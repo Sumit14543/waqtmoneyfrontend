@@ -1,0 +1,92 @@
+name: Deploy Frontend to cPanel
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: frontend-deploy
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 20
+  REMOTE_HOST: ${{ secrets.CPANEL_HOST || '103.234.185.16' }}
+  REMOTE_USER: ${{ secrets.CPANEL_USER || 'waqtmoney' }}
+  REMOTE_PORT: ${{ secrets.CPANEL_PORT || '5726' }}
+  REMOTE_FRONTEND_DIR: /home/waqtmoney/public_html
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Resolve Frontend Directory
+        id: frontend
+        shell: bash
+        run: |
+          if [ -f package.json ] && [ -f index.html ]; then
+            echo "dir=." >> "$GITHUB_OUTPUT"
+            echo "lock=package-lock.json" >> "$GITHUB_OUTPUT"
+          elif [ -f frontend/package.json ] && [ -f frontend/index.html ]; then
+            echo "dir=frontend" >> "$GITHUB_OUTPUT"
+            echo "lock=frontend/package-lock.json" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Could not find frontend package.json/index.html in repo root or frontend/."
+            exit 1
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: ${{ steps.frontend.outputs.lock }}
+
+      - name: Install Dependencies
+        working-directory: ${{ steps.frontend.outputs.dir }}
+        run: npm ci
+
+      - name: Test Project
+        working-directory: ${{ steps.frontend.outputs.dir }}
+        run: npm run test
+
+      - name: Lint Project
+        working-directory: ${{ steps.frontend.outputs.dir }}
+        run: npm run lint
+
+      - name: Build Project
+        working-directory: ${{ steps.frontend.outputs.dir }}
+        run: npm run build
+
+      - name: Setup SSH Key
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.CPANEL_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+      - name: Test SSH Connection
+        run: |
+          ssh -p "${REMOTE_PORT}" \
+            -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            "${REMOTE_USER}@${REMOTE_HOST}" "echo Connected Successfully"
+
+      - name: Deploy Frontend Files
+        run: |
+          rsync -avz --delete \
+            --exclude=backend \
+            --exclude=api \
+            --exclude=.well-known \
+            -e "ssh -p ${REMOTE_PORT} -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            "${{ steps.frontend.outputs.dir }}/dist/" \
+            "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_FRONTEND_DIR}/"
+
+      - name: Verify Public Website
+        run: curl -fsS https://waqtmoney.com/ -o /dev/null
+
