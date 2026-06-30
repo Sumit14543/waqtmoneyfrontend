@@ -211,13 +211,13 @@ export default function EmiCalculator() {
                 </div>
 
                 {/* CTA */}
-                <Link
-                  to="/user/apply"
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-purple-600 px-6 py-4 text-base font-bold text-white shadow-lg shadow-purple-200 transition hover:bg-purple-700"
+                <button
+                  disabled
+                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-purple-600 px-6 py-4 text-base font-bold text-white shadow-lg shadow-purple-200 transition hover:bg-purple-700 disabled:opacity-60 cursor-not-allowed"
                 >
                   Apply Now
                   <ArrowRight className="h-5 w-5" />
-                </Link>
+                </button>
               </div>
 
               {/* Sidebar */}

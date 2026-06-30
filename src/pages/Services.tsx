@@ -101,12 +101,12 @@ const Services = () => {
             </p>
           </div>
 
-          <Link
-            to="/user/apply"
-            className="inline-flex items-center justify-center rounded-full bg-background px-8 py-3 text-sm font-semibold text-primary shadow-lg transition-transform hover:scale-105"
+          <button
+            disabled
+            className="inline-flex items-center justify-center rounded-full bg-background px-8 py-3 text-sm font-semibold text-primary shadow-lg transition-transform hover:scale-105 disabled:opacity-60 cursor-not-allowed"
           >
             Apply for Loan
-          </Link>
+          </button>
         </div>
 
       </div>

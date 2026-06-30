@@ -378,7 +378,7 @@ const Repayment = () => {
                 className="mt-3 h-14 w-full rounded-xl border border-purple-100 bg-white px-4 text-base font-black uppercase tracking-[0.22em] text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-purple-600 focus:ring-4 focus:ring-purple-50"
               />
               <p className="mt-3 text-sm text-slate-500 sm:text-base">
-                Enter PAN to receive OTP on your registered mobile. Repayment details are fetched from CRM using that mobile number.
+                Enter PAN to receive OTP on your registered mobile. Repayment details are fetched using that mobile number.
               </p>
             </div>
 

@@ -173,11 +173,9 @@ const LoanCalculator = () => {
                 </p>
               </div>
 
-              <Button asChild className="w-full mt-4 bg-purple-600 text-white rounded-xl font-semibold hover:opacity-90">
-                <Link to="/user/apply">
-                  Get Started{" "}
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
+              <Button disabled className="w-full mt-4 bg-purple-600 text-white rounded-xl font-semibold hover:opacity-90">
+                Get Started{" "}
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
 

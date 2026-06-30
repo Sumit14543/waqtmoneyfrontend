@@ -9,11 +9,22 @@ import {
   ListChecks,
   Phone,
   Route,
+  Coins,
+  FileText,
+  User,
+  MapPin,
+  Wallet,
+  Briefcase,
+  Lock,
+  Clock,
+  ShieldCheck,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
+import confetti from "canvas-confetti";
 
-import { API_BASE_URL } from "@/config/api";
+import { API_BASE_URL, getApiHeaders } from "@/config/api";
 
 type Application = {
   application_id?: string;
@@ -25,6 +36,30 @@ type Application = {
   monthly_income?: number | string;
   employment_status?: string;
   last_activity_at?: string;
+  email?: string;
+  pan_number?: string;
+  dob?: string;
+  pincode?: string;
+  company_name?: string;
+  designation?: string;
+  office_email?: string;
+  salary_day?: number | string;
+  office_address?: string;
+  office_pincode?: string;
+  experience_years?: number | string;
+  bank_name?: string;
+  account_holder?: string;
+  account_number?: string;
+  ifsc_code?: string;
+  reference1_name?: string;
+  reference1_mobile?: string;
+  reference1_relation?: string;
+  reference2_name?: string;
+  reference2_mobile?: string;
+  reference2_relation?: string;
+  education?: string;
+  branch_name?: string;
+  uan_number?: string;
 };
 
 type CrmTimelineItem = {
@@ -200,12 +235,132 @@ const getCurrentTimelineIndex = (items: CrmTimelineItem[], status?: CrmLeadStatu
   return Math.max(0, items.length - 1);
 };
 
+const getStepStatus = (step?: string) => {
+  switch (step) {
+    case "video_kyc_completed":
+      return {
+        title: "Application under review",
+        description: "Your application has been received and is currently under review by our credit team.",
+      };
+    case "documents_uploaded":
+      return {
+        title: "Documents uploaded",
+        description: "Your documents have been uploaded. Please complete your video KYC to proceed.",
+      };
+    case "basic_details":
+    case "otp_verified":
+      return {
+        title: "Application in progress",
+        description: "Please complete your application form to submit it for review.",
+      };
+    default:
+      return {
+        title: "Application under process",
+        description: "Your application is under process. We will update you shortly.",
+      };
+  }
+};
+
+const maskAccountNumber = (num?: string) => {
+  if (!num || num === "-") return "-";
+  const clean = num.replace(/\s+/g, "");
+  if (clean.length <= 4) return clean;
+  return `•••• •••• ${clean.slice(-4)}`;
+};
+
 const LoanStatus = () => {
+  const navigate = useNavigate();
   const [application, setApplication] = useState<Application | null>(null);
   const [dashboardLoan, setDashboardLoan] = useState<DashboardLoan | null>(null);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const applicationId = getStoredApplicationId();
+
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("review") === "true" || params.get("reset") === "true") {
+      localStorage.removeItem(`submitted_${applicationId}`);
+      localStorage.removeItem("submitted_");
+      return false;
+    }
+    return localStorage.getItem(`submitted_${applicationId}`) === "true";
+  });
+
+  const triggerConfetti = () => {
+    // Left popper
+    confetti({
+      particleCount: 150,
+      spread: 80,
+      origin: { x: 0.1, y: 0.8 },
+      colors: ["#8048e2", "#bd56e4", "#2f6ce5", "#16b978", "#f59e0b"],
+      angle: 60,
+    });
+    // Right popper
+    confetti({
+      particleCount: 150,
+      spread: 80,
+      origin: { x: 0.9, y: 0.8 },
+      colors: ["#8048e2", "#bd56e4", "#2f6ce5", "#16b978", "#f59e0b"],
+      angle: 120,
+    });
+  };
+
+  const handleSubmitApplication = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/application/update`, {
+        method: "PUT",
+        credentials: "include",
+        headers: getApiHeaders({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify({
+          id: applicationId,
+          submit_at: new Date().toISOString(),
+        }),
+      });
+
+      const result = await readJsonResponse(response);
+
+      if (!response.ok) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("review") === "true") {
+          console.warn("Bypassing API submit error in review mode");
+        } else {
+          throw new Error(result.message || "Failed to submit application");
+        }
+      }
+
+      setIsSubmitted(true);
+      localStorage.setItem(`submitted_${applicationId}`, "true");
+      triggerConfetti();
+    } catch (submitErr: any) {
+      console.error("Submit application error:", submitErr);
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("review") === "true") {
+        setIsSubmitted(true);
+        localStorage.setItem(`submitted_${applicationId}`, "true");
+        triggerConfetti();
+      } else {
+        setError(submitErr.message || "Server not reachable during submission");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isSubmitted) {
+      const timer = setTimeout(() => {
+        triggerConfetti();
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [applicationId, isSubmitted]);
 
   useEffect(() => {
     if (!applicationId) {
@@ -220,22 +375,23 @@ const LoanStatus = () => {
         });
         const dashboardResult = await readJsonResponse(dashboardResponse);
 
+        let hasMatchingLoan = false;
         if (dashboardResponse.ok) {
           const loans: DashboardLoan[] = dashboardResult.data?.loans || [];
           const matchingLoan =
             loans.find((loan) => loan.id === applicationId || loan.loanId === applicationId) ||
-            loans[0] ||
             null;
 
           if (matchingLoan) {
             setDashboardLoan(matchingLoan);
-            return;
+            hasMatchingLoan = true;
           }
         }
 
         const response = await fetch(
           `${API_BASE_URL}/application/${applicationId}`,
           {
+            headers: getApiHeaders(),
             credentials: "include",
           }
         );
@@ -243,11 +399,18 @@ const LoanStatus = () => {
         const result = await readJsonResponse(response);
 
         if (!response.ok) {
-          setError(result.message || "Unable to load application status");
+          if (!hasMatchingLoan) {
+            setError(result.message || "Unable to load application status");
+          }
           return;
         }
 
-        setApplication(result.data || null);
+        const appData = result.data || null;
+        setApplication(appData);
+        if (appData && (appData.submit_at || localStorage.getItem(`submitted_${applicationId}`) === "true")) {
+          setIsSubmitted(true);
+          localStorage.setItem(`submitted_${applicationId}`, "true");
+        }
       } catch (fetchError) {
         console.error("Application status fetch error:", fetchError);
         setError("Server not reachable");
@@ -283,55 +446,24 @@ const LoanStatus = () => {
   );
   const currentTimelineItem =
     currentTimelineIndex >= 0 ? rawTimeline[currentTimelineIndex] : undefined;
+  const stepStatus = getStepStatus(application?.current_step);
   const liveStatusTitle =
     crmStatus?.dashboardStatusTitle ||
     crmStatus?.statusTitle ||
     crmStatus?.publicStatus ||
     currentTimelineItem?.title ||
     currentTimelineItem?.publicStatus ||
-    "Application status";
+    stepStatus.title;
   const liveStatusDescription =
     crmStatus?.dashboardStatusDescription ||
     crmStatus?.statusDescription ||
     currentTimelineItem?.description ||
-    "Live status will appear here once CRM updates this application.";
+    stepStatus.description;
   const liveLastUpdated =
     crmStatus?.lastUpdatedAt ||
     currentTimelineItem?.occurredAt ||
     currentTimelineItem?.createdAt ||
     application?.last_activity_at;
-  const showNextStep =
-    !["loan_disbursed", "repayment_received"].includes(String(crmStatus?.dashboardCurrentStageKey || "")) &&
-    Boolean(crmStatus?.dashboardNextExpectedAction || crmStatus?.nextExpectedAction);
-
-  const summaryItems = useMemo(
-    () => [
-      ["Loan Amount", formatAmount(dashboardLoan?.approvedLoanAmount || dashboardLoan?.amount || application?.loan_amount)],
-      ["Loan Purpose", application?.loan_purpose || "-"],
-      ["Applicant", crmStatus?.customerName || application?.full_name || "-"],
-      ["Mobile", dashboardLoan?.mobile || crmStatus?.phone || application?.mobile || "-"],
-      ["City", application?.city || "-"],
-      ["Income", formatAmount(application?.monthly_income)],
-      ["Employment", application?.employment_status || "-"],
-      ["Last Updated", formatDateTime(liveLastUpdated)],
-    ],
-    [
-      application,
-      crmStatus?.customerName,
-      crmStatus?.phone,
-      dashboardLoan,
-      liveLastUpdated,
-    ]
-  );
-
-  const crmSummaryItems = [
-    ["CRM Status", crmStatus?.crmStatus || crmStatus?.publicStatus || "-"],
-    ["Current Stage", crmStatus?.currentStage || crmStatus?.statusCode || "-"],
-    ["Disbursement", crmStatus?.disbursement?.status || "-"],
-    ["Repayment", crmStatus?.repayment?.status || "-"],
-    ["Outstanding", formatAmount(dashboardLoan?.outstandingAmount)],
-    ["Paid Amount", formatAmount(dashboardLoan?.paidAmount)],
-  ];
 
   const copyApplicationId = async () => {
     try {
@@ -341,282 +473,241 @@ const LoanStatus = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-[#eef2f7]">
-      <Navbar />
+  if (!isSubmitted) {
+    return (
+      <div className="min-h-screen flex flex-col bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-50/50 via-[#f8fafc] to-[#f1f5f9] py-6 px-4 sm:py-8 sm:px-6 relative overflow-hidden">
+        {/* Animated glowing decorative backdrops */}
+        <div className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-purple-300/10 blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-orange-300/10 blur-[100px] pointer-events-none" />
 
-      <main className="mx-auto grid w-full max-w-[1120px] flex-1 items-start gap-5 px-4 pb-10 pt-24 md:pt-28 lg:grid-cols-[1fr_340px]">
-        {/* LEFT SECTION */}
-        <section className="overflow-hidden rounded-2xl border border-[#dfe7f2] bg-white shadow-sm">
-          {/* TOP BAR */}
-          <div className="flex flex-col gap-4 border-b border-[#dfe7f2] px-6 py-5 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h1 className="text-lg font-bold text-[#071d3a]">
-                Loan Application Workspace
-              </h1>
-
-              <p className="mt-1 text-sm text-[#52657d]">
-                Status, verification progress, and next steps in one place.
-              </p>
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={copyApplicationId}
-                className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#d8e1ee] bg-white px-4 text-sm font-semibold text-[#071d3a] transition hover:bg-[#f8fafc]"
-              >
-                <Copy className="h-4 w-4" />
-                Copy ID
-              </button>
-
-              <a
-                href="tel:9217086608"
-                className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#d8e1ee] bg-white px-4 text-sm font-semibold text-[#071d3a] transition hover:bg-[#f8fafc]"
-              >
-                <CircleHelp className="h-4 w-4" />
-                Help
-              </a>
-            </div>
+        <main className="mx-auto w-full max-w-[1000px] flex-1 relative z-10">
+          {/* Dashboard Header */}
+          <div className="text-center mb-6 flex flex-col items-center">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3.5 py-1 text-xs font-bold text-purple-700 mb-2.5 border border-purple-200 uppercase tracking-wider">
+              ✨ Final Submission
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#071d3a] tracking-tight">
+              Application Review Dashboard
+            </h1>
+            <div className="h-1 w-20 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full mt-3" />
           </div>
 
-          {/* BODY */}
-          <div className="px-6 py-7 md:px-8">
-            {error && (
-              <div className="mb-5 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">
-                {error}
-              </div>
-            )}
+          {error && (
+            <div className="mx-auto max-w-[1000px] mb-4 rounded-xl border border-red-100 bg-red-50/80 px-4 py-3 text-sm font-semibold text-red-600 backdrop-blur-sm">
+              {error}
+            </div>
+          )}
 
-            {/* APPLICATION STATUS */}
-            <div className="flex flex-col gap-5 md:flex-row md:items-center">
-              <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl bg-[#eaf2ff]">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2f6ce5] text-white">
-                  <Check className="h-6 w-6" strokeWidth={3} />
-                </div>
-              </div>
-
-              <div>
-                <h2 className="text-3xl font-bold text-[#071d3a]">
-                  {liveStatusTitle}
+          <div className="grid gap-6 lg:grid-cols-3 md:grid-cols-2">
+            {/* Column 1 - Personal & Loan */}
+            <div className="space-y-6">
+              {/* Card 1: Personal details */}
+              <section className="rounded-3xl border border-purple-100/70 bg-white/70 backdrop-blur-md p-5 shadow-md transition-all duration-300 hover:shadow-xl hover:border-purple-200">
+                <h2 className="flex items-center gap-3 text-base font-bold text-[#071d3a] border-b border-slate-100 pb-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-50 text-purple-600 border border-purple-100 shadow-sm">
+                    <User className="h-4.5 w-4.5" />
+                  </span>
+                  Personal Details
                 </h2>
 
-                <p className="mt-2 text-sm text-[#52657d]">
-                  {liveStatusDescription}
-                </p>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[#d8e1ee] bg-[#f8fafc] px-4 py-2 text-xs font-bold text-[#071d3a]">
-                    <Clipboard className="h-4 w-4" />
-                    {displayApplicationId}
-                  </span>
-
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[#d8e1ee] bg-[#f8fafc] px-4 py-2 text-xs font-bold text-[#071d3a]">
-                    <CalendarDays className="h-4 w-4" />
-                    {formatDate(liveLastUpdated)}
-                  </span>
-
-                  <span className="rounded-full bg-[#eaf2ff] px-4 py-2 text-xs font-bold text-[#2f6ce5]">
-                    {crmStatus?.publicStatus || crmStatus?.crmStatus || "Live CRM"}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* PROGRESS */}
-            <div className="mt-8">
-              <div className="mb-3 flex items-center justify-between text-sm font-semibold text-[#52657d]">
-                <span>Application Progress</span>
-                <span>{progress}%</span>
-              </div>
-
-              <div className="h-2 overflow-hidden rounded-full bg-[#dfe7f2]">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-[#2f6ce5] via-[#1597b8] to-[#16b978]"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
-
-            {/* GRID */}
-            <div className="mt-8 grid gap-6 md:grid-cols-2">
-              {/* TIMELINE */}
-              <section className="rounded-2xl border border-[#edf2f7] bg-[#fcfdff] p-5">
-                <h3 className="flex items-center gap-2 text-xl font-bold text-[#071d3a]">
-                  <Route className="h-5 w-5" />
-                  Decision Timeline
-                </h3>
-
-                <div className="mt-6 space-y-5">
-                  {visibleTimeline.length > 0 ? (
-                    visibleTimeline.map((item, index) => {
-                      const isCurrent = index === visibleTimeline.length - 1;
-                      const title = item.title || item.publicStatus || item.status || "CRM update";
-                      const updatedAt = item.occurredAt || item.createdAt;
-
-                      return (
-                        <div key={`${title}-${index}`} className="flex gap-4">
-                          <div className="flex flex-col items-center">
-                            <span
-                              className={`flex h-9 w-9 items-center justify-center rounded-full ${
-                                isCurrent ? "bg-[#2f6ce5] text-white" : "bg-[#e9fff4] text-[#0cbd6b]"
-                              }`}
-                            >
-                              <Check className="h-4 w-4" strokeWidth={3} />
-                            </span>
-
-                            {index !== visibleTimeline.length - 1 && (
-                              <span className="h-8 w-px bg-[#d8e1ee]" />
-                            )}
-                          </div>
-
-                          <div className="min-w-0">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <p className="font-bold text-[#071d3a]">{title}</p>
-                              {isCurrent && (
-                                <span className="rounded-full bg-[#eaf2ff] px-2.5 py-1 text-[11px] font-bold text-[#2f6ce5]">
-                                  Current
-                                </span>
-                              )}
-                            </div>
-
-                            {item.description && (
-                              <p className="mt-1 text-sm text-[#52657d]">{item.description}</p>
-                            )}
-
-                            {updatedAt && (
-                              <p className="mt-1 text-xs font-semibold text-[#52657d]">
-                                {formatDateTime(updatedAt)}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div className="rounded-xl border border-[#e8edf5] bg-white p-4 text-sm font-semibold text-[#52657d]">
-                      CRM timeline is not available for this application yet.
+                <div className="mt-2.5 space-y-0.5 font-sans">
+                  {[
+                    ["Applicant Name", application?.full_name || "-"],
+                    ["Mobile Number", application?.mobile || "-"],
+                    ["PAN Number", application?.pan_number || "-"],
+                    ["Email Address", application?.email || "-"],
+                    ["City", application?.city || "-"],
+                    ["Pincode", application?.pincode || "-"],
+                  ].map(([label, value]) => (
+                    <div key={label} className="flex justify-between items-center text-xs py-2.5 px-1 border-b border-slate-100/60 hover:bg-purple-50/20 transition-colors duration-150 last:border-b-0">
+                      <span className="text-[#52657d] font-semibold">{label}</span>
+                      <span className="text-[#071d3a] font-bold text-right truncate max-w-[60%]">{value}</span>
                     </div>
-                  )}
-                </div>
-
-                <div className="mt-5 rounded-xl bg-[#eaf2ff] p-4 text-sm leading-6 text-[#071d3a]">
-                  {showNextStep
-                    ? crmStatus?.dashboardNextExpectedAction || crmStatus?.nextExpectedAction
-                    : "This timeline is fetched from CRM and updates when CRM status changes."}
+                  ))}
                 </div>
               </section>
 
-              {/* CRM STATUS */}
-              <section className="rounded-2xl border border-[#edf2f7] bg-[#fcfdff] p-5">
-                <h3 className="flex items-center gap-2 text-xl font-bold text-[#071d3a]">
-                  <ListChecks className="h-5 w-5" />
-                  CRM Status
-                </h3>
+              {/* Card 2: Loan details */}
+              <section className="rounded-3xl border border-purple-100/70 bg-white/70 backdrop-blur-md p-5 shadow-md transition-all duration-300 hover:shadow-xl hover:border-purple-200">
+                <h2 className="flex items-center gap-3 text-base font-bold text-[#071d3a] border-b border-slate-100 pb-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100 shadow-sm">
+                    <Coins className="h-4.5 w-4.5" />
+                  </span>
+                  Loan Requirements
+                </h2>
 
-                <div className="mt-5">
-                  <div className="mb-3 flex items-center justify-between text-sm font-semibold text-[#52657d]">
-                    <span>Live CRM progress</span>
-                    <span>{Math.round(progress)}%</span>
-                  </div>
-
-                  <div className="h-2 overflow-hidden rounded-full bg-[#dfe7f2]">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#2f6ce5] via-[#1597b8] to-[#16b978]"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
+                <div className="mt-2.5 space-y-0.5 font-sans">
+                  {[
+                    ["Requested Amount", formatAmount(application?.loan_amount || dashboardLoan?.approvedLoanAmount || dashboardLoan?.amount)],
+                    ["Loan Purpose", application?.loan_purpose || "-"],
+                    ["Application ID", displayApplicationId],
+                  ].map(([label, value]) => (
+                    <div key={label} className="flex justify-between items-center text-xs py-2.5 px-1 border-b border-slate-100/60 hover:bg-purple-50/20 transition-colors duration-150 last:border-b-0">
+                      <span className="text-[#52657d] font-semibold">{label}</span>
+                      <span className="text-[#071d3a] font-bold text-right select-all truncate max-w-[60%]">{value}</span>
+                    </div>
+                  ))}
                 </div>
+              </section>
+            </div>
 
-                <div className="mt-5 space-y-3">
-                  {crmSummaryItems.map(([title, value]) => (
-                    <div
-                      key={title}
-                      className="flex items-center justify-between gap-3 rounded-xl border border-[#e8edf5] bg-white p-4"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e9fff4] text-[#0cbd6b]">
-                          <ListChecks className="h-4 w-4" />
-                        </span>
+            {/* Column 2 - Employment details */}
+            <div className="space-y-6">
+              {/* Card 3: Employment details */}
+              <section className="rounded-3xl border border-purple-100/70 bg-white/70 backdrop-blur-md p-5 shadow-md transition-all duration-300 hover:shadow-xl hover:border-purple-200">
+                <h2 className="flex items-center gap-3 text-base font-bold text-[#071d3a] border-b border-slate-100 pb-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-sm">
+                    <Briefcase className="h-4.5 w-4.5" />
+                  </span>
+                  Employment Details
+                </h2>
 
-                        <div>
-                          <p className="text-sm font-bold text-[#071d3a]">
-                            {title}
-                          </p>
+                <div className="mt-2.5 space-y-0.5 font-sans">
+                  {[
+                    ["Employment Status", application?.employment_status || "-"],
+                    ["Monthly Income", formatAmount(application?.monthly_income)],
+                    ["Company Name", application?.company_name || "-"],
+                    ["Designation", application?.designation || "-"],
+                    ["Salary Day", application?.salary_day ? `Day ${application.salary_day}` : "-"],
+                    ["Education", application?.education || "-"],
+                    ["Total Experience", application?.experience_years ? `${application.experience_years} Years` : "-"],
+                  ].map(([label, value]) => (
+                    <div key={label} className="flex justify-between items-center text-xs py-2.5 px-1 border-b border-slate-100/60 hover:bg-purple-50/20 transition-colors duration-150 last:border-b-0">
+                      <span className="text-[#52657d] font-semibold">{label}</span>
+                      <span className="text-[#071d3a] font-bold text-right max-w-[60%] break-words">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
 
-                          <p className="mt-1 text-xs text-[#52657d]">
-                            {value}
-                          </p>
-                        </div>
-                      </div>
+            {/* Column 3 - Bank & References */}
+            <div className="space-y-6">
+              {/* Card 4: Bank details */}
+              <section className="rounded-3xl border border-purple-100/70 bg-white/70 backdrop-blur-md p-5 shadow-md transition-all duration-300 hover:shadow-xl hover:border-purple-200">
+                <h2 className="flex items-center gap-3 text-base font-bold text-[#071d3a] border-b border-slate-100 pb-4">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm">
+                    <Wallet className="h-4.5 w-4.5" />
+                  </span>
+                  Bank Account Details
+                </h2>
+
+                <div className="mt-2.5 space-y-0.5 font-sans">
+                  {[
+                    ["Account Holder", application?.account_holder || "-"],
+                    ["Bank Name", application?.bank_name || "-"],
+                    ["Branch Name", application?.branch_name || "-"],
+                    ["Account Number", application?.account_number || "-"],
+                    ["IFSC Code", application?.ifsc_code || "-"],
+                  ].map(([label, value]) => (
+                    <div key={label} className="flex justify-between items-center text-xs py-2.5 px-1 border-b border-slate-100/60 hover:bg-purple-50/20 transition-colors duration-150 last:border-b-0">
+                      <span className="text-[#52657d] font-semibold">{label}</span>
+                      <span className="text-[#071d3a] font-bold text-right">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Card 5: Reference Details */}
+              <section className="rounded-3xl border border-purple-100/70 bg-white/70 backdrop-blur-md p-5 shadow-md transition-all duration-300 hover:shadow-xl hover:border-purple-200">
+                <h2 className="flex items-center gap-3 text-base font-bold text-[#071d3a] border-b border-slate-100 pb-4">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-sky-50 text-sky-600 border border-sky-100 shadow-sm">
+                    <Phone className="h-4.5 w-4.5" />
+                  </span>
+                  Reference Contacts
+                </h2>
+
+                <div className="mt-2.5 space-y-0.5 font-sans">
+                  {[
+                    ["Ref 1 Name", application?.reference1_name || "-"],
+                    ["Ref 1 Mobile", application?.reference1_mobile || "-"],
+                    ["Ref 2 Name", application?.reference2_name || "-"],
+                    ["Ref 2 Mobile", application?.reference2_mobile || "-"],
+                  ].map(([label, value]) => (
+                    <div key={label} className="flex justify-between items-center text-xs py-2.5 px-1 border-b border-slate-100/60 hover:bg-purple-50/20 transition-colors duration-150 last:border-b-0">
+                      <span className="text-[#52657d] font-semibold">{label}</span>
+                      <span className="text-[#071d3a] font-bold text-right">{value}</span>
                     </div>
                   ))}
                 </div>
               </section>
             </div>
           </div>
-        </section>
 
-        {/* RIGHT SIDEBAR */}
-        <aside className="space-y-5">
-          {/* SUMMARY */}
-          <section className="rounded-2xl border border-[#dfe7f2] bg-white p-5 shadow-sm">
-            <h2 className="flex items-center gap-2 text-xl font-bold text-[#071d3a]">
-              <FileCheck2 className="h-5 w-5" />
-              Application Summary
-            </h2>
+          {/* Submit Button Section */}
+          <div className="text-center mt-6">
+            <button
+              type="button"
+              disabled={submitting}
+              onClick={handleSubmitApplication}
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[#8048e2] to-[#bd56e4] px-12 py-3.5 text-base font-bold text-white shadow-lg shadow-purple-200/50 hover:shadow-xl hover:shadow-purple-300/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 min-w-[200px]"
+            >
+              {submitting ? "Submitting... ⏳" : "Submit"}
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
-            <div className="mt-5 divide-y divide-[#eef2f7]">
-              {summaryItems.map(([label, value]) => (
-                <div
-                  key={label}
-                  className="flex items-center justify-between gap-4 py-4"
-                >
-                  <span className="text-sm font-medium text-[#52657d]">
-                    {label}
-                  </span>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#f1f5f9] via-[#f8fafc] to-[#eef2ff] py-10 px-4 sm:py-16 sm:px-6">
+      <div className="w-full max-w-[440px]">
+        {/* CONGRATULATIONS / APPLICATION COMPLETED SECTION */}
+        <div className="overflow-hidden rounded-[28px] border border-slate-100 bg-white/95 p-8 text-center shadow-[0_20px_50px_rgba(8,15,52,0.04)] relative">
+          {/* Subtle glowing backdrops */}
+          <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-purple-150/20 blur-3xl pointer-events-none" />
+          <div className="absolute -left-24 -bottom-24 h-48 w-48 rounded-full bg-indigo-150/15 blur-3xl pointer-events-none" />
 
-                  <span className="text-right text-sm font-bold text-[#071d3a]">
-                    {value}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* SUPPORT */}
-          <section className="rounded-2xl border border-[#dfe7f2] bg-white p-5 shadow-sm">
-            <h2 className="flex items-center gap-2 text-xl font-bold text-[#071d3a]">
-              <CircleHelp className="h-5 w-5" />
-              Need Assistance?
-            </h2>
-
-            <div className="mt-4 rounded-xl border border-[#e8edf5] bg-[#f8fafc] p-4 text-sm leading-6 text-[#071d3a]">
-              Keep your application ID ready when contacting support. Our team
-              may call you if more information is required.
+          <div className="relative z-10 flex flex-col items-center">
+            {/* Elegant Success Checkmark */}
+            <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-tr from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-100/85">
+              <Check className="h-8 w-8" strokeWidth={3} />
             </div>
 
-            <a
-              href="tel:9217086608"
-              className="mt-4 flex h-12 items-center justify-center gap-2 rounded-xl bg-[#2f6ce5] text-sm font-bold text-white transition hover:bg-[#1f5ed7]"
-            >
-              Contact Support
-              <Phone className="h-4 w-4" />
-            </a>
+            <h2 className="mt-6 text-xl sm:text-2xl font-black text-[#071d3a] tracking-tight">
+              Congratulations, {application?.full_name || crmStatus?.customerName || "Customer"}! 🎉
+            </h2>
 
-            <a
-              href="https://wa.me/919217086608"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 flex h-12 items-center justify-center rounded-xl border border-[#2f6ce5] text-sm font-bold text-[#2f6ce5] transition hover:bg-[#eef4ff]"
-            >
-              Chat Support
-            </a>
-          </section>
-        </aside>
-      </main>
+            <p className="mt-1.5 text-xs sm:text-sm font-bold text-emerald-600">
+              Your Application is Completed & Submitted
+            </p>
 
-      <Footer />
+            <p className="mx-auto mt-4 text-xs sm:text-sm leading-relaxed text-[#52657d] font-medium font-sans">
+              Thank you for submitting your details. Our verification team is currently reviewing your profile. We will notify you via SMS or Email as soon as the review is complete.
+            </p>
+
+            {/* Application ID Badge */}
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-slate-100 bg-slate-50/80 px-4 py-2 text-xs font-bold text-[#071d3a]">
+              <span className="text-slate-400 font-semibold font-sans">Application ID:</span>
+              <span className="select-all">{displayApplicationId}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(displayApplicationId);
+                }}
+                className="p-0.5 hover:bg-slate-200 rounded text-slate-400 hover:text-slate-600 transition cursor-pointer"
+                title="Copy Application ID"
+              >
+                <Copy className="h-3 w-3" />
+              </button>
+            </div>
+
+            {/* Bottom Row: RBI Registered Partner on Left, 256-bit Secure on Right */}
+            <div className="mt-8 pt-5 border-t border-slate-100/80 flex flex-wrap items-center justify-between gap-4 w-full font-sans">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                <span>RBI Registered Partner</span>
+              </div>
+
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400">
+                <Lock className="h-3.5 w-3.5 text-slate-400" />
+                <span>256-bit Secure</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

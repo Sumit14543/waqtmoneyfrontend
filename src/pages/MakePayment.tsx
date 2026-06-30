@@ -683,7 +683,7 @@ const MakePayment = () => {
                         <p className="mt-4 text-sm font-bold text-purple-100">Outstanding Today</p>
                         <p className="mt-1 text-3xl font-black">{formatINR(repayment.outstandingToday)}</p>
                         <p className="mt-3 text-xs font-semibold leading-5 text-purple-100">
-                          Live amount fetched from CRM repayment records.
+                          Live amount fetched from system repayment records.
                         </p>
                       </div>
 

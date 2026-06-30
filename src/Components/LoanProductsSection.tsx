@@ -91,15 +91,13 @@ const LoanProductsSection = () => {
                 </div>
               </div>
               <Button
-                asChild
+                disabled
                 variant="ghost"
                 size="sm"
                 className="text-primary hover:text-primary/80 p-0 h-auto font-semibold flex items-center gap-1 hover:gap-2 transition-all"
               >
-                <Link to="/user/apply">
-                  Apply Now
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+                Apply Now
+                <ArrowRight className="w-4 h-4" />
               </Button>
             </motion.div>
           ))}

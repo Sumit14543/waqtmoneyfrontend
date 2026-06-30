@@ -332,7 +332,7 @@ const ProcessTimeline = ({
           <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h3 className="text-lg font-extrabold text-[#071d3a]">Tracking Details</h3>
-              <p className="mt-1 text-xs font-bold text-[#52657d]">Live updates from CRM</p>
+              <p className="mt-1 text-xs font-bold text-[#52657d]">Live tracking updates</p>
             </div>
             <span className="w-fit rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#8048e2] ring-1 ring-purple-100">
               {status?.crmStatus || status?.publicStatus || "Active"}

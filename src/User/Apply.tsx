@@ -681,8 +681,8 @@ const Apply = () => {
 
             <button
               type="button"
-              onClick={handleApplyStart}
-              className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 text-base font-bold text-white shadow-lg shadow-purple-200 transition hover:bg-purple-700"
+              disabled
+              className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 text-base font-bold text-white shadow-lg shadow-purple-200 transition hover:bg-purple-700 disabled:opacity-60 cursor-not-allowed"
             >
               Apply Now
               <ArrowRightCircle className="h-5 w-5" />
@@ -701,18 +701,17 @@ const Apply = () => {
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   <button
                     type="button"
-                    onClick={handleFreshApplication}
-                    className="h-12 rounded-full border border-slate-200 bg-white text-sm font-bold text-slate-800 transition hover:bg-slate-50"
+                    disabled={true}
+                    className="h-12 rounded-full border border-slate-200 bg-white text-sm font-bold text-slate-800 transition hover:bg-slate-50 disabled:opacity-60 cursor-not-allowed"
                   >
                     Start Fresh
                   </button>
                   <button
                     type="button"
-                    onClick={handleResumeApplication}
-                    disabled={resumeLoading}
-                    className="h-12 rounded-full bg-purple-600 text-sm font-bold text-white transition hover:bg-purple-700 disabled:opacity-60"
+                    disabled={true}
+                    className="h-12 rounded-full bg-purple-600 text-sm font-bold text-white transition hover:bg-purple-700 disabled:opacity-60 cursor-not-allowed"
                   >
-                    {resumeLoading ? "Resuming..." : "Resume"}
+                    Resume
                   </button>
                 </div>
               </div>
@@ -1162,10 +1161,10 @@ const Apply = () => {
 
               <button
                 type="submit"
-                disabled={loading}
-                className="mt-7 h-12 w-full rounded-lg bg-gradient-to-r from-[#8048e2] to-[#bd56e4] text-sm font-bold text-white shadow-[0_9px_18px_rgba(128,72,226,0.22)] transition hover:opacity-90 disabled:opacity-60"
+                disabled={true}
+                className="mt-7 h-12 w-full rounded-lg bg-gradient-to-r from-[#8048e2] to-[#bd56e4] text-sm font-bold text-white shadow-[0_9px_18px_rgba(128,72,226,0.22)] transition hover:opacity-90 disabled:opacity-60 cursor-not-allowed"
               >
-                {loading ? "Sending..." : "Send OTP"}
+                Send OTP
               </button>
             </div>
           </form>
