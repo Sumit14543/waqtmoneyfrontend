@@ -84,6 +84,7 @@ type Application = {
   loan_amount?: number | string;
   principal_amount?: number | string;
   disbursed_amount?: number | string;
+  disbursal_date?: string;
   loan_purpose?: string;
   full_name?: string;
   mobile?: string;
@@ -203,6 +204,7 @@ const mockApplicationFromCrmStatus = (data?: CrmStatus | null): Application => {
     loan_amount: data.sanction?.principalAmount ?? data.loanAmount,
     principal_amount: data.sanction?.principalAmount ?? data.loanAmount,
     disbursed_amount: data.disbursement?.disbursedAmount ?? data.sanction?.disbursedAmount,
+    disbursal_date: data.disbursement?.disbursedAt || data.disbursement?.disbursalDate || data.disbursement?.disbursementDate || data.sanction?.disbursedAt || "",
     full_name: data.customerName || "Customer",
     mobile: data.phone,
     pan_number: data.pan || data.panNumber || "",
@@ -470,12 +472,20 @@ const MakePayment = () => {
       ? rawDpdInterest
       : Math.max(0, outstandingToday - maturityAmount);
 
+    const disbursalDateValue = effectiveApplication?.disbursal_date || "";
+    const disbursalDate = disbursalDateValue ? new Date(disbursalDateValue) : null;
+    const validDisbursalDate =
+      disbursalDate && !Number.isNaN(disbursalDate.getTime()) && disbursalDate.getFullYear() >= 2020
+        ? disbursalDate
+        : null;
+
     return {
       loanId: effectiveApplication?.loan_id || effectiveApplication?.application_id || repaymentLookupId || "-",
       customerName: effectiveApplication?.full_name || "Customer",
       loanAmount: safeLoanAmount,
       disbursedAmount: Number.isFinite(disbursedAmount) && disbursedAmount > 0 ? disbursedAmount : 0,
       dueDate: validDueDate,
+      disbursalDate: validDisbursalDate,
       tenureDays: Number.isFinite(Number(tenureDays)) && Number(tenureDays) > 0 ? Number(tenureDays) : null,
       interestRate: hasMeaningfulValue(effectiveApplication?.interest_rate) ? effectiveApplication?.interest_rate : "",
       interestAccrued: Number.isFinite(Number(interestAccrued)) && Number(interestAccrued) > 0 ? Number(interestAccrued) : null,
@@ -501,8 +511,7 @@ const MakePayment = () => {
     ["Principal Amount", formatINR(repayment.loanAmount)],
     ["Disbursed Amount", repayment.disbursedAmount > 0 ? formatINR(repayment.disbursedAmount) : "-"],
     ["Interest Rate", repayment.interestRate ? String(repayment.interestRate) : "-"],
-    ["Interest Accrued", repayment.interestAccrued ? formatINR(repayment.interestAccrued) : "-"],
-    ...(repayment.dpdInterest > 0 ? [["DPD Interest", formatINR(repayment.dpdInterest)]] : []),
+    ["Disbursed On", repayment.disbursalDate ? formatDate(repayment.disbursalDate) : "-"],
     ["Paid Amount", repayment.paidAmount > 0 ? formatINR(repayment.paidAmount) : "-"],
   ];
 
