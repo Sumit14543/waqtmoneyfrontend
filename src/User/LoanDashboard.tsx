@@ -688,7 +688,6 @@ const LoanDashboard = () => {
             { icon: ReceiptText, label: "Total Repayable", value: formatINR(totalRepayableAmount) },
             { icon: IndianRupee, label: "Paid Amount", value: formatINR(paidAmount) },
             { icon: ReceiptText, label: "Interest Rate", value: loan.interestRate ? String(loan.interestRate) : "-" },
-            { icon: IndianRupee, label: "Interest Accrued", value: formatINR(interestAccrued) },
             ...(crmStatus
               ? [
                   {

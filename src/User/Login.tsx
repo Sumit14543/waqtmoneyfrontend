@@ -292,8 +292,8 @@ const Login = () => {
 
                   <button
                     type="submit"
-                    disabled={loading || mobile.length !== 10}
-                    className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-fuchsia-600 font-black text-white shadow-[0_18px_32px_rgba(126,34,206,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_38px_rgba(126,34,206,0.34)] disabled:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed sm:h-16"
+                    disabled={true}
+                    className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-fuchsia-600 font-black text-white shadow-[0_18px_32px_rgba(126,34,206,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_38px_rgba(126,34,206,0.34)] disabled:translate-y-0 disabled:opacity-60 sm:h-16 cursor-not-allowed"
                   >
                     {loading ? "Sending OTP..." : "Send OTP"}
                     {!loading && <ArrowRight className="h-5 w-5" />}
@@ -338,8 +338,8 @@ const Login = () => {
 
                   <button
                     type="submit"
-                    disabled={loading || otp.some((v) => !v)}
-                    className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-fuchsia-600 font-black text-white shadow-[0_18px_32px_rgba(126,34,206,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_38px_rgba(126,34,206,0.34)] disabled:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed sm:h-16"
+                    disabled={true}
+                    className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-fuchsia-600 font-black text-white shadow-[0_18px_32px_rgba(126,34,206,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_38px_rgba(126,34,206,0.34)] disabled:translate-y-0 disabled:opacity-60 sm:h-16 cursor-not-allowed"
                   >
                     {loading ? "Verifying..." : "Verify & Login"}
                     {!loading && <ArrowRight className="h-5 w-5" />}
