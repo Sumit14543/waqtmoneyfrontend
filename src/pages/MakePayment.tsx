@@ -94,6 +94,7 @@ type Application = {
   repayment_status?: string;
   status?: string;
   outstanding_amount?: number | string;
+  dpd_interest?: number | string;
   maturity_amount?: number | string;
   total_repayable_amount?: number | string;
   next_payment_amount?: number | string;
@@ -191,6 +192,11 @@ const mockApplicationFromCrmStatus = (data?: CrmStatus | null): Application => {
   if (!data) return {};
   const repayment = { ...(data.repayment || {}), ...data };
   const crmOutstanding = data.disbursement?.outstanding ?? data.disbursement?.outstandingAmount ?? data.disbursement?.outstanding_amount ?? repayment.outstanding ?? repayment.balanceAmount;
+  const baseRepayable = repayment.dueAmount ?? data.sanction?.repaymentAmount;
+  const safeMaturity = Number(baseRepayable) > 0 ? Number(baseRepayable) : 0;
+  const safeOutstanding = Number(crmOutstanding) > 0 ? Number(crmOutstanding) : 0;
+  const dpdInterest = Math.max(0, safeOutstanding - safeMaturity);
+
   return {
     application_id: data.sourceLeadId || data.sourceApplicationId || data.applicationId || "-",
     loan_id: repayment.loanId || data.sanction?.loanId || data.sanction?.agreementNumber || "-",
@@ -204,6 +210,7 @@ const mockApplicationFromCrmStatus = (data?: CrmStatus | null): Application => {
     repayment_status: repayment.repaymentStatus || repayment.status,
     status: repayment.repaymentStatus || repayment.status,
     outstanding_amount: crmOutstanding,
+    dpd_interest: dpdInterest > 0 ? dpdInterest : undefined,
     maturity_amount: repayment.dueAmount ?? data.sanction?.repaymentAmount,
     total_repayable_amount: repayment.dueAmount ?? data.sanction?.repaymentAmount,
     next_payment_amount: crmOutstanding,
@@ -458,6 +465,11 @@ const MakePayment = () => {
         : Number(partAmount || 0);
     const eligibleLimit = safeLoanAmount;
 
+    const rawDpdInterest = hasMeaningfulValue(effectiveApplication?.dpd_interest) ? Number(effectiveApplication?.dpd_interest) : 0;
+    const dpdInterest = rawDpdInterest > 0
+      ? rawDpdInterest
+      : Math.max(0, outstandingToday - maturityAmount);
+
     return {
       loanId: effectiveApplication?.loan_id || effectiveApplication?.application_id || repaymentLookupId || "-",
       customerName: effectiveApplication?.full_name || "Customer",
@@ -467,6 +479,7 @@ const MakePayment = () => {
       tenureDays: Number.isFinite(Number(tenureDays)) && Number(tenureDays) > 0 ? Number(tenureDays) : null,
       interestRate: hasMeaningfulValue(effectiveApplication?.interest_rate) ? effectiveApplication?.interest_rate : "",
       interestAccrued: Number.isFinite(Number(interestAccrued)) && Number(interestAccrued) > 0 ? Number(interestAccrued) : null,
+      dpdInterest: Number.isFinite(dpdInterest) && dpdInterest > 0 ? dpdInterest : 0,
       outstandingToday,
       maturityAmount,
       paidAmount: Number.isFinite(Number(paidAmount)) ? Number(paidAmount) : 0,
@@ -489,6 +502,7 @@ const MakePayment = () => {
     ["Disbursed Amount", repayment.disbursedAmount > 0 ? formatINR(repayment.disbursedAmount) : "-"],
     ["Interest Rate", repayment.interestRate ? String(repayment.interestRate) : "-"],
     ["Interest Accrued", repayment.interestAccrued ? formatINR(repayment.interestAccrued) : "-"],
+    ...(repayment.dpdInterest > 0 ? [["DPD Interest", formatINR(repayment.dpdInterest)]] : []),
     ["Paid Amount", repayment.paidAmount > 0 ? formatINR(repayment.paidAmount) : "-"],
   ];
 
