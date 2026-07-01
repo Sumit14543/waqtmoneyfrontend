@@ -105,21 +105,20 @@ const HeroSection = () => {
               <button
                 type="button"
                 onClick={handleLeadSubmit}
-                disabled={true}
-                className="hidden w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3 font-semibold text-white transition-all hover:scale-105 disabled:opacity-60 sm:flex sm:w-auto sm:rounded-full cursor-not-allowed"
+                disabled={loading}
+                className="hidden w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3 font-semibold text-white transition-all hover:scale-105 disabled:opacity-60 sm:flex sm:w-auto sm:rounded-full"
               >
                 Apply Now
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <button
-                type="button"
-                disabled={true}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3 font-semibold text-white transition-all hover:scale-105 sm:hidden disabled:opacity-60 cursor-not-allowed"
+              <Link
+                to="/user/apply"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3 font-semibold text-white transition-all hover:scale-105 sm:hidden"
               >
                 Apply Now
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
 
             </div>
             {error && (
