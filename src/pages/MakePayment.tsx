@@ -35,7 +35,12 @@ declare global {
 type CrmStatus = {
   applicationId?: string;
   customerName?: string;
-  disbursement?: { disbursedAmount?: number | string };
+  disbursement?: {
+    disbursedAmount?: number | string;
+    outstanding?: number | string;
+    outstandingAmount?: number | string;
+    outstanding_amount?: number | string;
+  };
   email?: string;
   loanAmount?: number | string;
   pan?: string;
@@ -185,6 +190,7 @@ const loadCashfreeSdk = () =>
 const mockApplicationFromCrmStatus = (data?: CrmStatus | null): Application => {
   if (!data) return {};
   const repayment = { ...(data.repayment || {}), ...data };
+  const crmOutstanding = data.disbursement?.outstanding ?? data.disbursement?.outstandingAmount ?? data.disbursement?.outstanding_amount ?? repayment.outstanding ?? repayment.balanceAmount;
   return {
     application_id: data.sourceLeadId || data.sourceApplicationId || data.applicationId || "-",
     loan_id: repayment.loanId || data.sanction?.loanId || data.sanction?.agreementNumber || "-",
@@ -197,10 +203,10 @@ const mockApplicationFromCrmStatus = (data?: CrmStatus | null): Application => {
     repayment_paid_amount: repayment.amountPaid ?? repayment.paidAmount,
     repayment_status: repayment.repaymentStatus || repayment.status,
     status: repayment.repaymentStatus || repayment.status,
-    outstanding_amount: repayment.outstanding ?? repayment.balanceAmount,
+    outstanding_amount: crmOutstanding,
     maturity_amount: repayment.dueAmount ?? data.sanction?.repaymentAmount,
     total_repayable_amount: repayment.dueAmount ?? data.sanction?.repaymentAmount,
-    next_payment_amount: repayment.outstanding ?? repayment.balanceAmount,
+    next_payment_amount: crmOutstanding,
     paid_amount: repayment.amountPaid ?? repayment.paidAmount,
     due_date: repayment.loanDueDate || repayment.loan_due_date || repayment.dueDate || data.sanction?.dueDate,
     repayment_due_date: repayment.loanDueDate || repayment.loan_due_date || repayment.dueDate || data.sanction?.dueDate,
