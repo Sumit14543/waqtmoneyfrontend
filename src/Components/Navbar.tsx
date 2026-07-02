@@ -71,12 +71,16 @@ const Navbar = () => {
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" size="sm" disabled>
-            Log In
-          </Button>
-          <Button disabled className="bg-purple-600 text-white hover:bg-purple-700">
-            Apply Now
-          </Button>
+          <Link to="/login">
+            <Button variant="ghost" size="sm">
+              Log In
+            </Button>
+          </Link>
+          <Link to="/user/apply">
+            <Button className="bg-purple-600 text-white hover:bg-purple-700">
+              Apply Now
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Toggle */}
@@ -110,20 +114,22 @@ const Navbar = () => {
 
               {/* Buttons */}
               <div className="flex flex-col gap-3 pt-4">
-                <Button
-                  variant="outline"
-                  className="w-full h-11 text-base"
-                  disabled
-                >
-                  Log In
-                </Button>
+                <Link to="/login" className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full h-11 text-base"
+                  >
+                    Log In
+                  </Button>
+                </Link>
 
-                <Button
-                  className="w-full h-11 text-base bg-purple-600 text-white hover:bg-purple-700"
-                  disabled
-                >
-                  Apply Now
-                </Button>
+                <Link to="/user/apply" className="w-full">
+                  <Button
+                    className="w-full h-11 text-base bg-purple-600 text-white hover:bg-purple-700"
+                  >
+                    Apply Now
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
