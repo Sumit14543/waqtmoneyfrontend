@@ -75,8 +75,14 @@ Options -Indexes
   RewriteCond %{REQUEST_FILENAME} \.(webp|png|jpg|jpeg|gif|ico|svg|css|js|woff|woff2|ttf|json|xml|txt)$ [NC]
   RewriteRule ^ - [L]
 
+  # Explicit SPA Route Fix for /blog, /admin, /user routes (handles physical directory collisions)
+  RewriteCond %{REQUEST_URI} ^/(blog|admin|user)(?:/.*)?$ [NC]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ index.html [L]
+
   # Exclude /api/ and /uploads/ from SPA index.html rewrite
   RewriteCond %{REQUEST_URI} !^/api/ [NC]
   RewriteCond %{REQUEST_URI} !^/uploads/ [NC]
+  RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ index.html [L]
 </IfModule>
