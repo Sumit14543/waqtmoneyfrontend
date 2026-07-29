@@ -22,8 +22,8 @@ interface Blog {
 }
 
 export default function Blog() {
-  const [blogs, setBlogs] = useState<Blog[]>(fallbackBlogs as any);
-  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(fallbackBlogs as any);
+  const [blogs, setBlogs] = useState<Blog[]>(fallbackBlogs as unknown as Blog[]);
+  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(fallbackBlogs as unknown as Blog[]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -49,13 +49,13 @@ export default function Blog() {
           setBlogs(data.blogs);
           setFilteredBlogs(data.blogs);
         } else {
-          setBlogs(fallbackBlogs as any);
-          setFilteredBlogs(fallbackBlogs as any);
+          setBlogs(fallbackBlogs as unknown as Blog[]);
+          setFilteredBlogs(fallbackBlogs as unknown as Blog[]);
         }
       } catch (err) {
         console.error("Failed to load blog posts:", err);
-        setBlogs(fallbackBlogs as any);
-        setFilteredBlogs(fallbackBlogs as any);
+        setBlogs(fallbackBlogs as unknown as Blog[]);
+        setFilteredBlogs(fallbackBlogs as unknown as Blog[]);
       } finally {
         setLoading(false);
       }

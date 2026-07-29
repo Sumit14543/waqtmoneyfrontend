@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-type SchemaType = Record<string, any> | Record<string, any>[];
+type SchemaType = Record<string, unknown> | Record<string, unknown>[];
 
 type SEOProps = {
   title: string;

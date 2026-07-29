@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import AdminLayout from "@/Components/admin/AdminLayout";
 import SEO from "@/Components/SEO";
@@ -28,9 +28,9 @@ export default function AdminLeads() {
   const [loanType, setLoanType] = useState("");
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const limit = 15;
+  const limit = 20;
 
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -59,11 +59,11 @@ export default function AdminLeads() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit, search, loanType]);
 
   useEffect(() => {
     fetchLeads();
-  }, [page, loanType]);
+  }, [fetchLeads]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();

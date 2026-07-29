@@ -58,14 +58,14 @@ export default function AdminBlogForm() {
         try {
           const response = await fetch(`${API_BASE_URL}/blogs/${id}`);
           const data = await response.json();
-          let blog: any = null;
+          let blog: Record<string, unknown> | null = null;
           if (data.success && data.blog) {
-            blog = data.blog;
+            blog = data.blog as Record<string, unknown>;
           } else {
             const listRes = await fetch(`${API_BASE_URL}/blogs`);
             const listData = await listRes.json();
             if (listData.success && Array.isArray(listData.blogs)) {
-              blog = listData.blogs.find((b: any) => String(b.id) === String(id) || b.slug === id);
+              blog = (listData.blogs as Record<string, unknown>[]).find((b) => String(b.id) === String(id) || b.slug === id) || null;
             }
           }
 

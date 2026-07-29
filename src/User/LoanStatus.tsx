@@ -338,15 +338,16 @@ const LoanStatus = () => {
       setIsSubmitted(true);
       localStorage.setItem(`submitted_${applicationId}`, "true");
       triggerConfetti();
-    } catch (submitErr: any) {
+    } catch (submitErr: unknown) {
       console.error("Submit application error:", submitErr);
+      const err = submitErr as Error;
       const params = new URLSearchParams(window.location.search);
       if (params.get("review") === "true") {
         setIsSubmitted(true);
         localStorage.setItem(`submitted_${applicationId}`, "true");
         triggerConfetti();
       } else {
-        setError(submitErr.message || "Server not reachable during submission");
+        setError(err?.message || "Server not reachable during submission");
       }
     } finally {
       setSubmitting(false);

@@ -90,12 +90,13 @@ const SelfieUpload = ({ file, error, onCapture }: SelfieUploadProps) => {
 
       setCameraActive(true);
       setIsStarting(false);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Camera access error:", err);
       setIsStarting(false);
       setCameraActive(false);
 
-      const errName = err?.name || "";
+      const cameraErr = err as Error & { name?: string };
+      const errName = cameraErr?.name || "";
 
       if (errName === "NotAllowedError" || errName === "PermissionDeniedError") {
         setErrorType("denied");

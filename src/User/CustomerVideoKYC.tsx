@@ -161,11 +161,12 @@ const VideoVerification: React.FC = () => {
       schedulePreviewAutoStop();
 
       return mediaStream;
-    } catch (cameraError: any) {
+    } catch (cameraError: unknown) {
       console.error("Video KYC camera error:", cameraError);
-      if (cameraError?.name === "NotAllowedError" || cameraError?.name === "PermissionDeniedError") {
+      const err = cameraError as Error & { name?: string };
+      if (err?.name === "NotAllowedError" || err?.name === "PermissionDeniedError") {
         setError("Camera and microphone permission denied. Click the Lock 🔒 icon in your browser address bar (top left) -> allow Camera & Microphone, then try again.");
-      } else if (cameraError?.name === "NotFoundError" || cameraError?.name === "DevicesNotFoundError") {
+      } else if (err?.name === "NotFoundError" || err?.name === "DevicesNotFoundError") {
         setError("No camera/microphone found. Please connect a camera or use a mobile device.");
       } else {
         setError("Camera and microphone permission is required for video KYC. Please allow access in browser settings.");

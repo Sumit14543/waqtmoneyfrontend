@@ -51,7 +51,7 @@ export default function AdminBlogs() {
       const response = await fetch(`${API_BASE_URL}/blogs`);
       const data = await response.json();
       if (data.success && Array.isArray(data.blogs) && data.blogs.length > 0) {
-        setBlogs(data.blogs.map((b: any) => ({ ...b, status: b.status || "ACTIVE" })));
+        setBlogs(data.blogs.map((b: AdminBlog) => ({ ...b, status: b.status || "ACTIVE" })));
       } else {
         setBlogs(
           fallbackBlogs.map((b) => ({

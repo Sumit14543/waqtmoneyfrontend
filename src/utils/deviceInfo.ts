@@ -66,14 +66,16 @@ export const getDeviceInfo = async (): Promise<ExtendedDeviceInfo> => {
   }
 
   // Network connection type if available
-  const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+  const navRecord = navigator as Record<string, unknown>;
+  const connection = (navRecord.connection || navRecord.mozConnection || navRecord.webkitConnection) as { effectiveType?: string; type?: string } | undefined;
   const networkType = connection?.effectiveType || connection?.type || "unknown";
 
   // Battery status if supported
   let batteryStatus = "unknown";
   try {
-    if (typeof (navigator as any).getBattery === "function") {
-      const battery = await (navigator as any).getBattery();
+    const getBatteryFn = navRecord.getBattery as (() => Promise<{ level?: number; charging?: boolean }>) | undefined;
+    if (typeof getBatteryFn === "function") {
+      const battery = await getBatteryFn();
       const level = Math.round((battery.level || 0) * 100);
       const charging = battery.charging ? "Charging" : "Discharging";
       batteryStatus = `${level}% (${charging})`;

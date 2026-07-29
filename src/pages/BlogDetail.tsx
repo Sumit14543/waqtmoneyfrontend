@@ -54,15 +54,15 @@ export default function BlogDetail() {
           // Fallback to local array
           const found = fallbackBlogs.find((b) => b.slug === slug || String(b.id) === slug);
           if (found) {
-            setBlog(found as any);
+            setBlog(found as unknown as Blog);
           } else {
             setError("Blog article not found");
           }
         }
-      } catch (err) {
+      } catch {
         const found = fallbackBlogs.find((b) => b.slug === slug || String(b.id) === slug);
         if (found) {
-          setBlog(found as any);
+          setBlog(found as unknown as Blog);
         } else {
           setError("Server not reachable");
         }
@@ -84,7 +84,7 @@ export default function BlogDetail() {
 
   // Helper function to render Markdown cleanly without raw ## or **
   const parseInlineMarkdown = (text: string) => {
-    let cleanText = text.replace(/^#{1,4}\s*/, "");
+    const cleanText = text.replace(/^#{1,4}\s*/, "");
     const parts = cleanText.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*)/g);
 
     return parts.map((part, i) => {
@@ -99,13 +99,15 @@ export default function BlogDetail() {
       const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
       if (linkMatch) {
         return (
-          <Link
+          <a
             key={i}
-            to={linkMatch[2]}
-            className="font-bold text-purple-600 hover:text-purple-800 hover:underline"
+            href={linkMatch[2]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-purple-600 underline hover:text-purple-800"
           >
             {linkMatch[1]}
-          </Link>
+          </a>
         );
       }
 
@@ -113,8 +115,9 @@ export default function BlogDetail() {
     });
   };
 
-  const renderFormattedMarkdown = (contentStr: string) => {
+  const renderContentBlocks = (contentStr: string) => {
     if (!contentStr) return null;
+
     const blocks = contentStr.split(/\n{2,}/);
 
     return blocks.map((block, idx) => {
@@ -124,7 +127,7 @@ export default function BlogDetail() {
       // H2 Heading (e.g. ## Heading or 1. Heading)
       const h2Match = trimmed.match(/^(?:##\s*|\d+\.\s+)(.+)$/m);
       if (h2Match) {
-        const headingText = h2Match[1].replace(/[\#\*]/g, "").trim();
+        const headingText = h2Match[1].replace(/[#*]/g, "").trim();
         const headingId = headingText.toLowerCase().replace(/[^a-z0-9]/g, "-");
         const restLines = trimmed.split("\n").slice(1).join("\n").trim();
 
@@ -142,7 +145,7 @@ export default function BlogDetail() {
       // H3 Heading (e.g. ### Heading)
       const h3Match = trimmed.match(/^###\s*(.+)$/m);
       if (h3Match) {
-        const headingText = h3Match[1].replace(/[\#\*]/g, "").trim();
+        const headingText = h3Match[1].replace(/[#*]/g, "").trim();
         const headingId = headingText.toLowerCase().replace(/[^a-z0-9]/g, "-");
         const restLines = trimmed.split("\n").slice(1).join("\n").trim();
 
@@ -188,7 +191,7 @@ export default function BlogDetail() {
     blocks.forEach((block) => {
       const match = block.match(/^(?:##\s*|###\s*|\d+\.\s+)(.+)$/m);
       if (match) {
-        const clean = match[1].replace(/[\#\*]/g, "").trim();
+        const clean = match[1].replace(/[#*]/g, "").trim();
         if (clean.length > 3) headings.push(clean);
       }
     });

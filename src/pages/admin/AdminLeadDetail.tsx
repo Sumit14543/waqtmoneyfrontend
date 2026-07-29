@@ -72,7 +72,7 @@ export default function AdminLeadDetail() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState("");
 
-  const fetchLeadDetails = async () => {
+  const fetchLeadDetails = useCallback(async () => {
     try {
       const token = localStorage.getItem("admin_token");
       const response = await fetch(`${API_BASE_URL}/admin/leads/${id}`, {
@@ -94,11 +94,11 @@ export default function AdminLeadDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchLeadDetails();
-  }, [id]);
+  }, [fetchLeadDetails]);
 
   const handleUpdateStatus = async (e: React.FormEvent) => {
     e.preventDefault();
