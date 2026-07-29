@@ -44,8 +44,8 @@ export default function Blog() {
     const fetchBlogs = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/blogs`);
-        const data = await response.json();
-        if (data.success && Array.isArray(data.blogs) && data.blogs.length > 0) {
+        const data = await response.json().catch(() => null);
+        if (response.ok && data?.success && Array.isArray(data?.blogs) && data.blogs.length > 0) {
           setBlogs(data.blogs);
           setFilteredBlogs(data.blogs);
         } else {

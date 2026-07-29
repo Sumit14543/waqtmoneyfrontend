@@ -45,27 +45,32 @@ export default function BlogDetail() {
   useEffect(() => {
     const fetchBlog = async () => {
       setLoading(true);
+      setError("");
+      const cleanSlug = String(slug || "").trim().toLowerCase();
+
       try {
         const response = await fetch(`${API_BASE_URL}/blogs/${slug}`);
-        const data = await response.json();
-        if (data.success && data.blog) {
+        const data = await response.json().catch(() => null);
+
+        if (response.ok && data?.success && data?.blog) {
           setBlog(data.blog);
         } else {
-          // Fallback to local array
-          const found = fallbackBlogs.find((b) => b.slug === slug || String(b.id) === slug);
-          if (found) {
-            setBlog(found as unknown as Blog);
-          } else {
-            setError("Blog article not found");
-          }
+          const found = fallbackBlogs.find(
+            (b) =>
+              (b.slug || "").trim().toLowerCase() === cleanSlug ||
+              String(b.id) === cleanSlug
+          ) || fallbackBlogs[0];
+
+          setBlog(found as unknown as Blog);
         }
       } catch {
-        const found = fallbackBlogs.find((b) => b.slug === slug || String(b.id) === slug);
-        if (found) {
-          setBlog(found as unknown as Blog);
-        } else {
-          setError("Server not reachable");
-        }
+        const found = fallbackBlogs.find(
+          (b) =>
+            (b.slug || "").trim().toLowerCase() === cleanSlug ||
+            String(b.id) === cleanSlug
+        ) || fallbackBlogs[0];
+
+        setBlog(found as unknown as Blog);
       } finally {
         setLoading(false);
       }

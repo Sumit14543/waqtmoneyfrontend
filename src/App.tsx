@@ -148,7 +148,9 @@ const App = () => (
 
           {/* PUBLIC BLOGS */}
           <Route path="/blog" element={withSuspense(Blog, <ContentPageFallback />)} />
+          <Route path="/blogs" element={withSuspense(Blog, <ContentPageFallback />)} />
           <Route path="/blog/:slug" element={withSuspense(BlogDetail, <ContentPageFallback />)} />
+          <Route path="/blogs/:slug" element={withSuspense(BlogDetail, <ContentPageFallback />)} />
 
           {/* ADMIN PORTALS */}
           <Route path="/admin" element={withSuspense(AdminLogin, <AuthPageFallback />)} />
