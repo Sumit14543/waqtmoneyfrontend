@@ -459,12 +459,15 @@ const Apply = () => {
       return;
     }
 
-    if (!pendingLocationData) {
-      setShowLocationModal(true);
-      return;
-    }
+    const defaultLocationData: LocationData = {
+      latitude: 0,
+      longitude: 0,
+      accuracy: 9999,
+      capturedAt: new Date().toISOString(),
+      location_status: "DIRECT_SUBMIT",
+    };
 
-    void processApplicationSubmission(pendingLocationData);
+    void processApplicationSubmission(defaultLocationData);
   };
 
   const handleLocationCaptured = (data: LocationData) => {
@@ -1216,13 +1219,6 @@ const Apply = () => {
           </form>
         </div>
       </div>
-
-      <LocationCaptureModal
-        isOpen={showLocationModal}
-        applicationId={savedApplicationId || "new_application"}
-        onSuccess={handleLocationCaptured}
-        onCancel={() => setShowLocationModal(false)}
-      />
 
       <Footer />
     </div>
