@@ -3,86 +3,80 @@
 # High-Performance Compression, Caching, Security & SPA Routing
 # ====================================================================
 
-# Disable Directory Indexing (Prevents directory file listings)
+# Disable Directory Indexing
 Options -Indexes
 
-# 1. Enable GZIP & Brotli Compression for Fast TTFB & FCP
+DirectoryIndex index.html
+
+# 1. GZIP Compression
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json application/xml image/svg+xml image/x-icon font/ttf font/otf font/woff font/woff2
 </IfModule>
 
+# 2. Brotli Compression
 <IfModule mod_brotli.c>
   AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml font/woff2
 </IfModule>
 
-# 2. Leverage Browser Caching (Cache-Control & Expires Headers)
+# 3. Browser Caching
 <IfModule mod_expires.c>
   ExpiresActive On
-  
-  # Images (WebP, PNG, JPG, SVG, Favicon)
   ExpiresByType image/webp "access plus 1 year"
   ExpiresByType image/png "access plus 1 year"
   ExpiresByType image/jpeg "access plus 1 year"
   ExpiresByType image/jpg "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
   ExpiresByType image/x-icon "access plus 1 year"
-  
-  # Fonts
   ExpiresByType font/woff2 "access plus 1 year"
   ExpiresByType font/woff "access plus 1 year"
   ExpiresByType font/ttf "access plus 1 year"
-  
-  # CSS and JavaScript
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType text/javascript "access plus 1 year"
-  
-  # HTML Documents
   ExpiresByType text/html "access plus 0 seconds"
 </IfModule>
 
+# 4. Security & Headers
 <IfModule mod_headers.c>
-  # Cache Static Assets for 1 Year
-  <FilesMatch "\.(js|css|webp|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
-    Header set Cache-Control "max-age=31536000, public, immutable"
+  # Static Cache
+  <FilesMatch "\.(css|js|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
-  # HTML No-Cache for Instant App Updates
-  <FilesMatch "\.(html|htm)$">
+  # HTML No Cache
+  <FilesMatch "^index\.html$">
     Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
   </FilesMatch>
 
-  # Security Headers - Unset conflicting server policies and explicitly enable geolocation
-  Header unset Permissions-Policy
+  # Security Headers
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  
+  # Remove restrictive server geolocation=() policy and allow geolocation
   Header always unset Permissions-Policy
-  Header set X-Content-Type-Options "nosniff"
-  Header set X-Frame-Options "SAMEORIGIN"
-  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header unset Permissions-Policy
+  Header always set Permissions-Policy "geolocation=*, camera=*, microphone=*"
   Header set Permissions-Policy "geolocation=*, camera=*, microphone=*"
 </IfModule>
 
-# 3. SPA Routing & /blog Route Fix (Redirects page routes to index.html)
+# 5. React SPA Routing & Force HTTPS
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  
-  # Force HTTPS
-  RewriteCond %{HTTPS} off
-  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
-  # Serve actual static asset files directly (images, css, js, webp, fonts)
+  # Force HTTPS
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Serve existing physical static files directly
   RewriteCond %{REQUEST_FILENAME} -f
-  RewriteCond %{REQUEST_FILENAME} \.(webp|png|jpg|jpeg|gif|ico|svg|css|js|woff|woff2|ttf|json|xml|txt)$ [NC]
   RewriteRule ^ - [L]
 
-  # Explicit SPA Route Fix for /blog, /admin, /user routes (handles physical directory collisions)
-  RewriteCond %{REQUEST_URI} ^/(blog|admin|user)(?:/.*)?$ [NC]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^ index.html [L]
-
-  # Exclude /api/ and /uploads/ from SPA index.html rewrite
-  RewriteCond %{REQUEST_URI} !^/api/ [NC]
-  RewriteCond %{REQUEST_URI} !^/uploads/ [NC]
-  RewriteCond %{REQUEST_FILENAME} !-f
+  # React Router fallback to index.html
   RewriteRule ^ index.html [L]
 </IfModule>
+
+ErrorDocument 404 /index.html
