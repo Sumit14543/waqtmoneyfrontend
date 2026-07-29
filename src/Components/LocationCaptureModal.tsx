@@ -101,7 +101,7 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
   );
 
   const requestGPSLocation = useCallback(
-    (isRetryAttempt = false) => {
+    (isRetryAttempt = false, useHighAccuracy = true) => {
       if (!navigator.geolocation) {
         setStatus("error");
         setErrorMessage("Geolocation is not supported by your browser. Please try another browser.");
@@ -113,9 +113,9 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
       setLowAccuracyWarning(false);
 
       const options: PositionOptions = {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0,
+        enableHighAccuracy: useHighAccuracy,
+        timeout: useHighAccuracy ? 12000 : 20000,
+        maximumAge: useHighAccuracy ? 0 : 60000,
       };
 
       navigator.geolocation.getCurrentPosition(
@@ -123,11 +123,10 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
           const { coords } = position;
           const isLowAcc = coords.accuracy > 100;
 
-          if (isLowAcc && !isRetryAttempt) {
+          if (isLowAcc && useHighAccuracy && !isRetryAttempt) {
             setLowAccuracyWarning(true);
-            // Attempt automatic high accuracy retry once
             setTimeout(() => {
-              requestGPSLocation(true);
+              requestGPSLocation(true, true);
             }, 1000);
             return;
           }
@@ -135,21 +134,36 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
           void saveLocationToBackend(coords, isLowAcc);
         },
         (error) => {
-          console.error("Geolocation error code:", error.code, error.message);
+          console.error("Geolocation error code:", error.code, error.message, "useHighAccuracy:", useHighAccuracy);
+
+          // If high accuracy failed due to position unavailable or timeout, attempt standard accuracy fallback
+          if (useHighAccuracy && (error.code === error.POSITION_UNAVAILABLE || error.code === error.TIMEOUT)) {
+            console.log("High accuracy failed, falling back to standard accuracy...");
+            requestGPSLocation(isRetryAttempt, false);
+            return;
+          }
+
           setStatus("denied");
+          const codeText = `[Code ${error.code}: ${error.message || "Denied"}]`;
 
           switch (error.code) {
             case error.PERMISSION_DENIED:
-              setErrorMessage("Location access is required to continue your loan application. Please allow location access.");
+              setErrorMessage(
+                `Location access is blocked by browser or OS settings. ${codeText}`
+              );
               break;
             case error.POSITION_UNAVAILABLE:
-              setErrorMessage("GPS signal unavailable. Please ensure Location / GPS services are enabled on your device.");
+              setErrorMessage(
+                `Location services unavailable on device. Please enable Location in Windows/Phone Settings. ${codeText}`
+              );
               break;
             case error.TIMEOUT:
-              setErrorMessage("Location request timed out. Please click Retry Location.");
+              setErrorMessage(
+                `Location request timed out. Please retry. ${codeText}`
+              );
               break;
             default:
-              setErrorMessage("Unable to capture your live GPS location. Please try again.");
+              setErrorMessage(`Unable to capture live location. ${codeText}`);
               break;
           }
         },
@@ -217,7 +231,7 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
 
             <div className="mt-5 flex items-center gap-2 rounded-full bg-purple-50 px-4 py-2 text-xs font-semibold text-purple-700">
               <MapPin className="h-4 w-4 animate-bounce text-purple-600" />
-              <span>HTML5 High Accuracy GPS Mode Active</span>
+              <span>HTML5 GPS Location Mode Active</span>
             </div>
           </div>
         )}
@@ -266,17 +280,18 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
               <div className="mt-3 border-t border-rose-100 pt-3 text-[11px] font-medium text-slate-600 space-y-1.5">
                 <p className="font-bold text-slate-800 flex items-center gap-1">
                   <Lock className="h-3.5 w-3.5 text-rose-600 inline" />
-                  Permission Changed? Click Reload or Retry below:
+                  How to fix:
                 </p>
-                <p>1. If Chrome shows <strong>"Reload this page"</strong> top banner, click <strong>Reload</strong>.</p>
-                <p>2. Or click <strong>Allow Location & Retry</strong> below.</p>
+                <p>1. <strong>Browser Lock Icon</strong>: Click 🔒 lock icon top left &rarr; set Location to <strong>Allow</strong>.</p>
+                <p>2. <strong>Windows 10/11 OS Settings</strong>: Open ⚙️ Windows Settings &rarr; <strong>Privacy & Security</strong> &rarr; <strong>Location</strong> &rarr; turn ON <strong>Location Services</strong> and <strong>Let desktop apps access location</strong>.</p>
+                <p>3. Click <strong>Allow Location & Retry</strong> below.</p>
               </div>
             </div>
 
             <div className="mt-6 flex w-full flex-col gap-2">
               <button
                 type="button"
-                onClick={() => requestGPSLocation(true)}
+                onClick={() => requestGPSLocation(true, true)}
                 className="w-full h-12 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#8048e2] to-[#bd56e4] text-sm font-bold text-white shadow-lg hover:opacity-95 transition"
               >
                 <RefreshCw className="h-4 w-4" />
