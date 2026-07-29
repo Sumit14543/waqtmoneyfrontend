@@ -183,18 +183,22 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
             </div>
 
             <h3 className="mt-6 text-xl font-extrabold text-[#071d3a]">
-              {status === "retrying" ? "Refining GPS Location..." : "Fetching Live Location..."}
+              {status === "retrying" ? "Refining GPS Location..." : "Location Permission Requested"}
             </h3>
 
-            <p className="mt-2 text-sm text-slate-500 font-medium max-w-[320px]">
-              {lowAccuracyWarning
-                ? "Low GPS accuracy detected. Retrying automatically for higher precision..."
-                : "Please allow location access when prompted by your browser."}
-            </p>
+            <div className="mt-3 rounded-2xl border border-purple-100 bg-purple-50/70 p-3.5 text-xs font-semibold text-purple-900 leading-relaxed max-w-[340px]">
+              {lowAccuracyWarning ? (
+                "Low GPS accuracy detected. Retrying automatically for higher precision..."
+              ) : (
+                <span className="flex flex-col items-center gap-1">
+                  <span>📍 Please click <strong>ALLOW</strong> on your browser popup at top-left to continue.</span>
+                </span>
+              )}
+            </div>
 
-            <div className="mt-6 flex items-center gap-2 rounded-full bg-purple-50 px-4 py-2 text-xs font-semibold text-purple-700">
+            <div className="mt-5 flex items-center gap-2 rounded-full bg-purple-50 px-4 py-2 text-xs font-semibold text-purple-700">
               <MapPin className="h-4 w-4 animate-bounce text-purple-600" />
-              <span>High Accuracy GPS Mode Active</span>
+              <span>HTML5 High Accuracy GPS Mode Active</span>
             </div>
           </div>
         )}
@@ -243,11 +247,11 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
               <div className="mt-3 border-t border-rose-100 pt-3 text-[11px] font-medium text-slate-600 space-y-1.5">
                 <p className="font-bold text-slate-800 flex items-center gap-1">
                   <Lock className="h-3.5 w-3.5 text-rose-600 inline" />
-                  How to enable location:
+                  Browser Popup Disabled / Blocked?
                 </p>
-                <p>1. Click the 🔒 lock / info icon in your browser URL address bar.</p>
+                <p>1. Click the 🔒 <strong>Lock / Info icon</strong> in your browser address bar (top left).</p>
                 <p>2. Change <strong>Location</strong> setting to <strong>Allow</strong>.</p>
-                <p>3. Click the <strong>Retry Location</strong> button below.</p>
+                <p>3. Click the <strong>Allow Location & Retry</strong> button below to open popup.</p>
               </div>
             </div>
 
@@ -258,7 +262,7 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
                 className="w-full h-12 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#8048e2] to-[#bd56e4] text-sm font-bold text-white shadow-lg hover:opacity-95 transition"
               >
                 <RefreshCw className="h-4 w-4" />
-                Retry Location
+                Allow Location & Retry
               </button>
 
               {onCancel && (
