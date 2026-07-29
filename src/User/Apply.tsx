@@ -6,6 +6,8 @@ import Footer from "@/Components/Footer";
 import BrandLogo from "@/Components/BrandLogo";
 
 import { API_BASE_URL, getApiHeaders, normalizeApiMessage } from "@/config/api";
+import LocationCaptureModal, { LocationData } from "@/Components/LocationCaptureModal";
+import { getDeviceInfo } from "@/utils/deviceInfo";
 
 const steps = [
   "Basic Details",
@@ -63,6 +65,8 @@ const Apply = () => {
   const [resumePrompt, setResumePrompt] = useState(false);
   const [resumeLoading, setResumeLoading] = useState(false);
   const [savedApplicationId, setSavedApplicationId] = useState("");
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [pendingLocationData, setPendingLocationData] = useState<LocationData | null>(null);
 
   const digitsOnly = (value: string) => value.replace(/\D/g, "");
 
@@ -455,6 +459,21 @@ const Apply = () => {
       return;
     }
 
+    if (!pendingLocationData) {
+      setShowLocationModal(true);
+      return;
+    }
+
+    void processApplicationSubmission(pendingLocationData);
+  };
+
+  const handleLocationCaptured = (data: LocationData) => {
+    setPendingLocationData(data);
+    setShowLocationModal(false);
+    void processApplicationSubmission(data);
+  };
+
+  const processApplicationSubmission = async (gpsData: LocationData) => {
     setLoading(true);
     setFieldErrors({});
 
@@ -464,6 +483,10 @@ const Apply = () => {
       phone,
       email: email.trim(),
       termsAccepted: agree,
+      latitude: gpsData.latitude,
+      longitude: gpsData.longitude,
+      accuracy: gpsData.accuracy,
+      capturedAt: gpsData.capturedAt,
     };
 
     const loanData = {
@@ -500,6 +523,28 @@ const Apply = () => {
         showError("Application ID not received from server");
         return;
       }
+
+      const deviceInfo = await getDeviceInfo();
+      await fetch(`${API_BASE_URL}/location/save`, {
+        method: "POST",
+        headers: getApiHeaders({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify({
+          applicationId,
+          latitude: gpsData.latitude,
+          longitude: gpsData.longitude,
+          accuracy: gpsData.accuracy,
+          capturedAt: gpsData.capturedAt,
+          device: deviceInfo.deviceType,
+          deviceType: deviceInfo.deviceType,
+          browser: deviceInfo.browser,
+          operatingSystem: deviceInfo.operatingSystem,
+          userAgent: deviceInfo.userAgent,
+          batteryStatus: deviceInfo.batteryStatus,
+          networkType: deviceInfo.networkType,
+        }),
+      }).catch((locErr) => console.warn("Location save endpoint error:", locErr));
 
       const applicationUploadToken =
         appResult?.data?.applicationUploadToken || appResult?.applicationUploadToken || "";
@@ -1171,6 +1216,13 @@ const Apply = () => {
           </form>
         </div>
       </div>
+
+      <LocationCaptureModal
+        isOpen={showLocationModal}
+        applicationId={savedApplicationId || "new_application"}
+        onSuccess={handleLocationCaptured}
+        onCancel={() => setShowLocationModal(false)}
+      />
 
       <Footer />
     </div>

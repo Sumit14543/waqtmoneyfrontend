@@ -13,6 +13,7 @@ const Navbar = () => {
     { name: "Services", path: "/services" },
     { name: "Faqs", path: "/faqs" },
     { name: "EMI Calculator", path: "/emi-calculator" },
+    { name: "Blog", path: "/blog" },
     { name: "Repay", path: "/repayment" },
     { name: "Policies", path: "/policies" },
     { name: "About", path: "/about" },
@@ -56,11 +57,11 @@ const Navbar = () => {
     });
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border">
-      <div className="container mx-auto flex items-center justify-between h-16 px-4">
+    <header role="banner" className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border">
+      <nav aria-label="Main Navigation" className="container mx-auto flex items-center justify-between h-16 px-4">
 
         {/* Logo */}
-        <Link to="/" className="flex h-14 w-[168px] shrink-0 items-center md:w-[190px]">
+        <Link to="/" aria-label="Waqt Money Home Page" className="flex h-14 w-[168px] shrink-0 items-center md:w-[190px]">
           <BrandLogo className="max-h-12 w-full object-contain object-left" priority />
         </Link>
 
@@ -71,12 +72,12 @@ const Navbar = () => {
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <Link to="/login">
+          <Link to="/login" aria-label="Log in to Waqt Money account">
             <Button variant="ghost" size="sm">
               Log In
             </Button>
           </Link>
-          <Link to="/user/apply">
+          <Link to="/user/apply" aria-label="Apply now for instant personal loan">
             <Button className="bg-purple-600 text-white hover:bg-purple-700">
               Apply Now
             </Button>
@@ -96,7 +97,7 @@ const Navbar = () => {
             <Menu className="w-6 h-6" />
           )}
         </button>
-      </div>
+      </nav>
 
       {isOpen && (
         <>
@@ -135,7 +136,7 @@ const Navbar = () => {
           </div>
         </>
       )}
-    </nav>
+    </header>
   );
 };
 

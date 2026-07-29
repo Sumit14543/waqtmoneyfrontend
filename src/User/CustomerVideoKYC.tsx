@@ -161,9 +161,15 @@ const VideoVerification: React.FC = () => {
       schedulePreviewAutoStop();
 
       return mediaStream;
-    } catch (cameraError) {
+    } catch (cameraError: any) {
       console.error("Video KYC camera error:", cameraError);
-      setError("Camera and microphone permission is required for video KYC.");
+      if (cameraError?.name === "NotAllowedError" || cameraError?.name === "PermissionDeniedError") {
+        setError("Camera and microphone permission denied. Click the Lock 🔒 icon in your browser address bar (top left) -> allow Camera & Microphone, then try again.");
+      } else if (cameraError?.name === "NotFoundError" || cameraError?.name === "DevicesNotFoundError") {
+        setError("No camera/microphone found. Please connect a camera or use a mobile device.");
+      } else {
+        setError("Camera and microphone permission is required for video KYC. Please allow access in browser settings.");
+      }
       return null;
     }
   };
@@ -291,26 +297,6 @@ const VideoVerification: React.FC = () => {
     void startCamera();
   };
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-
-    if (!file) return;
-
-    if (!file.type.startsWith("video/")) {
-      alert("Please upload only a video file.");
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-    clearRecordingTimer();
-    stopCamera();
-    setRecording(false);
-    setVideoBlob(file);
-    setVideoFileName(file.name);
-    setError("");
-    setVideoUrl(url);
-  };
-
   const submitVideo = async () => {
     if (loading) return;
 
@@ -322,7 +308,7 @@ const VideoVerification: React.FC = () => {
     }
 
     if (!videoBlob) {
-      setError("Please record or upload video first.");
+      setError("Please record live video first.");
       return;
     }
 
@@ -397,17 +383,7 @@ const VideoVerification: React.FC = () => {
               </h2>
 
               <p className="mt-3 text-[15px] leading-6 text-purple-700 sm:mt-6 sm:text-[17px]">
-                Record a 20-second video introduction or{" "}
-                <label className="bg-blue-600 text-white px-1 cursor-pointer">
-                  upload
-                  <input
-                    type="file"
-                    accept="video/*"
-                    className="hidden"
-                    onChange={handleUpload}
-                  />
-                </label>{" "}
-                a video file
+                Record a live 20-second video verification introduction.
               </p>
             </div>
           </div>
@@ -489,8 +465,9 @@ const VideoVerification: React.FC = () => {
           <div className="mt-5 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4">
             {!recording && !videoUrl && (
               <button
+                type="button"
                 onClick={startRecording}
-                className="flex justify-center gap-3 rounded-full bg-red-500 px-6 py-3 text-base font-bold text-white shadow-lg hover:bg-red-600 sm:px-8 sm:py-4 sm:text-lg"
+                className="flex justify-center items-center gap-3 rounded-full bg-red-500 px-6 py-3 text-base font-bold text-white shadow-lg hover:bg-red-600 sm:px-8 sm:py-4 sm:text-lg"
               >
                 <Circle className="w-4 h-4 fill-white" />
                 Start Recording

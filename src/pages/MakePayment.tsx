@@ -264,7 +264,7 @@ const MakePayment = () => {
       : null;
 
     return application
-      ? { ...application, ...responseCrmApplication, ...sessionCrmApplication }
+      ? { ...responseCrmApplication, ...sessionCrmApplication, ...application }
       : sessionCrmApplication;
   }, [application, sessionCrmStatus]);
   const hasVerifiedRepaymentSession = Boolean(effectiveApplication);
@@ -461,6 +461,7 @@ const MakePayment = () => {
     const maturityAmount = Number.isFinite(totalRepayableAmount) && totalRepayableAmount > 0
       ? totalRepayableAmount
       : 0;
+
     const payableAmount =
       paymentType === "full"
         ? outstandingToday
@@ -471,13 +472,6 @@ const MakePayment = () => {
     const dpdInterest = rawDpdInterest > 0
       ? rawDpdInterest
       : Math.max(0, outstandingToday - maturityAmount);
-
-    const disbursalDateValue = effectiveApplication?.disbursal_date || "";
-    const disbursalDate = disbursalDateValue ? new Date(disbursalDateValue) : null;
-    const validDisbursalDate =
-      disbursalDate && !Number.isNaN(disbursalDate.getTime()) && disbursalDate.getFullYear() >= 2020
-        ? disbursalDate
-        : null;
 
     return {
       loanId: effectiveApplication?.loan_id || effectiveApplication?.application_id || repaymentLookupId || "-",

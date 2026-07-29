@@ -2,6 +2,7 @@ import Navbar from "@/Components/Navbar";
 import { type FormEvent, useState } from "react";
 import { CheckCircle2, Clock, Mail, MapPin, Phone, X } from "lucide-react";
 import Footer from "@/Components/Footer";
+import SEO from "@/Components/SEO";
 
 import { API_BASE_URL } from "@/config/api";
 
@@ -97,17 +98,39 @@ const Contact = () => {
     }
   };
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Waqt Money",
+    "description": "Get in touch with Waqt Money customer support for quick payday and personal loan assistance.",
+    "url": "https://waqtmoney.com/contact",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+91-9217086608",
+      "contactType": "customer service",
+      "email": "support@waqtmoney.com",
+      "availableLanguage": ["English", "Hindi"]
+    }
+  };
+
   return (
     <>
+      <SEO
+        title="Contact Us - Customer Support & Office Location"
+        description="Contact Waqt Money support. Call +91 9217086608, email support@waqtmoney.com, or visit our registered corporate office in Sector 63, Noida (UP) for assistance."
+        keywords="contact Waqt Money, customer support number, office location, loan helpdesk"
+        schema={schema}
+      />
       <Navbar />
-      <section className="bg-gradient-to-br from-blue-50 to-white dark:from-slate-900 dark:to-slate-800 md:py-32 py-24" id="contact">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <main>
+        <section className="bg-gradient-to-br from-blue-50 to-white dark:from-slate-900 dark:to-slate-800 md:py-32 py-24" id="contact">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-          {/* Heading */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">
-              Contact <span className="text-primary">Waqt Money </span>
-            </h2>
+            {/* Heading */}
+            <div className="text-center mb-16">
+              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">
+                Contact <span className="text-primary">Waqt Money </span>
+              </h1>
             <p className="mt-4 text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto">
               Get instant payday loans with quick approval. Apply now and receive funds directly in your account.
             </p>
@@ -322,9 +345,11 @@ const Contact = () => {
           </div>
         </div>
       )}
+      </main>
       <Footer/>
     </>
   );
 };
+
 
 export default Contact;

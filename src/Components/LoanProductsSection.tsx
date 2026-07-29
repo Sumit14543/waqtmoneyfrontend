@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Wallet, GraduationCap, Briefcase, Heart } from "lucide-react";
+import { ArrowRight, Wallet, GraduationCap, Briefcase, Heart, Zap } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 const products = [
@@ -11,6 +11,7 @@ const products = [
     tenure: "3 - 36 months",
     desc: "For your personal needs — travel, wedding, home renovation or any emergency expense.",
     color: "bg-primary/10 text-primary",
+    path: "/loans/personal-loan",
   },
   {
     icon: Briefcase,
@@ -20,15 +21,17 @@ const products = [
     tenure: "6 - 48 months",
     desc: "Fuel your business growth with quick capital for inventory, equipment, or expansion.",
     color: "bg-accent/10 text-accent",
+    path: "/loans/business-loan",
   },
   {
-    icon: GraduationCap,
-    title: "Education Loan",
-    amount: "Up to ₹3,00,000",
-    rate: "From 10% p.a.",
-    tenure: "6 - 24 months",
-    desc: "Invest in your future. Cover tuition fees, books, and other educational expenses.",
-    color: "bg-primary/10 text-primary",
+    icon: Zap,
+    title: "Payday Loan",
+    amount: "Up to ₹2,00,000",
+    rate: "From 1% flat/mo.",
+    tenure: "15 - 90 days",
+    desc: "Instant salary cash advance before payday to cover urgent emergency expenses.",
+    color: "bg-purple-100 text-purple-700",
+    path: "/loans/payday-loan",
   },
   {
     icon: Heart,
@@ -38,6 +41,7 @@ const products = [
     tenure: "3 - 36 months",
     desc: "Don't let finances come in the way of health. Get instant funds for medical emergencies.",
     color: "bg-accent/10 text-accent",
+    path: "/loans/medical-loan",
   },
 ];
 
@@ -59,7 +63,7 @@ const LoanProductsSection = () => {
             Whether it's personal, business, education, or medical — we have a tailored loan product just for you.
           </p>
         </motion.div>
-
+ 
         <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {products.map((p, i) => (
             <motion.div
@@ -75,7 +79,7 @@ const LoanProductsSection = () => {
               </div>
               <h3 className="font-display text-xl font-bold mb-2">{p.title}</h3>
               <p className="text-sm text-muted-foreground mb-4">{p.desc}</p>
-
+ 
               <div className="grid grid-cols-3 gap-3 mb-5">
                 <div className="bg-secondary rounded-lg p-2.5 text-center">
                   <p className="text-xs text-muted-foreground">Amount</p>
@@ -90,18 +94,20 @@ const LoanProductsSection = () => {
                   <p className="text-xs font-semibold text-foreground">{p.tenure}</p>
                 </div>
               </div>
-              <Button
-                disabled
-                variant="ghost"
-                size="sm"
-                className="text-primary hover:text-primary/80 p-0 h-auto font-semibold flex items-center gap-1 hover:gap-2 transition-all"
-              >
-                Apply Now
-                <ArrowRight className="w-4 h-4" />
-              </Button>
+              <Link to={p.path} aria-label={`Explore ${p.title} options`}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-primary/80 p-0 h-auto font-semibold flex items-center gap-1 hover:gap-2 transition-all"
+                >
+                  Explore {p.title}
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
             </motion.div>
           ))}
         </div>
+
       </div>
     </section>
   );

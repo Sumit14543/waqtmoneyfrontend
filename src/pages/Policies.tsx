@@ -1,216 +1,136 @@
-import Footer from "@/Components/Footer";
+import React from "react";
+import { Link } from "react-router-dom";
+import { Lock, FileText, BadgeHelp, Scale, ShieldCheck, AlertTriangle } from "lucide-react";
 import Navbar from "@/Components/Navbar";
-import {
-  CheckCircle2,
-  Cookie,
-  Database,
-  FileText,
-  Lock,
-  Mail,
-  RefreshCcw,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
+import Footer from "@/Components/Footer";
+import SEO from "@/Components/SEO";
 
-const sections = [
+const policyDirectory = [
   {
-    id: "information",
-    icon: Database,
-    title: "Information We Collect",
-    points: [
-      "Personal details like name, mobile number, email, PAN, Aadhaar, address, and date of birth.",
-      "Financial details like income, employment information, bank details, and requested loan amount.",
-      "Technical details like device information, browser type, IP address, cookies, and website usage data.",
-    ],
-  },
-  {
-    id: "usage",
-    icon: Users,
-    title: "How We Use Your Data",
-    points: [
-      "To verify your identity, check eligibility, process applications, and provide customer support.",
-      "To send important updates related to your loan application, repayment, and account activity.",
-      "To improve our services, website experience, fraud prevention, and security systems.",
-    ],
-  },
-  {
-    id: "sharing",
-    icon: ShieldCheck,
-    title: "Data Sharing",
-    points: [
-      "We do not sell your personal information.",
-      "Information may be shared with lending partners, NBFC partners, credit bureaus, verification agencies, payment partners, or regulators when required.",
-      "Only the information needed to provide, verify, secure, or improve our services is shared.",
-    ],
-  },
-  {
-    id: "security",
+    title: "Privacy Policy",
+    desc: "Understand how we protect, process, and encrypt your personal and financial details.",
+    link: "/privacy-policy",
     icon: Lock,
-    title: "Data Security",
-    points: [
-      "We use reasonable technical, administrative, and physical safeguards to protect your information.",
-      "Sensitive information is handled through secured systems and access controls.",
-      "No online platform can guarantee absolute security, but we continuously work to reduce risk.",
-    ],
+    color: "text-blue-600 bg-blue-50 border-blue-100",
   },
   {
-    id: "cookies",
-    icon: Cookie,
-    title: "Cookies",
-    points: [
-      "We may use cookies to remember preferences, analyze website traffic, and improve performance.",
-      "You can manage or disable cookies from your browser settings.",
-    ],
-  },
-  {
-    id: "rights",
+    title: "Terms & Conditions",
+    desc: "Review rules, user agreements, and borrowing mandates for our credit services.",
+    link: "/terms-conditions",
     icon: FileText,
-    title: "Your Rights",
-    points: [
-      "You may request access, correction, or deletion of your personal information, subject to legal requirements.",
-      "You can opt out of promotional communication while still receiving important service messages.",
-    ],
+    color: "text-purple-600 bg-purple-50 border-purple-100",
   },
   {
-    id: "updates",
-    icon: RefreshCcw,
-    title: "Policy Updates",
-    points: [
-      "We may update this Privacy Policy from time to time.",
-      "All changes will be posted on this page with an updated effective date.",
-    ],
+    title: "Grievance Redressal",
+    desc: "Check our structured resolution paths, officer details, and regulatory escalations.",
+    link: "/grievance-redressal",
+    icon: BadgeHelp,
+    color: "text-emerald-600 bg-emerald-50 border-emerald-100",
   },
-];
-
-const highlights = [
-  "No sale of personal data",
-  "Secure digital verification",
-  "Limited partner sharing",
-  "User data rights supported",
+  {
+    title: "Fair Practices Code",
+    desc: "Learn about Waqt Money's ethical lending commitment and RBI partner compliances.",
+    link: "/fair-practices-code",
+    icon: Scale,
+    color: "text-indigo-600 bg-indigo-50 border-indigo-100",
+  },
+  {
+    title: "Responsible Lending",
+    desc: "Read our borrower protection mandates, credit education guides, and code of conduct.",
+    link: "/responsible-lending",
+    icon: ShieldCheck,
+    color: "text-orange-600 bg-orange-50 border-orange-100",
+  },
+  {
+    title: "Disclaimer Policy",
+    desc: "Read key declarations regarding our loan facilitation services and NBFC integrations.",
+    link: "/disclaimer",
+    icon: AlertTriangle,
+    color: "text-amber-600 bg-amber-50 border-amber-100",
+  },
+  {
+    title: "Refund & Cancellation",
+    desc: "Review terms governing processing fees deductions and repayment return timelines.",
+    link: "/refund-policy",
+    icon: FileText,
+    color: "text-rose-600 bg-rose-50 border-rose-100",
+  }
 ];
 
 export default function Policies() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Waqt Money Policies Directory Hub",
+    "description": "Access all legal agreements, policies, grievance redressal paths, and disclaimers for Waqt Money services.",
+    "url": "https://waqtmoney.com/policies"
+  };
+
   return (
     <>
+      <SEO
+        title="Waqt Money Policies Hub - Legal & Compliance Documents"
+        description="Access all official legal documents, privacy guidelines, customer grievance redressal procedures, refund policies, and lending terms for Waqt Money."
+        keywords="loan policies, privacy guidelines, terms and conditions, fair practices, grievance officer, refund policy"
+        schema={schema}
+      />
       <Navbar />
 
-      <main className="bg-gradient-to-b from-white via-[#fbf9ff] to-white pt-24">
+      <main className="bg-gradient-to-b from-white via-[#fbf9ff] to-white pt-24 min-h-screen">
         <section className="container mx-auto px-4 py-12 md:py-16">
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700">
-              <ShieldCheck className="h-4 w-4" />
-              Privacy & Data Protection
-            </div>
-
-            <h1 className="text-4xl font-bold leading-tight text-slate-950 md:text-5xl">
-              Privacy <span className="text-gradient">Policy</span>
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="inline-flex rounded-full bg-purple-50 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-700 mb-3">
+              Corporate Governance
+            </span>
+            <h1 className="text-3xl md:text-5xl font-bold text-slate-900 leading-tight">
+              Legal & <span className="text-purple-600">Compliance Hub</span>
             </h1>
-
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600 md:text-lg">
-              This policy explains how Waqt Money collects, uses, protects, and
-              shares your information when you use our website and loan services.
+            <p className="mt-3 text-sm md:text-base text-slate-600 leading-relaxed">
+              Waqt Money values transparency and compliance. Review our consumer terms, privacy parameters, grievance officers, and responsible lending guidelines.
             </p>
-
-            {/* <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm">
-              <span className="rounded-full border border-purple-100 bg-white px-4 py-2 font-medium text-slate-700 shadow-sm">
-                Effective Date: 04 May 2026
-              </span>
-              <span className="rounded-full border border-orange-100 bg-white px-4 py-2 font-medium text-slate-700 shadow-sm">
-                Waqt Money Services
-              </span>
-            </div> */}
           </div>
 
-          <div className="mt-10 grid gap-8 lg:grid-cols-[280px_1fr]">
-            <aside className="lg:sticky lg:top-24 lg:self-start">
-              <div className="rounded-xl border border-purple-100 bg-white p-5 shadow-sm">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-slate-900">
-                  On This Page
-                </h2>
-                <nav className="mt-4 space-y-2">
-                  {sections.map((section) => (
-                    <a
-                      key={section.id}
-                      href={`#${section.id}`}
-                      className="block rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-purple-50 hover:text-purple-700"
-                    >
-                      {section.title}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-
-              <div className="mt-5 rounded-xl border border-purple-100 bg-white p-5 shadow-sm">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-slate-900">
-                  Key Points
-                </h2>
-                <ul className="mt-4 space-y-3">
-                  {highlights.map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-2 text-sm text-slate-600"
-                    >
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-purple-600" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </aside>
-
-            <div className="space-y-5">
-              {sections.map((section) => {
-                const Icon = section.icon;
-
-                return (
-                  <section
-                    key={section.id}
-                    id={section.id}
-                    className="scroll-mt-28 rounded-xl border border-purple-100 bg-white p-5 shadow-sm md:p-7"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      <h2 className="text-xl font-bold text-slate-950">
-                        {section.title}
-                      </h2>
-                    </div>
-
-                    <ul className="mt-5 space-y-3">
-                      {section.points.map((point) => (
-                        <li
-                          key={point}
-                          className="flex gap-3 text-sm leading-7 text-slate-600"
-                        >
-                          <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-orange-400" />
-                          {point}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                );
-              })}
-
-              <section className="rounded-xl border border-purple-100 bg-gradient-to-r from-purple-600 to-violet-600 p-5 text-white shadow-sm md:p-7">
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+            {policyDirectory.map((p) => {
+              const Icon = p.icon;
+              return (
+                <Link
+                  key={p.title}
+                  to={p.link}
+                  className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:border-purple-200 transition-all flex flex-col justify-between"
+                >
                   <div>
-                    <h2 className="text-xl font-bold">Privacy Questions?</h2>
-                    <p className="mt-2 text-sm leading-6 text-purple-50">
-                      For privacy concerns, corrections, or data requests,
-                      contact our support team.
+                    <div className={`h-11 w-11 rounded-xl flex items-center justify-center border ${p.color} mb-5`}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-lg font-bold text-slate-900 group-hover:text-purple-600 transition-colors">
+                      {p.title}
+                    </h2>
+                    <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                      {p.desc}
                     </p>
                   </div>
-                  <a
-                    href="mailto:support@waqtmoney.com"
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-5 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
-                  >
-                    <Mail className="h-4 w-4" />
-                    Email Support
-                  </a>
-                </div>
-              </section>
-            </div>
+                  <div className="mt-6 flex items-center gap-1 text-sm font-semibold text-purple-600 group-hover:gap-1.5 transition-all">
+                    Read Document
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-4 w-4"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="m12 5 7 7-7 7" />
+                    </svg>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       </main>

@@ -1,0 +1,24 @@
+# Waqt Money
+
+> Fast, Paperless Instant Personal Loans & MSME Business Credit Lines in India.
+
+Waqt Money is a digital lending platform operating in partnership with RBI-registered NBFC Waqt Finance Pvt Ltd (RBI License No. B.10.00143).
+
+## Key Financial Services
+- [Instant Personal Loans](https://waqtmoney.com/loans/personal-loan): Unsecured personal loans up to ₹5,00,000 for salaried professionals with 5-minute approval.
+- [MSME Business Loans](https://waqtmoney.com/loans/business-loan): Working capital credit lines up to ₹50,00,000 without collateral.
+- [Payday Cash Advance](https://waqtmoney.com/loans/payday-loan): Short-term salary advance loans for immediate financial needs.
+- [Property Loans](https://waqtmoney.com/loans/loan-against-property): Secured loans against residential or commercial real estate.
+- [EMI Calculator](https://waqtmoney.com/emi-calculator): Interactive loan EMI calculator for principal, interest, and tenure.
+
+## Blog & Financial Guides
+- [Blog Masterclass](https://waqtmoney.com/blog): Comprehensive financial literacy articles and loan guides.
+
+## Documentation & Legal Policies
+- [About Us](https://waqtmoney.com/about): Company background, mission, and leadership.
+- [Services](https://waqtmoney.com/services): Overview of loan products and financial solutions.
+- [FAQs](https://waqtmoney.com/faqs): Frequently asked questions regarding eligibility, interest rates, and disbursals.
+- [Privacy Policy](https://waqtmoney.com/privacy-policy): Data security and privacy standards.
+- [Terms & Conditions](https://waqtmoney.com/terms-conditions): Terms of service.
+- [Grievance Redressal](https://waqtmoney.com/grievance-redressal): RBI grievance officer details and contact info.
+- [Fair Practices Code](https://waqtmoney.com/fair-practices-code): Code of fair practices in lending.

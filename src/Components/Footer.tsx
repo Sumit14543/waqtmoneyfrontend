@@ -2,6 +2,7 @@ import {
   AlertTriangle,
   BadgeHelp,
   BriefcaseBusiness,
+  CreditCard,
   FileText,
   HelpCircle,
   Home,
@@ -11,23 +12,38 @@ import {
   MapPin,
   PhoneCall,
   ShieldCheck,
+  Zap
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import BrandLogo from "@/Components/BrandLogo";
 
 const quickLinks = [
   { name: "Home", link: "/", icon: Home },
-  { name: "Services", link: "/services", icon: BriefcaseBusiness },
+  { name: "All Services", link: "/services", icon: BriefcaseBusiness },
+  { name: "Blog Articles", link: "/blog", icon: FileText },
   { name: "About Us", link: "/about", icon: Info },
   { name: "Contact Us", link: "/contact", icon: PhoneCall },
   { name: "FAQs", link: "/faqs", icon: HelpCircle },
 ];
 
+const loanProducts = [
+  { name: "Personal Loan", link: "/loans/personal-loan", icon: CreditCard },
+  { name: "Business Loan", link: "/loans/business-loan", icon: BriefcaseBusiness },
+  { name: "Payday Loan", link: "/pay-day-loan", icon: Zap },
+  { name: "Short Term Loan", link: "/loans/credit-services", icon: CreditCard },
+  { name: "Loan Against Property", link: "/loans/loan-against-property", icon: Home },
+  { name: "Vehicle Loan", link: "/loans/vehicle-loan", icon: CreditCard },
+  { name: "Medical Loan", link: "/loans/medical-loan", icon: ShieldCheck },
+];
+
 const policies = [
-  { name: "Privacy Policy", link: "/privacy-policies", icon: LockKeyhole },
+  { name: "Privacy Policy", link: "/privacy-policy", icon: LockKeyhole },
   { name: "Terms & Conditions", link: "/terms-conditions", icon: FileText },
   { name: "Grievance Redressal", link: "/grievance-redressal", icon: BadgeHelp },
   { name: "Fair Practices Code", link: "/fair-practices-code", icon: FileText },
+  { name: "Responsible Lending", link: "/responsible-lending", icon: ShieldCheck },
+  { name: "Refund Policy", link: "/refund-policy", icon: FileText },
+  { name: "Disclaimer", link: "/disclaimer", icon: AlertTriangle },
 ];
 
 const contactItems = [
@@ -42,10 +58,10 @@ const Footer = () => {
       <div className="h-1 bg-gradient-to-r from-purple-600 via-violet-500 to-orange-400" />
 
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_1fr_1.25fr] lg:gap-10">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8">
           {/* Brand */}
           <div className="flex flex-col items-center sm:col-span-2 sm:items-start lg:col-span-1">
-            <Link to="/" className="mb-4 inline-flex w-fit items-center justify-center">
+            <Link to="/" aria-label="Waqt Money Home Page" className="mb-4 inline-flex w-fit items-center justify-center">
               <BrandLogo className="h-14 w-auto object-contain md:-mt-3" />
             </Link>
 
@@ -67,6 +83,32 @@ const Footer = () => {
             </div>
           </div>
 
+          {/* Loan Products */}
+          <div>
+            <h4 className="mb-3 text-base font-semibold text-slate-950">
+              Loan Products
+            </h4>
+            <span className="mb-4 block h-0.5 w-10 bg-purple-600" />
+
+            <ul className="grid gap-2.5 text-sm text-slate-600">
+              {loanProducts.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <li key={item.name}>
+                    <Link
+                      to={item.link}
+                      className="inline-flex items-center gap-2.5 transition hover:text-purple-600 hover:translate-x-0.5"
+                    >
+                      <Icon className="h-3.5 w-3.5 shrink-0 text-purple-600" />
+                      <span>{item.name}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
           {/* Quick Links */}
           <div>
             <h4 className="mb-3 text-base font-semibold text-slate-950">
@@ -74,7 +116,7 @@ const Footer = () => {
             </h4>
             <span className="mb-4 block h-0.5 w-10 bg-purple-600" />
 
-            <ul className="grid gap-3 text-sm text-slate-600">
+            <ul className="grid gap-2.5 text-sm text-slate-600">
               {quickLinks.map((item) => {
                 const Icon = item.icon;
 
@@ -82,9 +124,9 @@ const Footer = () => {
                   <li key={item.name}>
                     <Link
                       to={item.link}
-                      className="inline-flex items-center gap-3 transition hover:text-purple-600"
+                      className="inline-flex items-center gap-2.5 transition hover:text-purple-600 hover:translate-x-0.5"
                     >
-                      <Icon className="h-4 w-4 shrink-0 text-purple-600" />
+                      <Icon className="h-3.5 w-3.5 shrink-0 text-purple-600" />
                       <span>{item.name}</span>
                     </Link>
                   </li>
@@ -100,7 +142,7 @@ const Footer = () => {
             </h4>
             <span className="mb-4 block h-0.5 w-10 bg-orange-400" />
 
-            <ul className="grid gap-3 text-sm text-slate-600">
+            <ul className="grid gap-2.5 text-sm text-slate-600">
               {policies.map((item) => {
                 const Icon = item.icon;
 
@@ -108,9 +150,9 @@ const Footer = () => {
                   <li key={item.name}>
                     <Link
                       to={item.link}
-                      className="inline-flex items-center gap-3 transition hover:text-purple-600"
+                      className="inline-flex items-center gap-2.5 transition hover:text-purple-600 hover:translate-x-0.5"
                     >
-                      <Icon className="h-4 w-4 shrink-0 text-orange-500" />
+                      <Icon className="h-3.5 w-3.5 shrink-0 text-orange-500" />
                       <span>{item.name}</span>
                     </Link>
                   </li>
@@ -182,8 +224,9 @@ const Footer = () => {
           <p>&copy; 2026 Waqt Money. All rights reserved.</p>
           <p>NBFC Partner: Waqt Finance Pvt Ltd</p>
           <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 md:justify-end">
-            {/* <Link
-              to="/privacy-policies"
+            <Link
+              to="/privacy-policy"
+              aria-label="Read Waqt Money Privacy Policy"
               className="transition hover:text-purple-600"
             >
               Privacy Policy
@@ -191,18 +234,24 @@ const Footer = () => {
 
             <Link
               to="/terms-conditions"
+              aria-label="Read Waqt Money Terms and Conditions"
               className="transition hover:text-purple-600"
             >
-              Terms
+              Terms &amp; Conditions
             </Link>
 
-            <Link to="/contact" className="transition hover:text-purple-600">
-              Support
-            </Link> */}
+            <Link
+              to="/contact"
+              aria-label="Contact Waqt Money Customer Support"
+              className="transition hover:text-purple-600"
+            >
+              Customer Support
+            </Link>
             
             <p>RBI LICENCE NO.: B.10.00143</p>
           </div>
         </div>
+
       </div>
     </footer>
   );

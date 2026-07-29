@@ -184,11 +184,100 @@ const KycAadhaar = () => {
     return parts ? parts.join(" ") : "";
   };
 
+  const validateAadhaarAgainstMask = (aadhaarStr: string, maskStr: string) => {
+    if (!maskStr || !aadhaarStr) return { isValid: true, error: "" };
+
+    const cleanMask = String(maskStr).replace(/[\s-]/g, "");
+    const cleanAadhaar = String(aadhaarStr).replace(/\D/g, "");
+
+    if (cleanMask.length === 12) {
+      const first2Mask = cleanMask.slice(0, 2);
+      if (/^\d{2}$/.test(first2Mask) && cleanAadhaar.length >= 2) {
+        if (cleanAadhaar.slice(0, 2) !== first2Mask) {
+          return {
+            isValid: false,
+            error: `First 2 digits must match fetched Aadhaar (${first2Mask}...)`,
+          };
+        }
+      } else if (/^\d{1}$/.test(first2Mask[0]) && cleanAadhaar.length >= 1) {
+        if (cleanAadhaar[0] !== first2Mask[0]) {
+          return {
+            isValid: false,
+            error: `First digit must match fetched Aadhaar (${first2Mask[0]}...)`,
+          };
+        }
+      }
+
+      if (cleanAadhaar.length === 12) {
+        const last4Mask = cleanMask.slice(-4);
+        const last2Mask = cleanMask.slice(-2);
+
+        if (/^\d{4}$/.test(last4Mask) && cleanAadhaar.slice(-4) !== last4Mask) {
+          return {
+            isValid: false,
+            error: `Last 4 digits must match fetched Aadhaar (...${last4Mask})`,
+          };
+        }
+        if (/^\d{2}$/.test(last2Mask) && cleanAadhaar.slice(-2) !== last2Mask) {
+          return {
+            isValid: false,
+            error: `Last 2 digits must match fetched Aadhaar (...${last2Mask})`,
+          };
+        }
+      }
+    } else {
+      const first2Match = cleanMask.match(/^(\d{2})/);
+      const last4Match = cleanMask.match(/(\d{4})$/);
+      const last2Match = cleanMask.match(/(\d{2})$/);
+
+      if (first2Match && cleanAadhaar.length >= 2) {
+        if (cleanAadhaar.slice(0, 2) !== first2Match[1]) {
+          return {
+            isValid: false,
+            error: `First 2 digits must match fetched Aadhaar (${first2Match[1]}...)`,
+          };
+        }
+      } else if (first2Match && cleanAadhaar.length >= 1) {
+        if (cleanAadhaar[0] !== first2Match[1][0]) {
+          return {
+            isValid: false,
+            error: `First digit must match fetched Aadhaar (${first2Match[1][0]}...)`,
+          };
+        }
+      }
+
+      if (cleanAadhaar.length === 12) {
+        if (last4Match && cleanAadhaar.slice(-4) !== last4Match[1]) {
+          return {
+            isValid: false,
+            error: `Last 4 digits must match fetched Aadhaar (...${last4Match[1]})`,
+          };
+        } else if (last2Match && cleanAadhaar.slice(-2) !== last2Match[1]) {
+          return {
+            isValid: false,
+            error: `Last 2 digits must match fetched Aadhaar (...${last2Match[1]})`,
+          };
+        }
+      }
+    }
+
+    return { isValid: true, error: "" };
+  };
+
   const handleChange = (value: string) => {
     const cleaned = value.replace(/\D/g, "").slice(0, 12);
+    const validation = validateAadhaarAgainstMask(cleaned, aadhaarMasked);
+
+    if (!validation.isValid && (cleaned.length <= 2 || cleaned.length === 12)) {
+      setError(validation.error);
+      if (cleaned.length <= 2) {
+        return;
+      }
+    } else {
+      setError("");
+    }
+
     setAadhaar(cleaned);
-    setAadhaarMasked("");
-    setError("");
   };
 
   const maskAadhaar = (value: string) => {
@@ -232,7 +321,7 @@ const KycAadhaar = () => {
   };
 
   const previewName = applicantName || "Your Name";
-  const previewMaskedAadhaar = maskAadhaar(aadhaar) || formatMaskedAadhaar(aadhaarMasked) || "XXXX XXXX XXXX";
+  const previewMaskedAadhaar = formatMaskedAadhaar(aadhaarMasked) || maskAadhaar(aadhaar) || "XXXX XXXX XXXX";
 
   const readJsonResponse = async (res: Response) => {
     const text = await res.text();
@@ -259,6 +348,12 @@ const KycAadhaar = () => {
 
     if (aadhaar.length !== 12) {
       showError("Enter valid 12-digit Aadhaar number");
+      return;
+    }
+
+    const validation = validateAadhaarAgainstMask(aadhaar, aadhaarMasked);
+    if (!validation.isValid) {
+      showError(validation.error);
       return;
     }
 

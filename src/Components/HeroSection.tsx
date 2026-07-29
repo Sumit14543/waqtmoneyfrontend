@@ -71,7 +71,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-hero pb-10 pt-24 lg:pb-12 lg:pt-24 xl:pb-16 xl:pt-[20px]">
+    <section className="relative overflow-hidden bg-gradient-hero pb-10 pt-16 lg:pb-12 lg:pt-20 xl:pb-14 xl:pt-20">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid items-center gap-8 lg:gap-10 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:gap-12">
           <div className="animate-fade-up text-center xl:text-left">
@@ -171,32 +171,22 @@ const HeroSection = () => {
               <div className="relative w-full">
                 <div className="absolute -inset-3 rounded-3xl bg-primary/5 blur-3xl sm:-inset-4" />
                 <img
-                  src="/landing_banner_img.png"
-                  alt="Happy customer"
-                  width={700}
-                  height={700}
+                  src="/landing_banner_img.webp"
+                  alt="Happy customer enjoying instant loan disbursal with Waqt Money"
+                  width={604}
+                  height={511}
+                  style={{ aspectRatio: "604 / 511" }}
                   loading="eager"
+                  fetchPriority="high"
                   decoding="async"
                   className="relative mx-auto aspect-[5/4] w-full rounded-3xl object-contain object-bottom shadow-elevated sm:aspect-square xl:max-w-2xl"
                 />
-                <div
-                  className="absolute right-3 top-28 hidden rounded-2xl bg-card p-3 shadow-2xl animate-fade-in sm:right-4 sm:top-32 sm:p-4 xl:right-5 xl:top-36 xl:block"
-                  style={{ animationDelay: "0.3s" }}
-                >
-                  <p className="font-heading text-xl font-bold text-foreground sm:text-2xl">{"\u20b9"}1Cr+</p>
-                  <p className="text-xs text-muted-foreground">Loans Disbursed</p>
-                </div>
                 <div className="absolute bottom-4 left-3 hidden rounded-2xl bg-primary p-3 text-primary-foreground shadow-glow animate-fade-in sm:bottom-8 sm:p-4 xl:left-5 xl:block" style={{ animationDelay: "0.5s" }}>
                   <p className="text-xs font-semibold sm:text-sm">Get Approved Fast.</p>
                   <p className="text-sm font-bold sm:text-base">Get Funded Faster.</p>
                 </div>
               </div>
-              <div className="mt-3 grid w-full grid-cols-1 md:grid-cols-2 gap-3 xl:hidden">
-                <div className="rounded-2xl bg-card px-4 py-3 text-center shadow-lg">
-                  <p className="font-heading text-lg font-bold text-foreground">{"\u20b9"}1Cr+</p>
-                  <p className="text-[11px] text-muted-foreground">Loans Disbursed</p>
-                </div>
-
+              <div className="mt-3 w-full xl:hidden">
                 <div className="rounded-2xl bg-primary px-4 py-3 text-center text-primary-foreground shadow-glow">
                   <p className="text-xs font-semibold">Get Approved Fast.</p>
                   <p className="text-sm font-bold">Get Funded Faster.</p>

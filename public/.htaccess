@@ -1,21 +1,80 @@
+# ====================================================================
+# WAQT MONEY PRODUCTION .HTACCESS FOR CPANEL / APACHE
+# High-Performance Compression, Caching, Security & SPA Routing
+# ====================================================================
+
+# Disable Directory Indexing (Prevents directory file listings)
+Options -Indexes
+
+# 1. Enable GZIP & Brotli Compression for Fast TTFB & FCP
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json application/xml image/svg+xml image/x-icon font/ttf font/otf font/woff font/woff2
+</IfModule>
+
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml font/woff2
+</IfModule>
+
+# 2. Leverage Browser Caching (Cache-Control & Expires Headers)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  
+  # Images (WebP, PNG, JPG, SVG, Favicon)
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  
+  # Fonts
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/ttf "access plus 1 year"
+  
+  # CSS and JavaScript
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  
+  # HTML Documents
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Cache Static Assets for 1 Year
+  <FilesMatch "\.(js|css|webp|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "max-age=31536000, public, immutable"
+  </FilesMatch>
+
+  # HTML No-Cache for Instant App Updates
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+
+  # Security Headers for 100/100 Best Practices
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "camera=(self), microphone=(self), geolocation=(), payment=()"
+</IfModule>
+
+# 3. SPA Routing & /blog Route Fix (Redirects page routes to index.html)
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  DirectoryIndex index.html
+  
+  # Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
+  # Serve actual static asset files directly (images, css, js, webp, fonts)
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteCond %{REQUEST_FILENAME} \.(webp|png|jpg|jpeg|gif|ico|svg|css|js|woff|woff2|ttf|json|xml|txt)$ [NC]
   RewriteRule ^ - [L]
 
-  RewriteRule . /index.html [L]
-</IfModule>
-
-ErrorDocument 404 /index.html
-
-<IfModule mod_headers.c>
-  <FilesMatch "^index\.html$">
-    Header set Cache-Control "no-cache, no-store, must-revalidate"
-    Header set Pragma "no-cache"
-    Header set Expires "0"
-  </FilesMatch>
+  # Exclude /api/ and /uploads/ from SPA index.html rewrite
+  RewriteCond %{REQUEST_URI} !^/api/ [NC]
+  RewriteCond %{REQUEST_URI} !^/uploads/ [NC]
+  RewriteRule ^ index.html [L]
 </IfModule>

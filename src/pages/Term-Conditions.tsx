@@ -1,162 +1,105 @@
 import React from "react";
+import Navbar from "@/Components/Navbar";
+import Footer from "@/Components/Footer";
+import SEO from "@/Components/SEO";
+import { CheckCircle2, ShieldCheck, Mail, Info, FileText } from "lucide-react";
 
-const TermsConditions = () => {
+export default function TermsConditions() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Waqt Money Terms & Conditions",
+    "description": "Read the official Terms and Conditions of Waqt Money for instant personal and payday loans.",
+    "url": "https://waqtmoney.com/terms-conditions"
+  };
+
   return (
-    <main className="min-h-screen bg-[#eaf3fb] px-4 py-10">
-      <section className="max-w-5xl mx-auto">
+    <>
+      <SEO
+        title="Terms & Conditions - User Agreement"
+        description="Review the official Terms and Conditions governing Waqt Money loan facilitation services. Learn about user eligibility, repayment structures, and defaults."
+        keywords="terms and conditions, loan agreement terms, user agreement, Waqt Money credit rules"
+        schema={schema}
+      />
+      <Navbar />
 
-        {/* TITLE */}
-        <div className="text-center mb-8">
-          <h1 className="text-xl md:text-2xl font-bold uppercase text-black">
-            Terms & <span className=" text-primary -600">Conditions</span>
-          </h1>
-          <div className="w-20 h-[3px] bg-sky-500 mx-auto mt-3 rounded-full" />
-        </div>
+      <main className="bg-gradient-to-b from-white via-[#fbf9ff] to-white pt-24 min-h-screen">
+        <section className="container mx-auto px-4 py-12 md:py-16 max-w-4xl">
+          <div className="text-center mb-10">
+            <span className="inline-flex rounded-full bg-purple-50 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-700 mb-3">
+              User Mandates
+            </span>
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
+              Terms & <span className="text-purple-600">Conditions</span>
+            </h1>
+            <p className="mt-3 text-sm text-slate-500">Effective Date: 04 May 2026</p>
+          </div>
 
-        {/* CARD */}
-        <div className="bg-[#dcebf7] rounded-2xl shadow-[0_10px_35px_rgba(30,64,175,0.12)] px-6 md:px-10 py-8 md:py-10 text-[15px] leading-7 text-black">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-purple-100 shadow-xl text-slate-700 space-y-6 text-sm leading-relaxed">
+            <p>
+              Welcome to <strong>Waqt Money</strong> (operated under Waqt Finance Pvt Ltd). By accessing our website or applying for loan facilitation services, you agree to comply with and be bound by the following Terms & Conditions. Please read them carefully.
+            </p>
 
-          {/* INTRO */}
-          <p className="mb-5">
-            Welcome to <strong>Waqt Money</strong>, a digital platform providing fast and 
-            secure payday loan services. By accessing or using our website, mobile 
-            application, or services, you agree to comply with and be bound by these 
-            Terms & Conditions.
-          </p>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-purple-600" />
+              1. Eligibility Criteria
+            </h2>
+            <p>
+              To use our facilitation services, you must satisfy the following:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Must be a citizen and resident of India.</li>
+              <li>Must be aged between 21 and 60 years at the time of application.</li>
+              <li>Must have a stable monthly income credited directly to your bank account.</li>
+              <li>Must hold valid KYC documents: PAN Card and Aadhaar Card.</li>
+            </ul>
 
-          <p className="mb-6">
-            Please read these terms carefully before using our services. If you do not 
-            agree with any part of these terms, you should not use our platform.
-          </p>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <Info className="h-5 w-5 text-purple-600" />
+              2. Facilitation & Sanctioning
+            </h2>
+            <p>
+              Waqt Money acts as a technology intermediary matching borrowers with RBI-registered NBFC partners, including Waqt Finance Pvt Ltd. Loan approvals, principal amounts, interest rates, and disbursals are subject to verification check outcomes. The final loan terms will be provided to you in the official Sanction Letter and Loan Agreement.
+            </p>
 
-          {/* ELIGIBILITY */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            1. Eligibility
-          </h2>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-purple-600" />
+              3. User Responsibilities
+            </h2>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Provide 100% accurate, complete, and truthful information during KYC and loan applications.</li>
+              <li>Maintain full confidentiality of your OTPs, logins, and credentials.</li>
+              <li>Use the credited loan amount strictly for lawful personal or business requirements.</li>
+              <li>Repay the loan amount on or before the due date specified in the Loan Agreement.</li>
+            </ul>
 
-          <ul className="list-disc pl-6 mb-6 space-y-2">
-            <li>You must be at least 18 years old</li>
-            <li>You must be an Indian resident</li>
-            <li>You must provide accurate and complete information</li>
-            <li>You must have a valid bank account and mobile number</li>
-          </ul>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-purple-600" />
+              4. Default & Late Repayments
+            </h2>
+            <p>
+              Failure to repay your loan on time may lead to:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Deductions of late fee charges as outlined in the loan agreement.</li>
+              <li>Negative reporting to credit bureaus (CIBIL, Experian), lowering your future loan eligibility.</li>
+              <li>Legal recovery procedures as authorized by RBI guidelines and Indian financial laws.</li>
+            </ul>
 
-          {/* SERVICES */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            2. Services Offered
-          </h2>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <Mail className="h-5 w-5 text-purple-600" />
+              5. Contact Us
+            </h2>
+            <p>
+              For legal inquiries or clarifications regarding these terms, please contact us:
+              <br />
+              <strong className="text-slate-900">Email:</strong> support@waqtmoney.com
+            </p>
+          </div>
+        </section>
+      </main>
 
-          <p className="mb-6">
-            Waqt Money provides instant payday loan services through its digital platform. 
-            Loan approval, amount, tenure, and interest rates are subject to eligibility 
-            and verification checks.
-          </p>
-
-          {/* USER RESPONSIBILITY */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            3. User Responsibilities
-          </h2>
-
-          <ul className="list-disc pl-6 mb-6 space-y-2">
-            <li>Provide true and accurate information during application</li>
-            <li>Maintain confidentiality of login and OTP details</li>
-            <li>Use the platform only for lawful purposes</li>
-            <li>Repay loan amounts on time as per agreement</li>
-          </ul>
-
-          {/* LOAN TERMS */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            4. Loan Terms & Repayment
-          </h2>
-
-          <p className="mb-4">
-            All loans provided through Waqt Money are subject to approval and governed 
-            by agreed terms including interest rate, tenure, and repayment schedule.
-          </p>
-
-          <ul className="list-disc pl-6 mb-6 space-y-2">
-            <li>Late payments may attract penalties or additional charges</li>
-            <li>Failure to repay may affect your credit score</li>
-            <li>Recovery actions may be initiated as per applicable laws</li>
-          </ul>
-
-          {/* FEES */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            5. Fees & Charges
-          </h2>
-
-          <p className="mb-6">
-            Waqt Money may charge processing fees, interest, or service charges 
-            depending on the loan product. All applicable charges will be clearly 
-            communicated before loan acceptance.
-          </p>
-
-          {/* PRIVACY */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            6. Privacy & Data Usage
-          </h2>
-
-          <p className="mb-6">
-            Your personal data will be collected and used as per our Privacy Policy. 
-            By using our services, you consent to such data collection and processing.
-          </p>
-
-          {/* THIRD PARTY */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            7. Third-Party Services
-          </h2>
-
-          <p className="mb-6">
-            We may engage third-party partners such as NBFCs, payment gateways, 
-            and KYC providers to deliver services. We are not responsible for 
-            their independent actions.
-          </p>
-
-          {/* LIMITATION */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            8. Limitation of Liability
-          </h2>
-
-          <p className="mb-6">
-            Waqt Money shall not be liable for any indirect, incidental, or 
-            consequential damages arising from the use of our platform or services.
-          </p>
-
-          {/* TERMINATION */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            9. Termination
-          </h2>
-
-          <p className="mb-6">
-            We reserve the right to suspend or terminate your access if you violate 
-            these terms or engage in fraudulent or unlawful activities.
-          </p>
-
-          {/* CHANGES */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            10. Changes to Terms
-          </h2>
-
-          <p className="mb-6">
-            Waqt Money may update these Terms & Conditions at any time. Continued use 
-            of the platform indicates your acceptance of the updated terms.
-          </p>
-
-          {/* CONTACT */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            11. Contact Us
-          </h2>
-
-          <p>
-            For any queries regarding these Terms & Conditions:
-            <br />
-            <strong>Email:</strong> support@waqtmoney.com
-          </p>
-
-        </div>
-      </section>
-    </main>
+      <Footer />
+    </>
   );
-};
-
-export default TermsConditions;
+}

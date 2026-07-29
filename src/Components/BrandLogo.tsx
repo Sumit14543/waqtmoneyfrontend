@@ -13,14 +13,17 @@ const BrandLogo = ({ className = "h-10 w-auto", priority = false }: BrandLogoPro
   return (
     <img
       src={LOGO_SOURCES[sourceIndex]}
-      alt="Waqt Money"
+      alt="Waqt Money Logo"
       className={className}
+      width={180}
+      height={50}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
       onError={() => {
         setSourceIndex((current) => Math.min(current + 1, LOGO_SOURCES.length - 1));
       }}
     />
+
   );
 };
 

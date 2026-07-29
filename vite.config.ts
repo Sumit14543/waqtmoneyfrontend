@@ -12,12 +12,39 @@ export default defineConfig({
   },
   plugins: [react()],
   build: {
+    target: "es2020",
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 1000,
+    minify: "esbuild",
+    esbuild: {
+      legalComments: "none",
+    },
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ["react", "react-dom", "react-router-dom"],
-          ui: ["@radix-ui/react-dialog", "@radix-ui/react-select", "@radix-ui/react-toast", "lucide-react"],
-          motion: ["framer-motion"],
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("react") || id.includes("react-dom") || id.includes("react-router")) {
+              return "vendor-react";
+            }
+            if (id.includes("@tanstack")) {
+              return "vendor-query";
+            }
+            if (id.includes("@radix-ui")) {
+              return "vendor-radix";
+            }
+            if (id.includes("lucide-react")) {
+              return "vendor-icons";
+            }
+            if (id.includes("framer-motion")) {
+              return "vendor-motion";
+            }
+            if (id.includes("recharts")) {
+              return "vendor-charts";
+            }
+            if (id.includes("sweetalert2") || id.includes("canvas-confetti")) {
+              return "vendor-utils";
+            }
+          }
         },
       },
     },

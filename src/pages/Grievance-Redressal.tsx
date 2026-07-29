@@ -1,126 +1,95 @@
 import React from "react";
+import Navbar from "@/Components/Navbar";
+import Footer from "@/Components/Footer";
+import SEO from "@/Components/SEO";
+import { Mail, Clock, ShieldAlert, Award, FileText } from "lucide-react";
 
-const GrievanceRedressal = () => {
+export default function GrievanceRedressal() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Waqt Money Grievance Redressal",
+    "description": "Information about customer grievance redressal policy, grievance officer contacts, and escalation matrices at Waqt Money.",
+    "url": "https://waqtmoney.com/grievance-redressal"
+  };
+
   return (
-    <main className="min-h-screen bg-[#eaf3fb] px-4 py-10">
-      <section className="max-w-5xl mx-auto">
+    <>
+      <SEO
+        title="Grievance Redressal - Customer Complaints Policy"
+        description="Read Waqt Money's Grievance Redressal Policy. Find contact details for our Grievance Redressal Officer and details on the escalation matrix."
+        keywords="grievance officer, customer support complaints, NBFC grievance escalation, CIBIL dispute resolution"
+        schema={schema}
+      />
+      <Navbar />
 
-        {/* TITLE */}
-        <div className="text-center mb-8">
-          <h1 className="text-xl md:text-2xl font-bold uppercase text-black">
-            Grievance <span className=" text-primary -600">Redressal</span>
-          </h1>
-          <div className="w-20 h-[3px] bg-sky-500 mx-auto mt-3 rounded-full" />
-        </div>
+      <main className="bg-gradient-to-b from-white via-[#fbf9ff] to-white pt-24 min-h-screen">
+        <section className="container mx-auto px-4 py-12 md:py-16 max-w-4xl">
+          <div className="text-center mb-10">
+            <span className="inline-flex rounded-full bg-purple-50 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-700 mb-3">
+              Customer Protection
+            </span>
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
+              Grievance <span className="text-purple-600">Redressal Policy</span>
+            </h1>
+            <p className="mt-3 text-sm text-slate-500">Fast, transparent customer complaint resolutions</p>
+          </div>
 
-        {/* CARD */}
-        <div className="bg-[#dcebf7] rounded-2xl shadow-[0_10px_35px_rgba(30,64,175,0.12)] px-6 md:px-10 py-8 md:py-10 text-[15px] leading-7 text-black">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-purple-100 shadow-xl text-slate-700 space-y-6 text-sm leading-relaxed">
+            <p>
+              At <strong>Waqt Money</strong>, customer satisfaction is our top priority. We have established a structured Grievance Redressal Mechanism to ensure all complaints regarding loan facilitation, interest rates, repayments, or collections are resolved quickly and fairly.
+            </p>
 
-          {/* INTRO */}
-          <p className="mb-5">
-            At <strong>Waqt Money</strong>, we are committed to providing a seamless 
-            and transparent experience for our users. If you have any concerns, 
-            complaints, or grievances related to our payday loan services, we 
-            encourage you to reach out to us through the channels mentioned below.
-          </p>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <Clock className="h-5 w-5 text-purple-600" />
+              Level 1 – Customer Support
+            </h2>
+            <p>
+              For general queries, loan updates, or minor discrepancies, please contact our customer support team. Most issues are successfully resolved at this stage.
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li><strong>Support Email:</strong> support@waqtmoney.com</li>
+              <li><strong>Operational Hours:</strong> 9:00 AM to 6:00 PM (Monday to Saturday, excluding public holidays)</li>
+              <li><strong>Expected Resolution Time:</strong> 24 to 48 business hours</li>
+            </ul>
 
-          <p className="mb-6">
-            Our grievance redressal mechanism is designed to ensure quick 
-            resolution, fairness, and transparency in handling user complaints.
-          </p>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <ShieldAlert className="h-5 w-5 text-purple-600" />
+              Level 2 – Grievance Redressal Officer
+            </h2>
+            <p>
+              If your complaint is not resolved within 7 business days at Level 1, or if you are not satisfied with the resolution, you may escalate the issue to our dedicated Grievance Officer:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li><strong>Officer Name:</strong> Grievance Officer – Waqt Money</li>
+              <li><strong>Contact Email:</strong> grievance@waqtmoney.com</li>
+              <li><strong>Address:</strong> Waqt Finance Pvt Ltd, H-15 BSI Business Park, H Block, Sector 63, Noida, Uttar Pradesh, India</li>
+              <li><strong>Expected Resolution Time:</strong> Within 7 working days</li>
+            </ul>
 
-          {/* LEVEL 1 */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            1. Level 1 – Customer Support
-          </h2>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <Award className="h-5 w-5 text-purple-600" />
+              Level 3 – Escalation to NBFC Partners & RBI
+            </h2>
+            <p>
+              If your grievance is not resolved within 30 days or if you disagree with the final outcome, you may approach the Principal Officer of our RBI-registered NBFC partner, <strong className="text-slate-900">Waqt Finance Pvt Ltd</strong>, or file a complaint with the RBI Ombudsman under the Integrated Ombudsman Scheme:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li><strong>Partner NBFC Email:</strong> support@waqtfinance.com</li>
+              <li><strong>RBI Ombudsman Portal:</strong> <a href="https://cms.rbi.org.in" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">https://cms.rbi.org.in</a></li>
+            </ul>
 
-          <p className="mb-4">
-            You may contact our customer support team for any queries or issues 
-            related to loan application, repayment, or account-related concerns.
-          </p>
+            <div className="bg-purple-50 p-4 rounded-xl border border-purple-100 text-purple-900">
+              <h3 className="font-bold text-sm">Tracking Complaints</h3>
+              <p className="mt-1 text-xs text-purple-950">
+                A unique Complaint Ticket ID will be shared with you via email when registering a complaint. Please quote this ticket number in all future correspondences.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
 
-          <ul className="list-disc pl-6 mb-6 space-y-2">
-            <li><strong>Email:</strong> support@waqtmoney.com</li>
-            <li><strong>Working Hours:</strong> 9:00 AM to 6:00 PM (Mon–Sat)</li>
-            <li>Response Time: Within 24–48 business hours</li>
-          </ul>
-
-          {/* LEVEL 2 */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            2. Level 2 – Grievance Officer
-          </h2>
-
-          <p className="mb-4">
-            If your issue is not resolved at Level 1, you may escalate the matter 
-            to our Grievance Officer.
-          </p>
-
-          <ul className="list-disc pl-6 mb-6 space-y-2">
-            <li><strong>Name:</strong> Grievance Officer – Waqt Money</li>
-            <li><strong>Email:</strong> grievance@waqtmoney.com</li>
-            <li>Resolution Time: Within 7 working days</li>
-          </ul>
-
-          {/* LEVEL 3 */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            3. Level 3 – Escalation to Regulatory Authority
-          </h2>
-
-          <p className="mb-6">
-            If your grievance is still not resolved satisfactorily, you may 
-            approach the appropriate regulatory authority or partner NBFC 
-            associated with your loan, as per applicable guidelines.
-          </p>
-
-          {/* TYPES */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            4. Types of Grievances
-          </h2>
-
-          <ul className="list-disc pl-6 mb-6 space-y-2">
-            <li>Loan application or rejection issues</li>
-            <li>Delay in loan disbursal</li>
-            <li>Repayment or EMI related concerns</li>
-            <li>Incorrect charges or penalties</li>
-            <li>Data privacy or misuse concerns</li>
-          </ul>
-
-          {/* TRACKING */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            5. Complaint Tracking
-          </h2>
-
-          <p className="mb-6">
-            Once a complaint is registered, you will receive a reference ID 
-            for tracking your grievance. Please use this ID for all future 
-            communications related to your complaint.
-          </p>
-
-          {/* FAIR PRACTICE */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            6. Fair Practice Commitment
-          </h2>
-
-          <p className="mb-6">
-            Waqt Money follows fair practices and ensures that all complaints 
-            are handled with transparency, confidentiality, and in compliance 
-            with applicable financial regulations.
-          </p>
-
-          {/* FINAL */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            7. Contact Summary
-          </h2>
-
-          <p>
-            <strong>Customer Support:</strong> support@waqtmoney.com <br />
-            <strong>Grievance Officer:</strong> support@waqtfinance.com
-          </p>
-
-        </div>
-      </section>
-    </main>
+      <Footer />
+    </>
   );
-};
-
-export default GrievanceRedressal;
+}

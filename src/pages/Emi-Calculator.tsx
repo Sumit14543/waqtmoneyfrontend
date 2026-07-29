@@ -9,9 +9,13 @@ import {
   IndianRupee,
   Percent,
   ShieldCheck,
+  BookOpen,
+  Scale,
+  HelpCircle
 } from "lucide-react";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
+import SEO from "@/Components/SEO";
 
 const formatINR = (value: number) =>
   new Intl.NumberFormat("en-IN", {
@@ -44,9 +48,85 @@ export default function EmiCalculator() {
     #f59e0b ${amountPercent}% 100%
   )`;
 
+  const faqs = [
+    {
+      q: "What is an EMI, and how is it calculated?",
+      a: "EMI stands for Equated Monthly Installment. It is a fixed payment amount made by a borrower to a lender at a specified date each calendar month. EMIs consist of both interest and principal components. The standard formula used to calculate EMIs is: E = P * r * (1 + r)^n / ((1 + r)^n - 1), where E is the EMI, P is the principal loan amount, r is the monthly interest rate, and n is the loan tenure in months."
+    },
+    {
+      q: "What is the difference between simple interest and reducing balance EMI calculations?",
+      a: "Under flat simple interest, the interest is calculated on the initial principal throughout the tenure. In reducing balance calculations, the interest is calculated only on the remaining outstanding principal at the end of each payment cycle, making it more cost-effective as the principal is repaid."
+    },
+    {
+      q: "What is Annual Percentage Rate (APR)?",
+      a: "Annual Percentage Rate (APR) represents the true annual cost of borrowing, including both the interest rate and any upfront fees (such as processing and documentation fees). It is expressed as a percentage to help you compare the real costs of different loan products."
+    },
+    {
+      q: "How does pre-paying my loan affect the EMI?",
+      a: "Pre-paying a part of your outstanding loan reduces the remaining principal balance. You can choose to either lower your monthly EMI amount (keeping the tenure same) or reduce your loan tenure (keeping the EMI amount same), saving on overall interest costs."
+    },
+    {
+      q: "How do floating interest rates impact EMIs?",
+      a: "Floating interest rates are linked to market benchmarks (like Repo rates). If the benchmark rate increases, the interest rate on your loan increases. Lenders typically adjust this by extending the loan tenure while keeping the monthly EMI constant, or by increasing the EMI amount."
+    },
+    {
+      q: "Can I choose my own EMI payment due date?",
+      a: "Due dates are typically set by the lending partner and aligned with your monthly salary credit date (usually between the 1st and 7th of the month) to ensure prompt repayments and prevent bounce incidents."
+    },
+    {
+      q: "What charges are applied if an EMI payment bounces?",
+      a: "An EMI bounce triggers both bank ECS/NACH bounce charges (charged by your bank) and late payment penalties (charged by the lender), and negatively impacts your credit score."
+    },
+    {
+      q: "Does using an EMI calculator guarantee loan approval?",
+      a: "No, the EMI calculator is an illustrative tool to help you estimate costs. Loan approvals are subject to credit evaluations, KYC verification, and risk assessments conducted by the lending partners."
+    },
+    {
+      q: "What is an amortization schedule?",
+      a: "An amortization schedule is a detailed table showing each periodic payment on a loan. It breaks down each payment into the amount going toward interest and the amount going toward the principal balance."
+    },
+    {
+      q: "How does the loan tenure affect the total interest payout?",
+      a: "A longer tenure reduces your monthly EMI amount, but increases the total interest paid over the life of the loan. A shorter tenure increases the monthly EMI but minimizes overall interest costs."
+    },
+    {
+      q: "Are processing fees included in the EMI?",
+      a: "No, processing fees are typically one-time charges deducted upfront from the disbursed loan amount. They are not added to your monthly EMIs but are factored into the loan's APR."
+    }
+  ];
+
+  const schema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Waqt Money EMI Calculator",
+      "description": "Calculate loan EMIs, interest details, and APR values using our interactive online calculator.",
+      "url": "https://waqtmoney.com/emi-calculator"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": f.a
+        }
+      }))
+    }
+  ];
+
   return (
     <>
+      <SEO
+        title="EMI Calculator - Instant Loan Cost Estimator"
+        description="Estimate your monthly EMIs, total interest payouts, and Annual Percentage Rate (APR) instantly with our easy-to-use Waqt Money Loan Calculator."
+        keywords="loan EMI calculator, salary loan interest, calculate loan APR, credit cost calculator"
+        schema={schema}
+      />
       <Navbar />
+
 
       <main className="min-h-screen bg-[linear-gradient(135deg,#f8fafc,#eef2ff_48%,#fff7ed)] pt-24">
         <section className="px-4 pb-16 pt-8 sm:px-6 lg:px-8 lg:pb-24 lg:pt-14">
@@ -294,6 +374,92 @@ export default function EmiCalculator() {
                 </div>
               </div>
             </div>
+
+            {/* Comprehensive Calculator Guide Content */}
+            <div className="mt-16 text-left space-y-12 bg-white p-6 sm:p-8 rounded-3xl border border-purple-100 shadow-xl">
+              
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                  <BookOpen className="h-6 w-6 text-purple-600" />
+                  Understanding Loan EMIs: A Complete Financial Guide
+                </h2>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  An Equated Monthly Installment (EMI) is the foundation of personal and business debt management. It is a fixed payment amount made by a borrower to a lender at a specified date each calendar month. EMIs allow borrowers to repay their loans in predictable cycles, dividing the principal and interest charges evenly across the loan tenure.
+                </p>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Before applying for any credit product, calculating your estimated monthly EMIs is critical to maintaining financial health. Over-leveraging by selecting EMIs that exceed your repayment capacity can lower your credit rating and trigger default penalties.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-slate-900">The Mathematical Formula for EMI Calculation</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Lenders use a standard mathematical formula to determine the monthly EMI amount for reducing balance loans:
+                </p>
+                <div className="bg-purple-50/50 p-4 rounded-xl text-center border border-purple-100 my-4">
+                  <span className="text-lg font-bold text-purple-700">
+                    {"\\(E = P \\cdot \\frac{r \\cdot (1+r)^n}{(1+r)^n - 1}\\)"}
+                  </span>
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Where the variables represent:
+                </p>
+                <ul className="list-disc pl-5 space-y-2 text-sm text-slate-600">
+                  <li><strong>E</strong> is the Equated Monthly Installment (EMI).</li>
+                  <li><strong>P</strong> is the Principal loan amount borrowed.</li>
+                  <li><strong>r</strong> is the monthly interest rate (annual interest rate divided by 12, then divided by 100).</li>
+                  <li><strong>n</strong> is the loan tenure in months.</li>
+                </ul>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-slate-900">Short-Term Interest Calculations vs. Reducing Balance</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  For short-term cash advances like payday loans, interest rates may be calculated on a flat daily or monthly basis rather than a reducing balance. A flat daily interest rate means interest is calculated on the initial principal amount for each day of the loan tenure. For example, if you borrow ₹10,000 at a daily rate of 0.1% for 30 days, the daily interest is ₹10, and the total interest accrued over 30 days is ₹300.
+                </p>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  It is essential to understand the calculation method used for your specific loan product to estimate the true cost of borrowing. Reducing balance calculations are typically more cost-effective for long-term loans, while flat rates are common for short-term liquidity bridges.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-slate-900">What is Annual Percentage Rate (APR)?</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  The Annual Percentage Rate (APR) represents the total annual cost of borrowing, expressing both the nominal interest rate and any upfront fees (such as processing and documentation fees) as a percentage. Expressing costs as an APR allows you to compare the real costs of different loan products accurately.
+                </p>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  For example, a loan with a lower nominal interest rate but high processing fees might have a higher APR than a loan with a slightly higher interest rate but no processing fees. Always review the APR in your loan agreement to understand the true cost of credit.
+                </p>
+              </div>
+
+              <div className="space-y-4 bg-purple-50/50 p-6 rounded-3xl border border-purple-100">
+                <h3 className="text-md font-bold text-slate-900 flex items-center gap-2">
+                  <Scale className="h-5 w-5 text-purple-600" />
+                  Tips for Managing Your Loan EMIs
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  To maintain a healthy credit profile, ensure your total monthly EMI obligations do not exceed 40% of your net monthly take-home salary. Setting up an Auto-Debit (NACH mandate) on your salary account ensures EMIs are processed automatically on time, protecting you from late payment fees and safeguarding your credit rating.
+                </p>
+              </div>
+
+            </div>
+
+            {/* FAQs Section */}
+            <div className="mt-16 text-left space-y-6">
+              <h2 className="text-2xl font-bold text-slate-900 text-center mb-8 flex items-center justify-center gap-2">
+                <HelpCircle className="h-6 w-6 text-purple-600" />
+                EMI Calculator Frequently Asked Questions
+              </h2>
+              <div className="space-y-4">
+                {faqs.map((faq, idx) => (
+                  <div key={idx} className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition">
+                    <h3 className="text-base font-semibold text-slate-900">{faq.q}</h3>
+                    <p className="mt-2 text-sm text-slate-600 leading-relaxed">{faq.a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
         </section>
       </main>

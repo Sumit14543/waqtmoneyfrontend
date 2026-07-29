@@ -54,11 +54,13 @@ const BorrowSection = () => (
 
         <div className="hidden lg:block">
           <img
-            src="/borrow-lifestyle.jpg"
-            alt="Person managing finances"
+            src="/borrow-lifestyle.webp"
+            alt="Salaried professional managing finances with Waqt Money instant loan"
             loading="lazy"
-            width={640}
-            height={512}
+            decoding="async"
+            width={500}
+            height={400}
+            style={{ aspectRatio: "500 / 400" }}
             className="rounded-3xl shadow-elevated w-full object-cover"
           />
         </div>

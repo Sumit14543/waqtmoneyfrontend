@@ -1,5 +1,6 @@
 import Footer from "@/Components/Footer";
 import Navbar from "@/Components/Navbar";
+import SEO from "@/Components/SEO";
 import React from "react";
 
 const Faqs = () => {
@@ -72,16 +73,37 @@ const Faqs = () => {
     },
   ];
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((f) => ({
+      "@type": "Question",
+      "name": f.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": f.answer
+      }
+    }))
+  };
+
   return (
     <>
+      <SEO
+        title="Frequently Asked Questions (FAQs) - Instant Loan Help"
+        description="Have questions about instant payday loans, eligibility criteria, required documents, or payback tenures? Find answers in our comprehensive FAQs guide."
+        keywords="loan FAQs, payday loan questions, credit help, Waqt Money FAQ"
+        schema={schema}
+      />
       <Navbar />
 
-      <section className="flex w-full flex-col items-center justify-center px-4 py-16">
-        <div className="my-24 w-full max-w-5xl">
-          <div className="mb-10">
-            <h2 className="mb-4 text-center text-3xl font-semibold text-neutral-900 md:text-start">
-              Most asked FAQ&apos;s
-            </h2>
+      <main>
+        <section className="flex w-full flex-col items-center justify-center px-4 py-16">
+          <div className="my-24 w-full max-w-5xl">
+            <div className="mb-10">
+              <h1 className="mb-4 text-center text-3xl font-semibold text-neutral-900 md:text-start">
+                Frequently Asked Questions (FAQs)
+              </h1>
+
             <p className="mx-auto max-w-[416px] text-center text-sm text-neutral-800 md:mx-0 md:text-start">
               We&apos;re here to help you and solve doubts. Find answers to the most common questions below.
             </p>
@@ -150,6 +172,7 @@ const Faqs = () => {
           </div>
         </div>
       </section>
+      </main>
 
       <Footer />
     </>

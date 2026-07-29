@@ -1,5 +1,12 @@
+const envApiUrl = import.meta.env.VITE_API_BASE_URL;
+
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://api.waqtmoney.com/api";
+  envApiUrl && !envApiUrl.includes("localhost")
+    ? envApiUrl
+    : import.meta.env.PROD
+      ? "https://api.waqtmoney.com/api"
+      : (envApiUrl || "http://localhost:5000/api");
+
 
 export const ACTIVE_LOAN_APPLICATION_MESSAGE = "You have already applied for a loan.";
 
@@ -23,6 +30,24 @@ export const normalizeApiMessage = (message: unknown, fallback = "Something went
   return text || fallback;
 };
 
+// In-Memory CSRF Token Cache
+let cachedCsrfToken = "";
+
+export const fetchCsrfToken = async () => {
+  if (cachedCsrfToken) return cachedCsrfToken;
+  try {
+    const res = await fetch(`${API_BASE_URL}/csrf-token`);
+    const data = await res.json();
+    if (data.success && data.csrfToken) {
+      cachedCsrfToken = data.csrfToken;
+      return cachedCsrfToken;
+    }
+  } catch (e) {
+    // Graceful fallback
+  }
+  return "";
+};
+
 export const getApiHeaders = (extraHeaders: Record<string, string> = {}) => {
   const headers: Record<string, string> = { ...extraHeaders };
 
@@ -31,12 +56,15 @@ export const getApiHeaders = (extraHeaders: Record<string, string> = {}) => {
   const email = sessionStorage.getItem("applyEmail") || localStorage.getItem("applyEmail");
   const pan = sessionStorage.getItem("applyPan") || localStorage.getItem("applyPan");
   const token = sessionStorage.getItem("applicationUploadToken") || localStorage.getItem("applicationUploadToken");
+  const adminToken = localStorage.getItem("admin_token");
 
   if (id) headers["X-Application-Id"] = id;
   if (phone) headers["X-Application-Mobile"] = phone;
   if (email) headers["X-Application-Email"] = email;
   if (pan) headers["X-Application-Pan"] = pan;
   if (token) headers["X-Application-Upload-Token"] = token;
+  if (adminToken) headers["Authorization"] = `Bearer ${adminToken}`;
+  if (cachedCsrfToken) headers["X-CSRF-Token"] = cachedCsrfToken;
 
   return headers;
 };

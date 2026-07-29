@@ -1,5 +1,6 @@
 import Footer from "@/Components/Footer";
 import Navbar from "@/Components/Navbar";
+import SEO from "@/Components/SEO";
 import { BadgeCheck, CheckCheck, FileText, Wallet } from "lucide-react";
 
 const loanProcessSteps = [
@@ -34,17 +35,45 @@ const loanProcessSteps = [
 ];
 
 export default function About() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About Waqt Money",
+    "description": "Learn more about Waqt Money and our RBI-registered NBFC partner Waqt Finance Pvt Ltd, providing quick payday loans and personal credit solutions in India.",
+    "url": "https://waqtmoney.com/about",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "Waqt Finance Pvt Ltd",
+      "logo": "https://waqtmoney.com/waqt-money-logo-img.png",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "postalCode": "201301",
+        "addressCountry": "IN"
+      }
+    }
+  };
+
   return (
     <>
+      <SEO
+        title="About Us - Instant Payday & Personal Loans Facilitator"
+        description="Learn more about Waqt Money. We partner with RBI-registered NBFC Waqt Finance Pvt Ltd to deliver fast, secure, paperless credit advances to salaried professionals."
+        keywords="about Waqt Money, instant salary loans, licensed NBFC loans, Waqt Finance Pvt Ltd details"
+        schema={schema}
+      />
       <Navbar />
 
-      <section className="w-full bg-gradient-to-b from-white to-indigo-50 py-20 md:py-28">
-        
-        {/* Heading */}
+      <main>
+        <section className="w-full bg-gradient-to-b from-white to-indigo-50 py-20 md:py-28">
+          
+          {/* Heading */}
         <div className="text-center mb-16 px-4">
-          <h2 className="text-3xl md:text-5xl font-bold text-slate-800">
+          <h1 className="text-3xl md:text-5xl font-bold text-slate-800">
             About <span className="text-primary">Waqt Money </span>
-          </h2>
+          </h1>
          
 
           <p className="mt-5 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">
@@ -61,6 +90,9 @@ export default function About() {
               className="w-full h-[300px] sm:h-[400px] lg:h-[500px] object-cover rounded-3xl shadow-xl"
               src="/about-img.jpg"
               alt="Waqt Money Payday Loan"
+              width={500}
+              height={500}
+              loading="lazy"
             />
 
             {/* Floating Card */}
@@ -70,14 +102,26 @@ export default function About() {
                 <img
                   src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200"
                   className="w-9 h-9 rounded-full border-2 border-white"
+                  width={36}
+                  height={36}
+                  loading="lazy"
+                  alt="Customer avatar"
                 />
                 <img
                   src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200"
                   className="w-9 h-9 rounded-full border-2 border-white"
+                  width={36}
+                  height={36}
+                  loading="lazy"
+                  alt="Customer avatar"
                 />
                 <img
                   src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200"
                   className="w-9 h-9 rounded-full border-2 border-white"
+                  width={36}
+                  height={36}
+                  loading="lazy"
+                  alt="Customer avatar"
                 />
                 <div className="flex items-center justify-center text-xs text-white w-9 h-9 rounded-full bg-indigo-600 border-2 border-white">
                   50K+
@@ -92,11 +136,12 @@ export default function About() {
 
           {/* Content */}
           <div className="max-w-xl text-center lg:text-left">
-            <h1 className="text-2xl md:text-4xl font-bold text-slate-800 leading-tight">
+            <h2 className="text-2xl md:text-4xl font-bold text-slate-800 leading-tight">
               Instant Payday Loans for Your Short-Term Needs
-            </h1>
+            </h2>
 
             <div className="w-24 h-1 mt-4 mx-auto lg:mx-0 rounded-full bg-gradient-to-r from-indigo-600 to-purple-400"></div>
+
 
             <p className="mt-6 text-sm md:text-lg text-slate-600 leading-relaxed">
               Waqt Money provides quick and easy payday loans to salaried individuals across India.
@@ -201,6 +246,7 @@ export default function About() {
           </div>
         </div>
       </section>
+      </main>
 
       <Footer />
     </>

@@ -2,17 +2,89 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Fallback/Default SEO Meta Tags -->
+    <title>Waqt Money - Quick Online Personal Loans with Instant Approval</title>
+    <meta name="description" content="Get instant personal loans, payday loans, and business loans online with Waqt Money. Quick approvals, paperless documentation, and direct disbursal within minutes." />
+    <meta name="theme-color" content="#6d28d9" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    
+    <!-- Favicon and Icons -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Waqt Money - Quick Online Loan with Instant Approval</title>    
-</head>
+
+    <!-- LCP Hero Image Preload Hint -->
+    <link rel="preload" as="image" href="/landing_banner_img.webp" type="image/webp" fetchpriority="high" />
+
+    <!-- Resource Preconnects & Non-Render Blocking Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    </noscript>
+
+    <!-- Google Search Console Site Verification -->
+    <meta name="google-site-verification" content="OCm3lVNKWATDXha6QHjE78DC_SYqeojW93Tvn2e7oV4" />
+
+    <!-- Organization & FinancialService Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FinancialService",
+      "name": "Waqt Money",
+      "url": "https://waqtmoney.com",
+      "logo": "https://waqtmoney.com/favicon-32x32.png",
+      "description": "Instant Personal Loans, Payday Loans, and Business Credit Lines for Salaried Professionals and MSMEs in India.",
+      "telephone": "+91-11-45678900",
+      "priceRange": "₹5,000 - ₹50,000,00",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Gurgaon",
+        "addressRegion": "Haryana",
+        "addressCountry": "IN"
+      }
+    }
+    </script>
+  </head>
 
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WLW8NHFK"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Deferred Non-Blocking Tracking Scripts (GTM & GA4) -->
+    <script>
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          // GTM
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-WLW8NHFK');
+
+          // GA4
+          var gaScript = document.createElement('script');
+          gaScript.async = true;
+          gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-0HK38FZXCF';
+          document.body.appendChild(gaScript);
+          
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-0HK38FZXCF');
+        }, 1500);
+      });
+    </script>
   </body>
 </html>

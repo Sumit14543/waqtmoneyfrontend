@@ -1,5 +1,6 @@
 import Footer from "@/Components/Footer";
 import Navbar from "@/Components/Navbar";
+import SEO from "@/Components/SEO";
 import { Banknote, Clock, ShieldCheck, Wallet, FileCheck, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -43,11 +44,29 @@ const services = [
 ];
 
 const Services = () => {
- 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Waqt Money Financial Services",
+    "description": "Instant personal loans, business capital, and payday loan advances online.",
+    "provider": {
+      "@type": "Organization",
+      "name": "Waqt Finance Pvt Ltd"
+    }
+  };
+
   return (
-       <>
-  <Navbar/>
-    <section className="bg-background py-20 sm:py-28">
+    <>
+      <SEO
+        title="Our Services - Instant Payday & Personal Loans Facilitation"
+        description="Browse financial services offered by Waqt Money. Instant payday credit up to ₹2,00,000, 24-hour disbursal, paperless KYC, and flexible repayment terms."
+        keywords="loan services, salary advance services, instant payday finance, online loan provider"
+        schema={schema}
+      />
+      <Navbar />
+      <main>
+        <section className="bg-background py-20 sm:py-28">
+
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
 
         <div className="mx-auto max-w-2xl text-center">
@@ -111,6 +130,7 @@ const Services = () => {
 
       </div>
     </section>
+    </main>
     <Footer />
      </>
   );

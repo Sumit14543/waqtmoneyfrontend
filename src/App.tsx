@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "./Components/ui/sonner";
 import {
   HomeFallback,
@@ -38,13 +38,41 @@ const References = lazy(() => import("./User/References.tsx"));
 const SalarySlip = lazy(() => import("./User/SalarySlip.tsx"));
 const CustomerVideoKYC = lazy(() => import("./User/CustomerVideoKYC.tsx"));
 const LoanStatus = lazy(() => import("./User/LoanStatus.tsx"));
-const PrivacyPolicy = lazy(() => import("./pages/Privacy-Policies.tsx"));
+
+// ADMIN PANEL ROUTES
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin.tsx"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard.tsx"));
+const AdminLeads = lazy(() => import("./pages/admin/AdminLeads.tsx"));
+const AdminLeadDetail = lazy(() => import("./pages/admin/AdminLeadDetail.tsx"));
+const AdminContacts = lazy(() => import("./pages/admin/AdminContacts.tsx"));
+const AdminBlogs = lazy(() => import("./pages/admin/AdminBlogs.tsx"));
+const AdminBlogForm = lazy(() => import("./pages/admin/AdminBlogForm.tsx"));
+
+// PUBLIC BLOG ROUTES
+const Blog = lazy(() => import("./pages/Blog.tsx"));
+const BlogDetail = lazy(() => import("./pages/BlogDetail.tsx"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsConditions = lazy(() => import("./pages/Term-Conditions.tsx"));
 const GrievanceRedressal = lazy(() => import("./pages/Grievance-Redressal.tsx"));
 const FairPracticesCode = lazy(() => import("./pages/Fair-Practices.tsx"));
 const Repayment = lazy(() => import("./pages/Repayment.tsx"));
 const MakePayment = lazy(() => import("./pages/MakePayment.tsx"));
 const ReloanOffer = lazy(() => import("./pages/ReloanOffer.tsx"));
+
+// New YMYL Pages
+const RefundPolicy = lazy(() => import("./pages/RefundPolicy.tsx"));
+const Disclaimer = lazy(() => import("./pages/Disclaimer.tsx"));
+const ResponsibleLending = lazy(() => import("./pages/ResponsibleLending.tsx"));
+
+// New Loan Product Pages
+const PersonalLoan = lazy(() => import("./pages/loans/PersonalLoan.tsx"));
+const BusinessLoan = lazy(() => import("./pages/loans/BusinessLoan.tsx"));
+const PaydayLoan = lazy(() => import("./pages/loans/PaydayLoan.tsx"));
+const LoanAgainstProperty = lazy(() => import("./pages/loans/LoanAgainstProperty.tsx"));
+const VehicleLoan = lazy(() => import("./pages/loans/VehicleLoan.tsx"));
+const CreditServices = lazy(() => import("./pages/loans/CreditServices.tsx"));
+const EducationLoan = lazy(() => import("./pages/loans/EducationLoan.tsx"));
+const MedicalLoan = lazy(() => import("./pages/loans/MedicalLoan.tsx"));
 
 const withSuspense = (
   Component: React.ComponentType,
@@ -74,7 +102,27 @@ const App = () => (
           <Route path="/repayment" element={withSuspense(Repayment, <ContentPageFallback />)} />
           <Route path="/repayment/make-payment" element={withSuspense(MakePayment, <ContentPageFallback />)} />
           <Route path="/repayment/reloan-offer" element={withSuspense(ReloanOffer, <ContentPageFallback />)} />
-          <Route path="/privacy-policy" element={withSuspense(Policies, <ContentPageFallback />)} />
+          
+          {/* Privacy & Legal Policies */}
+          <Route path="/privacy-policy" element={withSuspense(PrivacyPolicy, <ContentPageFallback />)} />
+          <Route path="/privacy-policies" element={<Navigate to="/privacy-policy" replace />} />
+          <Route path="/terms-conditions" element={withSuspense(TermsConditions, <ContentPageFallback />)} />
+          <Route path="/grievance-redressal" element={withSuspense(GrievanceRedressal, <ContentPageFallback />)} />
+          <Route path="/fair-practices-code" element={withSuspense(FairPracticesCode, <ContentPageFallback />)} />
+          <Route path="/refund-policy" element={withSuspense(RefundPolicy, <ContentPageFallback />)} />
+          <Route path="/disclaimer" element={withSuspense(Disclaimer, <ContentPageFallback />)} />
+          <Route path="/responsible-lending" element={withSuspense(ResponsibleLending, <ContentPageFallback />)} />
+
+          {/* Loan Landing Pages */}
+          <Route path="/loans/personal-loan" element={withSuspense(PersonalLoan, <ContentPageFallback />)} />
+          <Route path="/loans/business-loan" element={withSuspense(BusinessLoan, <ContentPageFallback />)} />
+          <Route path="/loans/payday-loan" element={withSuspense(PaydayLoan, <ContentPageFallback />)} />
+          <Route path="/pay-day-loan" element={withSuspense(PaydayLoan, <ContentPageFallback />)} />
+          <Route path="/loans/loan-against-property" element={withSuspense(LoanAgainstProperty, <ContentPageFallback />)} />
+          <Route path="/loans/vehicle-loan" element={withSuspense(VehicleLoan, <ContentPageFallback />)} />
+          <Route path="/loans/credit-services" element={withSuspense(CreditServices, <ContentPageFallback />)} />
+          <Route path="/loans/education-loan" element={withSuspense(EducationLoan, <ContentPageFallback />)} />
+          <Route path="/loans/medical-loan" element={withSuspense(MedicalLoan, <ContentPageFallback />)} />
 
           <Route path="/login" element={withSuspense(Login, <AuthPageFallback />)} />
           <Route path="/user/dashboard" element={withSuspense(LoanDashboard, <DashboardPageFallback />)} />
@@ -97,16 +145,28 @@ const App = () => (
 
           {/* FINAL STATUS */}
           <Route path="/user/loan-status" element={withSuspense(LoanStatus, <KycPageFallback />)} />
-          <Route path="*" element={withSuspense(NotFound, <ContentPageFallback />)} />
 
-          <Route path="/privacy-policies" element={withSuspense(PrivacyPolicy, <ContentPageFallback />)} />
-          <Route path="/terms-conditions" element={withSuspense(TermsConditions, <ContentPageFallback />)} />
-          <Route path="/grievance-redressal" element={withSuspense(GrievanceRedressal, <ContentPageFallback />)} />
-          <Route path="/fair-practices-code" element={withSuspense(FairPracticesCode, <ContentPageFallback />)} />
+          {/* PUBLIC BLOGS */}
+          <Route path="/blog" element={withSuspense(Blog, <ContentPageFallback />)} />
+          <Route path="/blog/:slug" element={withSuspense(BlogDetail, <ContentPageFallback />)} />
+
+          {/* ADMIN PORTALS */}
+          <Route path="/admin" element={withSuspense(AdminLogin, <AuthPageFallback />)} />
+          <Route path="/admin/login" element={<Navigate to="/admin" replace />} />
+          <Route path="/admin/dashboard" element={withSuspense(AdminDashboard, <DashboardPageFallback />)} />
+          <Route path="/admin/leads" element={withSuspense(AdminLeads, <DashboardPageFallback />)} />
+          <Route path="/admin/leads/:id" element={withSuspense(AdminLeadDetail, <DashboardPageFallback />)} />
+          <Route path="/admin/contacts" element={withSuspense(AdminContacts, <DashboardPageFallback />)} />
+          <Route path="/admin/blogs" element={withSuspense(AdminBlogs, <DashboardPageFallback />)} />
+          <Route path="/admin/blogs/new" element={withSuspense(AdminBlogForm, <DashboardPageFallback />)} />
+          <Route path="/admin/blogs/edit/:id" element={withSuspense(AdminBlogForm, <DashboardPageFallback />)} />
+
+          <Route path="*" element={withSuspense(NotFound, <ContentPageFallback />)} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
+
 
 export default App;

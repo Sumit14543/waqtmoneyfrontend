@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
+import SEO from "@/Components/SEO";
 
 import { API_BASE_URL } from "@/config/api";
 
@@ -307,8 +308,22 @@ const Repayment = () => {
     setError("");
   };
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Waqt Money Loan Repayment Assistance",
+    "description": "Repay your Waqt Money payday and personal loans securely online. Find bank details, UPI options, and repayment verification instructions.",
+    "url": "https://waqtmoney.com/repayment"
+  };
+
   return (
     <div className="min-h-screen bg-[#f7f5ff] text-slate-950">
+      <SEO
+        title="Repay Your Loan Online - Secure Repayment Options"
+        description="Repay your Waqt Money loan securely online. View step-by-step instructions for UPI transfer, NEFT/IMPS bank transfer, and card payment clearance."
+        keywords="repay loan online, loan payment UPI, NEFT loan repayment, credit payback portal"
+        schema={schema}
+      />
       <Navbar />
 
       <main className="px-4 pb-16 pt-24 sm:px-6 lg:px-8">

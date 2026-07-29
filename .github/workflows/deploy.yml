@@ -79,10 +79,12 @@ jobs:
 
       - name: Deploy Frontend Files
         run: |
-          rsync -avz --delete \
+          rsync -avz \
             --exclude=backend \
             --exclude=api \
+            --exclude=payday-api \
             --exclude=.well-known \
+            --exclude=.htaccess \
             -e "ssh -p ${REMOTE_PORT} -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
             "${{ steps.frontend.outputs.dir }}/dist/" \
             "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_FRONTEND_DIR}/"

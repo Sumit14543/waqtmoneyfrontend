@@ -1,134 +1,88 @@
 import React from "react";
+import Navbar from "@/Components/Navbar";
+import Footer from "@/Components/Footer";
+import SEO from "@/Components/SEO";
+import { Scale, ShieldCheck, CheckCircle2 } from "lucide-react";
 
-const FairPracticesCode = () => {
+export default function FairPracticesCode() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Waqt Money Fair Practices Code",
+    "description": "Read the Fair Practices Code followed by Waqt Money in coordination with NBFC partner Waqt Finance Pvt Ltd.",
+    "url": "https://waqtmoney.com/fair-practices-code"
+  };
+
   return (
-    <main className="min-h-screen bg-[#eaf3fb] px-4 py-10">
-      <section className="max-w-5xl mx-auto">
+    <>
+      <SEO
+        title="Fair Practices Code - Ethical Lending Standards"
+        description="Read the Waqt Money Fair Practices Code. Understand our commitment to transparent interest rates, fair collection guidelines, and ethical operations."
+        keywords="fair practices code, ethical lending, customer rights India, NBFC recovery rules"
+        schema={schema}
+      />
+      <Navbar />
 
-        {/* TITLE */}
-        <div className="text-center mb-8">
-          <h1 className="text-xl md:text-2xl font-bold uppercase text-black">
-            Fair Practices <span className=" text-primary -600">Code</span>
-          </h1>
-          <div className="w-20 h-[3px] bg-sky-500 mx-auto mt-3 rounded-full" />
-        </div>
+      <main className="bg-gradient-to-b from-white via-[#fbf9ff] to-white pt-24 min-h-screen">
+        <section className="container mx-auto px-4 py-12 md:py-16 max-w-4xl">
+          <div className="text-center mb-10">
+            <span className="inline-flex rounded-full bg-purple-50 px-4 py-2 text-xs font-bold uppercase tracking-wide text-purple-700 mb-3">
+              Regulatory Standards
+            </span>
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
+              Fair Practices <span className="text-purple-600">Code</span>
+            </h1>
+            <p className="mt-3 text-sm text-slate-500">RBI Compliance & Borrower Rights Guidelines</p>
+          </div>
 
-        {/* CARD */}
-        <div className="bg-[#dcebf7] rounded-2xl shadow-[0_10px_35px_rgba(30,64,175,0.12)] px-6 md:px-10 py-8 md:py-10 text-[15px] leading-7 text-black">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-purple-100 shadow-xl text-slate-700 space-y-6 text-sm leading-relaxed">
+            <p>
+              At <strong>Waqt Money</strong> (operated under Waqt Finance Pvt Ltd), we follow a strict <strong>Fair Practices Code (FPC)</strong>. This code outlines our commitment to transparency, honesty, and ethical guidelines during customer loan evaluations, sanctioning, repayments, and collection procedures.
+            </p>
 
-          {/* INTRO */}
-          <p className="mb-5">
-            <strong>Waqt Money</strong> is committed to ensuring transparency, fairness, 
-            and ethical practices while offering instant payday loan services. 
-            This Fair Practices Code is based on applicable regulatory guidelines 
-            and is followed in coordination with our partner NBFCs/lenders.
-          </p>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-purple-600" />
+              1. Transparent Loan Assessment
+            </h2>
+            <p>
+              All loan applications submitted online are assessed digitally. We ensure that:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>All interest rates, administrative processing fees, and terms are explained upfront.</li>
+              <li>Official Sanction Letters are issued by our partner NBFC, outlining details of the credit facility.</li>
+              <li>No changes in loan conditions can be applied retroactively without prior notice.</li>
+            </ul>
 
-          <p className="mb-6">
-            The objective of this code is to provide clear and fair treatment 
-            to customers throughout the loan lifecycle including application, 
-            approval, disbursal, and repayment.
-          </p>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <Scale className="h-5 w-5 text-purple-600" />
+              2. Fair Recovery & Collection Practices
+            </h2>
+            <p>
+              In alignment with RBI guidelines, Waqt Money is committed to ensuring that:
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>No physical threats, intimidation, or privacy violations are used during loan recovery.</li>
+              <li>Recoveries are handled strictly by trained professionals between 9:00 AM and 6:00 PM.</li>
+              <li>Reminders and notifications regarding payment delays are communicated respectfully.</li>
+            </ul>
 
-          {/* APPLICATION */}
-          <h2 className="text-lg font-semibold   text-primary  -600 mb-3">
-            1. Loan Application Process
-          </h2>
+            <h2 className="text-lg font-bold text-slate-900 pt-2 flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-purple-600" />
+              3. Equal Opportunity & Fair Valuation
+            </h2>
+            <p>
+              We do not discriminate against applicants based on gender, race, caste, religion, or community. All applications are evaluated purely on financial stability, salary parameters, credit health, and eligibility scores.
+            </p>
 
-          <ul className="list-disc pl-6 mb-6 space-y-2">
-            <li>All loan applications are processed digitally through a simple interface</li>
-            <li>Applicants are required to provide accurate and complete information</li>
-            <li>All required documents and KYC details will be clearly communicated</li>
-          </ul>
+            <h2 className="text-lg font-bold text-slate-900 pt-2">4. Grievances and escalation</h2>
+            <p>
+              For concerns regarding the Fair Practices Code compliance, please escalate directly to our Grievance Officer at <strong className="text-slate-900">grievance@waqtmoney.com</strong>.
+            </p>
+          </div>
+        </section>
+      </main>
 
-          {/* TRANSPARENCY */}
-          <h2 className="text-lg font-semibold   text-primary  -600 mb-3">
-            2. Transparency in Loan Terms
-          </h2>
-
-          <ul className="list-disc pl-6 mb-6 space-y-2">
-            <li>Interest rates, fees, and charges are clearly disclosed upfront</li>
-            <li>No hidden charges will be applied</li>
-            <li>Loan agreement terms will be shared before acceptance</li>
-          </ul>
-
-          {/* DISBURSAL */}
-          <h2 className="text-lg font-semibold   text-primary  -600 mb-3">
-            3. Loan Disbursal
-          </h2>
-
-          <p className="mb-6">
-            Approved loans are disbursed directly to the borrower’s bank account 
-            in a timely manner after successful verification and acceptance of terms.
-          </p>
-
-          {/* REPAYMENT */}
-          <h2 className="text-lg font-semibold   text-primary  -600 mb-3">
-            4. Repayment & Collections
-          </h2>
-
-          <ul className="list-disc pl-6 mb-6 space-y-2">
-            <li>Clear repayment schedules will be provided</li>
-            <li>No harassment or unfair practices in recovery</li>
-            <li>Customers will be informed before applying any penalties</li>
-          </ul>
-
-          {/* DATA PRIVACY */}
-          <h2 className="text-lg font-semibold   text-primary  -600 mb-3">
-            5. Data Privacy & Confidentiality
-          </h2>
-
-          <p className="mb-6">
-            Customer information is handled securely and used only for legitimate 
-            business purposes such as loan processing, verification, and compliance.
-          </p>
-
-          {/* NON-DISCRIMINATION */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            6. Non-Discrimination
-          </h2>
-
-          <p className="mb-6">
-            Waqt Money does not discriminate based on gender, religion, caste, 
-            or any other personal factor while evaluating loan applications.
-          </p>
-
-          {/* GRIEVANCE */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            7. Grievance Redressal
-          </h2>
-
-          <p className="mb-6">
-            Customers can raise complaints through our grievance redressal 
-            mechanism. All complaints will be resolved within defined timelines 
-            in a fair and transparent manner.
-          </p>
-
-          {/* COMPLIANCE */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            8. Regulatory Compliance
-          </h2>
-
-          <p className="mb-6">
-            Waqt Money works in partnership with RBI-registered NBFCs/lenders and 
-            ensures compliance with applicable laws, guidelines, and industry standards.
-          </p>
-
-          {/* FINAL */}
-          <h2 className="text-lg font-semibold  text-primary -600 mb-3">
-            9. Contact Us
-          </h2>
-
-          <p>
-            For any queries related to Fair Practices Code:
-            <br />
-            <strong>Email:</strong> support@waqtmoney.com
-          </p>
-
-        </div>
-      </section>
-    </main>
+      <Footer />
+    </>
   );
-};
-
-export default FairPracticesCode;
+}
