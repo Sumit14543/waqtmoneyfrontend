@@ -184,8 +184,8 @@ const KycAadhaar = () => {
     return parts ? parts.join(" ") : "";
   };
 
-  const validateAadhaarAgainstMask = (aadhaarStr: string, maskStr: string) => {
-    if (!maskStr || !aadhaarStr) return { isValid: true, error: "" };
+  const validateAadhaarAgainstMask = (aadhaarStr: string, maskStr?: string) => {
+    if (!maskStr) return { isValid: true, error: "" };
 
     const cleanMask = String(maskStr).replace(/[\s-]/g, "");
     const cleanAadhaar = String(aadhaarStr).replace(/\D/g, "");
@@ -196,14 +196,14 @@ const KycAadhaar = () => {
         if (cleanAadhaar.slice(0, 2) !== first2Mask) {
           return {
             isValid: false,
-            error: `First 2 digits must match fetched Aadhaar (${first2Mask}...)`,
+            error: "Aadhaar number is incorrect",
           };
         }
       } else if (/^\d{1}$/.test(first2Mask[0]) && cleanAadhaar.length >= 1) {
         if (cleanAadhaar[0] !== first2Mask[0]) {
           return {
             isValid: false,
-            error: `First digit must match fetched Aadhaar (${first2Mask[0]}...)`,
+            error: "Aadhaar number is incorrect",
           };
         }
       }
@@ -215,13 +215,13 @@ const KycAadhaar = () => {
         if (/^\d{4}$/.test(last4Mask) && cleanAadhaar.slice(-4) !== last4Mask) {
           return {
             isValid: false,
-            error: `Last 4 digits must match fetched Aadhaar (...${last4Mask})`,
+            error: "Aadhaar number is incorrect",
           };
         }
         if (/^\d{2}$/.test(last2Mask) && cleanAadhaar.slice(-2) !== last2Mask) {
           return {
             isValid: false,
-            error: `Last 2 digits must match fetched Aadhaar (...${last2Mask})`,
+            error: "Aadhaar number is incorrect",
           };
         }
       }
@@ -234,14 +234,14 @@ const KycAadhaar = () => {
         if (cleanAadhaar.slice(0, 2) !== first2Match[1]) {
           return {
             isValid: false,
-            error: `First 2 digits must match fetched Aadhaar (${first2Match[1]}...)`,
+            error: "Aadhaar number is incorrect",
           };
         }
       } else if (first2Match && cleanAadhaar.length >= 1) {
         if (cleanAadhaar[0] !== first2Match[1][0]) {
           return {
             isValid: false,
-            error: `First digit must match fetched Aadhaar (${first2Match[1][0]}...)`,
+            error: "Aadhaar number is incorrect",
           };
         }
       }
@@ -250,12 +250,12 @@ const KycAadhaar = () => {
         if (last4Match && cleanAadhaar.slice(-4) !== last4Match[1]) {
           return {
             isValid: false,
-            error: `Last 4 digits must match fetched Aadhaar (...${last4Match[1]})`,
+            error: "Aadhaar number is incorrect",
           };
         } else if (last2Match && cleanAadhaar.slice(-2) !== last2Match[1]) {
           return {
             isValid: false,
-            error: `Last 2 digits must match fetched Aadhaar (...${last2Match[1]})`,
+            error: "Aadhaar number is incorrect",
           };
         }
       }
