@@ -14,7 +14,10 @@ export default function AdminLogin() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !password) {
+    const cleanUser = username.trim();
+    const cleanPass = password.trim();
+
+    if (!cleanUser || !cleanPass) {
       setError("Please fill in all fields");
       return;
     }
@@ -26,19 +29,22 @@ export default function AdminLogin() {
       const response = await fetch(`${API_BASE_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username: cleanUser, password: cleanPass }),
       });
 
-      const data = await response.json();
-      if (data.success) {
+      const data = await response.json().catch(() => null);
+
+      if (response.ok && data?.success) {
         localStorage.setItem("admin_token", data.token);
-        localStorage.setItem("admin_username", data.username);
+        localStorage.setItem("admin_username", data.username || cleanUser);
         navigate("/admin/dashboard");
       } else {
-        setError(data.message || "Invalid admin credentials");
+        setError(data?.message || `Login failed (${response.status}: ${response.statusText})`);
       }
-    } catch (err) {
-      setError("Server connection failed. Please try again.");
+    } catch (err: unknown) {
+      const errorObj = err as Error;
+      console.error("Admin login network error:", errorObj);
+      setError(errorObj?.message || "Server connection failed. Please try again.");
     } finally {
       setLoading(false);
     }
