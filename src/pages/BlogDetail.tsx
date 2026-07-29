@@ -46,29 +46,34 @@ export default function BlogDetail() {
     const fetchBlog = async () => {
       setLoading(true);
       setError("");
-      const cleanSlug = String(slug || "").trim().toLowerCase();
+
+      const rawSlug = String(slug || "").trim();
+      const decodedSlug = decodeURIComponent(rawSlug);
+      const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
 
       try {
-        const response = await fetch(`${API_BASE_URL}/blogs/${slug}`);
+        const response = await fetch(`${API_BASE_URL}/blogs/${cleanSlug}`);
         const data = await response.json().catch(() => null);
 
         if (response.ok && data?.success && data?.blog) {
           setBlog(data.blog);
         } else {
-          const found = fallbackBlogs.find(
-            (b) =>
-              (b.slug || "").trim().toLowerCase() === cleanSlug ||
-              String(b.id) === cleanSlug
-          ) || fallbackBlogs[0];
+          const found =
+            fallbackBlogs.find(
+              (b) =>
+                (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
+                String(b.id) === cleanSlug
+            ) || fallbackBlogs[0];
 
           setBlog(found as unknown as Blog);
         }
       } catch {
-        const found = fallbackBlogs.find(
-          (b) =>
-            (b.slug || "").trim().toLowerCase() === cleanSlug ||
-            String(b.id) === cleanSlug
-        ) || fallbackBlogs[0];
+        const found =
+          fallbackBlogs.find(
+            (b) =>
+              (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
+              String(b.id) === cleanSlug
+          ) || fallbackBlogs[0];
 
         setBlog(found as unknown as Blog);
       } finally {
