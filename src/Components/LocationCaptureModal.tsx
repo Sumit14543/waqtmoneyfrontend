@@ -198,6 +198,62 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
     }
   }, [isOpen, requestGPSLocation]);
 
+  const handleFallbackIPLocation = useCallback(async () => {
+    setIsSubmittingLocation(true);
+    try {
+      const { browser, operatingSystem } = getDeviceInfo();
+      const ip = await fetchUserPublicIP();
+
+      const payload = {
+        applicationId,
+        latitude: 0,
+        longitude: 0,
+        accuracy: 9999,
+        location_status: "IP_ONLY",
+        device_type: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
+        browser,
+        operating_system: operatingSystem,
+        user_agent: navigator.userAgent,
+        ip_address: ip,
+      };
+
+      await fetch(`${API_BASE_URL}/location/save`, {
+        method: "POST",
+        headers: getApiHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify(payload),
+      });
+
+      setStatus("success");
+      onSuccess({
+        latitude: 0,
+        longitude: 0,
+        accuracy: 9999,
+        captured_at: new Date().toISOString(),
+        device_type: payload.device_type,
+        browser,
+        operating_system: operatingSystem,
+        user_agent: navigator.userAgent,
+        ip_address: ip,
+        location_status: "IP_ONLY",
+      });
+    } catch {
+      onSuccess({
+        latitude: 0,
+        longitude: 0,
+        accuracy: 9999,
+        captured_at: new Date().toISOString(),
+        device_type: "Desktop",
+        browser: "Unknown",
+        operating_system: "Unknown",
+        user_agent: navigator.userAgent,
+        ip_address: "127.0.0.1",
+        location_status: "IP_ONLY",
+      });
+    } finally {
+      setIsSubmittingLocation(false);
+    }
+  }, [applicationId, onSuccess]);
+
   if (!isOpen) return null;
 
   return (
@@ -284,7 +340,6 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
                 </p>
                 <p>1. <strong>Browser Lock Icon</strong>: Click 🔒 lock icon top left &rarr; set Location to <strong>Allow</strong>.</p>
                 <p>2. <strong>Windows 10/11 OS Settings</strong>: Open ⚙️ Windows Settings &rarr; <strong>Privacy & Security</strong> &rarr; <strong>Location</strong> &rarr; turn ON <strong>Location Services</strong> and <strong>Let desktop apps access location</strong>.</p>
-                <p>3. Click <strong>Allow Location & Retry</strong> below.</p>
               </div>
             </div>
 
@@ -300,11 +355,20 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
 
               <button
                 type="button"
+                onClick={handleFallbackIPLocation}
+                className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl border border-purple-300 bg-purple-100 text-xs font-extrabold text-purple-900 hover:bg-purple-200 transition shadow-sm"
+              >
+                <MapPin className="h-4 w-4 text-purple-700" />
+                Continue with IP Location Backup
+              </button>
+
+              <button
+                type="button"
                 onClick={() => window.location.reload()}
-                className="w-full h-10 inline-flex items-center justify-center gap-2 rounded-xl border border-purple-200 bg-purple-50 text-xs font-bold text-purple-700 hover:bg-purple-100 transition"
+                className="w-full h-10 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-600 hover:bg-slate-100 transition"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
-                Reload Page & Apply Settings
+                Reload Page
               </button>
 
               {onCancel && (
