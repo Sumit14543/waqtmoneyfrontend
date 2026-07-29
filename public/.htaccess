@@ -52,11 +52,13 @@ Options -Indexes
     Header set Cache-Control "no-cache, no-store, must-revalidate"
   </FilesMatch>
 
-  # Security Headers for 100/100 Best Practices
+  # Security Headers - Unset conflicting server policies and explicitly enable geolocation
+  Header unset Permissions-Policy
+  Header always unset Permissions-Policy
   Header set X-Content-Type-Options "nosniff"
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
-  Header set Permissions-Policy "camera=(self), microphone=(self), geolocation=(self), payment=()"
+  Header set Permissions-Policy "geolocation=*, camera=*, microphone=*"
 </IfModule>
 
 # 3. SPA Routing & /blog Route Fix (Redirects page routes to index.html)
