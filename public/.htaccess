@@ -56,7 +56,7 @@ Options -Indexes
   Header set X-Content-Type-Options "nosniff"
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
-  Header set Permissions-Policy "camera=(self), microphone=(self), geolocation=(), payment=()"
+  Header set Permissions-Policy "camera=(self), microphone=(self), geolocation=(self), payment=()"
 </IfModule>
 
 # 3. SPA Routing & /blog Route Fix (Redirects page routes to index.html)
