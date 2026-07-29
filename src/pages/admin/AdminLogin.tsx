@@ -26,11 +26,23 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/login`, {
+      let response = await fetch(`${API_BASE_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: cleanUser, password: cleanPass }),
       });
+
+      if (response.status === 404) {
+        const altUrl = API_BASE_URL.endsWith("/api")
+          ? `${API_BASE_URL.replace(/\/api$/, "")}/admin/login`
+          : `${API_BASE_URL}/admin/login`;
+
+        response = await fetch(altUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: cleanUser, password: cleanPass }),
+        });
+      }
 
       const data = await response.json().catch(() => null);
 
