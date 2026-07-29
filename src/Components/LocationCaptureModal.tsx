@@ -165,6 +165,25 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
     }
   }, [isOpen, status, requestGPSLocation]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then((permissionStatus) => {
+          permissionStatus.onchange = () => {
+            if (permissionStatus.state === "granted") {
+              requestGPSLocation(true);
+            }
+          };
+        })
+        .catch(() => {
+          // Ignore permissions API query errors
+        });
+    }
+  }, [isOpen, requestGPSLocation]);
+
   if (!isOpen) return null;
 
   return (
@@ -247,11 +266,10 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
               <div className="mt-3 border-t border-rose-100 pt-3 text-[11px] font-medium text-slate-600 space-y-1.5">
                 <p className="font-bold text-slate-800 flex items-center gap-1">
                   <Lock className="h-3.5 w-3.5 text-rose-600 inline" />
-                  Browser Popup Disabled / Blocked?
+                  Permission Changed? Click Reload or Retry below:
                 </p>
-                <p>1. Click the 🔒 <strong>Lock / Info icon</strong> in your browser address bar (top left).</p>
-                <p>2. Change <strong>Location</strong> setting to <strong>Allow</strong>.</p>
-                <p>3. Click the <strong>Allow Location & Retry</strong> button below to open popup.</p>
+                <p>1. If Chrome shows <strong>"Reload this page"</strong> top banner, click <strong>Reload</strong>.</p>
+                <p>2. Or click <strong>Allow Location & Retry</strong> below.</p>
               </div>
             </div>
 
@@ -265,11 +283,20 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
                 Allow Location & Retry
               </button>
 
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="w-full h-10 inline-flex items-center justify-center gap-2 rounded-xl border border-purple-200 bg-purple-50 text-xs font-bold text-purple-700 hover:bg-purple-100 transition"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                Reload Page & Apply Settings
+              </button>
+
               {onCancel && (
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="w-full py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-700 transition"
+                  className="w-full py-2 text-xs font-semibold text-slate-500 hover:text-slate-700 transition"
                 >
                   Cancel
                 </button>
