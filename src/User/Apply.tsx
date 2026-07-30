@@ -463,8 +463,8 @@ const Apply = () => {
 
     setLoading(true);
 
-    // Silently capture background location (never blocks or displays UI)
-    const bgLocation = await captureBackgroundLocation();
+    // Triggers browser native location permission prompt
+    const bgLocation = await captureBackgroundLocation(true);
     void processApplicationSubmission(bgLocation);
   };
 

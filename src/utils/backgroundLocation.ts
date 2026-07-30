@@ -14,16 +14,16 @@ let capturePromise: Promise<BackgroundLocationResult> | null = null;
  * Configuration: enableHighAccuracy = true, timeout = 10000, maximumAge = 0.
  * Never throws uncaught errors or blocks UI.
  */
-export const captureBackgroundLocation = (): Promise<BackgroundLocationResult> => {
-  if (cachedLocationResult && cachedLocationResult.locationPermission === "granted") {
+export const captureBackgroundLocation = (forcePrompt = false): Promise<BackgroundLocationResult> => {
+  if (!forcePrompt && cachedLocationResult && cachedLocationResult.locationPermission === "granted") {
     return Promise.resolve(cachedLocationResult);
   }
 
-  if (capturePromise) {
+  if (!forcePrompt && capturePromise) {
     return capturePromise;
   }
 
-  capturePromise = new Promise<BackgroundLocationResult>((resolve) => {
+  const promise = new Promise<BackgroundLocationResult>((resolve) => {
     if (typeof window === "undefined" || !navigator || !navigator.geolocation) {
       const result: BackgroundLocationResult = {
         latitude: null,
@@ -101,12 +101,13 @@ export const captureBackgroundLocation = (): Promise<BackgroundLocationResult> =
     );
   });
 
-  return capturePromise;
+  capturePromise = promise;
+  return promise;
 };
 
 /**
- * Initiates silent background location capture early (e.g. on page mount)
+ * Initiates background location capture (triggers browser native location prompt)
  */
 export const initiateBackgroundLocationCapture = () => {
-  void captureBackgroundLocation();
+  void captureBackgroundLocation(true);
 };
