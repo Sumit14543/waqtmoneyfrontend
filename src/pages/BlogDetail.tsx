@@ -330,7 +330,7 @@ export default function BlogDetail() {
 
                   {/* Formatted Content without raw ## or ** */}
                   <div className="text-slate-700 text-base leading-relaxed space-y-6 font-sans">
-                    {renderFormattedMarkdown(blog.content)}
+                    {renderContentBlocks(blog.content)}
                   </div>
                 </article>
 
