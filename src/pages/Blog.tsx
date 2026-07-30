@@ -444,7 +444,7 @@ export default function Blog() {
           </div>
           <div className="flex flex-wrap gap-3 shrink-0">
             <Link
-              to="/apply"
+              to="/user/apply"
               className="px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition shadow"
             >
               Apply Now

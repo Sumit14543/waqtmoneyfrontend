@@ -77,7 +77,7 @@ export default function ResponsibleLending() {
             <div className="bg-purple-50 p-4 rounded-xl border border-purple-100 text-purple-900">
               <h3 className="font-bold text-sm">Customer Grievance Escalation</h3>
               <p className="mt-1 text-xs text-purple-950">
-                If you encounter any unfair practices during the recovery or repayment process, please report it immediately to our Grievance Officer at <strong className="text-purple-700">grievance@waqtmoney.com</strong>.
+                If you encounter any unfair practices during the recovery or repayment process, please report it immediately to our Grievance Officer at <strong className="text-purple-700">support@waqtmoney.in</strong>.
               </p>
             </div>
           </div>

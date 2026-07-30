@@ -108,7 +108,7 @@ const Contact = () => {
       "@type": "ContactPoint",
       "telephone": "+91-9217086608",
       "contactType": "customer service",
-      "email": "support@waqtmoney.com",
+      "email": "support@waqtmoney.in",
       "availableLanguage": ["English", "Hindi"]
     }
   };
@@ -117,7 +117,7 @@ const Contact = () => {
     <>
       <SEO
         title="Contact Us - Customer Support & Office Location"
-        description="Contact Waqt Money support. Call +91 9217086608, email support@waqtmoney.com, or visit our registered corporate office in Sector 63, Noida (UP) for assistance."
+        description="Contact Waqt Money support. Call +91 9217086608, email support@waqtmoney.in, or visit our registered corporate office in Sector 63, Noida (UP) for assistance."
         keywords="contact Waqt Money, customer support number, office location, loan helpdesk"
         schema={schema}
       />
@@ -177,7 +177,7 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white">Email Support</h3>
                     <p className="text-gray-600 dark:text-slate-400 text-sm">
-                      support@waqtmoney.com
+                      support@waqtmoney.in
                     </p>
                   </div>
                 </div>

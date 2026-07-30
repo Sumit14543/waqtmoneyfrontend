@@ -45,7 +45,7 @@ const Index = () => {
         "@type": "ContactPoint",
         "telephone": "+91-9217086608",
         "contactType": "customer service",
-        "email": "support@waqtmoney.com",
+        "email": "support@waqtmoney.in",
         "availableLanguage": ["English", "Hindi"]
       }
     }

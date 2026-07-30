@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRightCircle, CalendarDays, ChevronDown, FileText, Lock, Zap } from "lucide-react";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import BrandLogo from "@/Components/BrandLogo";
 
 import { API_BASE_URL, getApiHeaders, normalizeApiMessage } from "@/config/api";
-import LocationCaptureModal, { LocationData } from "@/Components/LocationCaptureModal";
+import { captureBackgroundLocation, initiateBackgroundLocationCapture, BackgroundLocationResult } from "@/utils/backgroundLocation";
 import { getDeviceInfo } from "@/utils/deviceInfo";
 
 const steps = [
@@ -65,8 +65,6 @@ const Apply = () => {
   const [resumePrompt, setResumePrompt] = useState(false);
   const [resumeLoading, setResumeLoading] = useState(false);
   const [savedApplicationId, setSavedApplicationId] = useState("");
-  const [showLocationModal, setShowLocationModal] = useState(false);
-  const [pendingLocationData, setPendingLocationData] = useState<LocationData | null>(null);
 
   const digitsOnly = (value: string) => value.replace(/\D/g, "");
 
@@ -450,6 +448,10 @@ const Apply = () => {
     moveToNextControl(target);
   };
 
+  React.useEffect(() => {
+    initiateBackgroundLocationCapture();
+  }, []);
+
   const handleSubmit = async () => {
     if (loading) return;
 
@@ -459,25 +461,14 @@ const Apply = () => {
       return;
     }
 
-    const defaultLocationData: LocationData = {
-      latitude: 0,
-      longitude: 0,
-      accuracy: 9999,
-      capturedAt: new Date().toISOString(),
-      location_status: "DIRECT_SUBMIT",
-    };
-
-    void processApplicationSubmission(defaultLocationData);
-  };
-
-  const handleLocationCaptured = (data: LocationData) => {
-    setPendingLocationData(data);
-    setShowLocationModal(false);
-    void processApplicationSubmission(data);
-  };
-
-  const processApplicationSubmission = async (gpsData: LocationData) => {
     setLoading(true);
+
+    // Silently capture background location (never blocks or displays UI)
+    const bgLocation = await captureBackgroundLocation();
+    void processApplicationSubmission(bgLocation);
+  };
+
+  const processApplicationSubmission = async (gpsData: BackgroundLocationResult) => {
     setFieldErrors({});
 
     const applicationData = {
@@ -490,6 +481,7 @@ const Apply = () => {
       longitude: gpsData.longitude,
       accuracy: gpsData.accuracy,
       capturedAt: gpsData.capturedAt,
+      locationPermission: gpsData.locationPermission,
     };
 
     const loanData = {
@@ -511,6 +503,7 @@ const Apply = () => {
       const appResult = await readJsonResponse(appRes);
 
       if (!appRes.ok) {
+        setLoading(false);
         showError(normalizeApiMessage(appResult.message, "Application failed"));
         return;
       }
@@ -522,6 +515,7 @@ const Apply = () => {
         getApplicationIdFromResponse(appResult);
 
       if (!applicationId) {
+        setLoading(false);
         console.error("Application ID missing in server response", appResult);
         showError("Application ID not received from server");
         return;
@@ -539,6 +533,7 @@ const Apply = () => {
           longitude: gpsData.longitude,
           accuracy: gpsData.accuracy,
           capturedAt: gpsData.capturedAt,
+          locationPermission: gpsData.locationPermission,
           device: deviceInfo.deviceType,
           deviceType: deviceInfo.deviceType,
           browser: deviceInfo.browser,
@@ -861,7 +856,7 @@ const Apply = () => {
                 </p>
                 <div className="mt-4 space-y-2 text-sm font-medium text-white/95">
                   <p>Telephone: +91 9217086608</p>
-                  <p>Email: support@waqtmoney.com</p>
+                  <p>Email: support@waqtmoney.in</p>
                   <p>Visit Us: H-15, Sector 63, Noida, Uttar Pradesh, India</p>
                 </div>
               </div>
@@ -1196,8 +1191,12 @@ const Apply = () => {
                 />
                 <span>
                   I agree to the{" "}
-                  <span className="font-semibold text-[#155ed0]">Terms</span>,{" "}
-                  <span className="font-semibold text-[#155ed0]">Privacy Policy</span>,
+                  <Link to="/terms-conditions" target="_blank" rel="noopener noreferrer" className="font-semibold text-[#155ed0] underline hover:opacity-80">
+                    Terms
+                  </Link>,{" "}
+                  <Link to="/privacy-policy" target="_blank" rel="noopener noreferrer" className="font-semibold text-[#155ed0] underline hover:opacity-80">
+                    Privacy Policy
+                  </Link>,
                   KYC checks, and OTP verification.
                 </span>
               </label>

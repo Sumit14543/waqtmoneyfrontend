@@ -20,9 +20,11 @@ const CTASection = () => {
             <p className="text-primary-foreground/80 mb-6 max-w-md">
               Apply in minutes and get access to transparent, flexible loan solutions designed to support your financial goals without unnecessary delays.
             </p>
-            <Button disabled size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 h-12 px-8">
-              Apply For Loan <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
+            <Link to="/user/apply">
+              <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 h-12 px-8">
+                Apply For Loan <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </Link>
           </div>
           <div className="flex-shrink-0">
             <img src={coinsStack} alt="Gold coins" loading="lazy" width={250} height={250} className="animate-float" />

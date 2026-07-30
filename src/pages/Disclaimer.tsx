@@ -62,7 +62,7 @@ export default function Disclaimer() {
             <p>
               If you have any questions or require further clarifications regarding our services, please feel free to reach out to us:
               <br />
-              <strong className="text-slate-900">Email:</strong> support@waqtmoney.com
+              <strong className="text-slate-900">Email:</strong> support@waqtmoney.in
             </p>
           </div>
         </section>

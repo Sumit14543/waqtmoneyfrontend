@@ -1,104 +1,95 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  ShieldCheck,
+  Zap,
+  IndianRupee,
   Clock,
   ArrowRight,
   CheckCircle2,
   AlertTriangle,
-  BookOpen,
   Scale,
   HelpCircle,
-  Zap,
-  Lock,
-  Percent,
-  Calendar,
-  FileText,
-  UserCheck,
   ChevronRight,
-  Headphones,
-  Info
+  Check,
+  Building2,
+  UserCheck,
+  ArrowRightLeft,
+  Info,
+  XCircle
 } from "lucide-react";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import SEO from "@/Components/SEO";
 
 export default function PaydayLoan() {
-  // Calculator State
-  const [loanAmount, setLoanAmount] = useState<number>(25000);
-  const [tenureDays, setTenureDays] = useState<number>(30);
+  const [loanAmount, setLoanAmount] = useState(25000);
+  const [tenureDays, setTenureDays] = useState(30);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
-  // Interest rate: 1% per day
+  // Daily interest 1% per day
   const dailyRate = 0.01;
-  const interestAmount = Math.round(loanAmount * dailyRate * tenureDays);
-  const processingFeePct = 0.08; // 8% average
-  const processingFee = Math.round(loanAmount * processingFeePct);
+  const totalInterest = Math.round(loanAmount * dailyRate * tenureDays);
+  // Processing fee: 8% + 18% GST on processing fee
+  const processingFee = Math.round(loanAmount * 0.08);
   const gstOnFee = Math.round(processingFee * 0.18);
-  const totalRepayment = loanAmount + interestAmount + processingFee + gstOnFee;
+  const totalRepayment = loanAmount + totalInterest + processingFee + gstOnFee;
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
+  };
 
   const faqs = [
     {
-      q: "What is a Payday Loan?",
-      a: "A Payday Loan is a Short-Term Loan designed for salaried individuals who need funds before their next salary credit, ranging from ₹5,000 to ₹1,00,000."
+      q: "1. What is a Payday Loan?",
+      a: "A Payday Loan is a short-term, unsecured Salary Advance Loan meant to help salaried individuals cover urgent expenses until their next salary is credited."
     },
     {
-      q: "Who is eligible for Waqt Money's Payday Loan?",
-      a: "Salaried employees aged 21–58, with a regular Monthly Salary, an active Salary Account, and valid documents may apply — approval is subject to eligibility and verification."
+      q: "2. How much can I borrow with a Payday Loan?",
+      a: "Waqt Money offers Payday Loans up to ₹1,00,000 (with ranges up to ₹2,00,000 for eligible profiles), depending on your monthly income and repayment capacity."
     },
     {
-      q: "What documents are required?",
-      a: "Aadhaar Card, PAN Card, a recent salary slip, and bank statements covering the last 6 months."
+      q: "3. What is the repayment tenure for a Payday Loan?",
+      a: "Tenures typically range from 15 to 45 days, aligned with your upcoming salary date."
     },
     {
-      q: "What is the Payday Loan interest rate?",
-      a: "Interest is charged at 1% per day on your outstanding loan amount, disclosed clearly as part of your loan agreement."
+      q: "4. What is the Payday Loan interest rate and fee structure?",
+      a: "Interest is 1% per day, with a processing fee of 7% to 10% plus 18% GST on the fee."
     },
     {
-      q: "What is the Payday Loan tenure?",
-      a: "Tenure ranges from 15 to 45 days, aligned with your salary cycle — shorter than personal or business loan tenures."
+      q: "5. What documents are required for a Payday Loan Online application?",
+      a: "Aadhaar Card, PAN Card, recent salary slips, and 3 to 6 months of bank statements showing salary credits."
     },
     {
-      q: "Is a Payday Loan the same as a Salary Advance Loan or Instant Salary Loan?",
-      a: "Yes — these terms commonly describe the same concept: a Loan Before Salary, repaid around your next salary credit."
+      q: "6. Can I get a Payday Loan with a low credit score?",
+      a: "While credit history is evaluated, your regular salary credit and current repayment capacity play a significant role in approval."
     },
     {
-      q: "Do I need collateral for an Emergency Cash Loan like this?",
-      a: "No — Payday Loans are unsecured, so no property, gold, or asset pledge is required."
+      q: "7. How fast are Payday Loan funds disbursed?",
+      a: "Once your application and verification are complete and you accept the agreement, funds are disbursed directly to your bank account."
     },
     {
-      q: "How much can I borrow?",
-      a: "Loan amounts range from ₹5,00,0 to ₹1,00,000, depending on your salary, existing obligations, and Credit Assessment."
-    },
-    {
-      q: "What charges apply besides interest?",
-      a: "A processing fee of 7%–10% of the loan amount, plus GST @ 18% on all applicable fees and charges."
-    },
-    {
-      q: "Can self-employed individuals apply?",
-      a: "Payday Loans at Waqt Money are designed for salaried employees; self-employed applicants can explore a Business Loan or EDI Loan instead."
-    },
-    {
-      q: "Is Waqt Money a registered lender?",
-      a: "Yes — Waqt Money operates under the same registered NBFC as Waqt Finance, ensuring your loan is processed under regulated, compliant standards."
+      q: "8. Is a Payday Loan suitable for long-term borrowing?",
+      a: "No. A Payday Loan is designed strictly for short-term financial gaps before payday. For multi-year needs, consider a Personal Loan or Business Loan."
     }
   ];
 
   const schema = [
     {
       "@context": "https://schema.org",
-      "@type": "FinancialService",
+      "@type": "LoanOrCredit",
       "name": "Waqt Money Payday Loan",
-      "description": "Apply Payday Loan Online with Waqt Money. Get an Instant Payday Loan of ₹5,00,0 to ₹1,00,000, minimal documentation, and transparent charges for salaried employees.",
-      "url": "https://waqtmoney.com/pay-day-loan",
-      "image": "https://waqtmoney.com/waqt-money-logo-img.png",
+      "description": "Urgent cash before your next salary. Get a Payday Loan of up to ₹1,00,000 with minimal documents and fast digital verification.",
+      "url": "https://waqtmoney.com/loans/payday-loan",
+      "amount": {
+        "@type": "MonetaryAmount",
+        "currency": "INR",
+        "minValue": 5000,
+        "maxValue": 100000
+      },
+      "interestRate": 1.0,
       "provider": {
         "@type": "Organization",
         "name": "Waqt Finance Pvt Ltd"
-      },
-      "offers": {
-        "@type": "Offer",
-        "priceCurrency": "INR",
-        "price": "100000"
       }
     },
     {
@@ -118,15 +109,15 @@ export default function PaydayLoan() {
   return (
     <>
       <SEO
-        title="Payday Loan in India | Instant Salary Advance | Waqt Money"
-        description="Apply Payday Loan Online with Waqt Money. Get an Instant Payday Loan of ₹5,000 to ₹1,00,000, minimal documentation, and transparent charges for salaried employees."
-        keywords="Payday Loan, Instant Payday Loan India, Salary Advance Loan, Emergency Cash Loan, Loan Before Salary, Short-Term Finance, Payday Loan Online, Waqt Money"
+        title="Payday Loan Online – Quick Salary Advance Loan | Waqt Money"
+        description="Need cash before your next salary? Apply Payday Loan Online with Waqt Money. Quick eligibility check, minimal documents, and a fast salary advance loan process."
+        keywords="Payday Loan, Payday Loan Online, Payday Loan India, Salary Advance Loan, Instant Payday Loan, Payday Loan Apply Online, Payday Loan Eligibility, Payday Loan Interest Rate, Emergency Salary Loan"
         schema={schema}
       />
       <Navbar />
 
-      <main className="bg-gradient-to-b from-slate-50 via-purple-50/20 to-white pt-24 min-h-screen text-slate-800">
-        {/* Breadcrumb */}
+      <main className="bg-gradient-to-b from-white via-[#fbf9ff] to-white pt-24 min-h-screen text-slate-800">
+        {/* Breadcrumbs */}
         <nav className="container mx-auto px-4 py-3 text-sm text-slate-500" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-2">
             <li>
@@ -142,696 +133,469 @@ export default function PaydayLoan() {
         </nav>
 
         {/* Hero Section */}
-        <section className="container mx-auto px-4 py-10 md:py-16 grid lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full bg-purple-100/80 px-4 py-1.5 text-xs font-bold text-purple-800 border border-purple-200 shadow-xs">
-              <Zap className="h-3.5 w-3.5 text-purple-600 fill-purple-600" />
-              Emergency Cash Loan • 100% Digital Process
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-              Instant Payday Loan <br />
-              <span className="bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-800 bg-clip-text text-transparent">
-                in India
-              </span>
-            </h1>
-
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl">
-              Need funds before your next salary credit? Apply Payday Loan Online with Waqt Money and access a Salary Advance Loan of ₹5,000 to ₹1,00,000 — a simple, secure digital process built for salaried employees who need short-term support for Emergency Cash Loan situations.
-            </p>
-
-            {/* CTAs */}
-            <div className="pt-4 flex flex-col sm:flex-row gap-4">
-              <Link to="/user/apply">
-                <button className="inline-flex h-13 items-center justify-center gap-2 rounded-xl bg-purple-600 px-8 text-base font-bold text-white shadow-lg shadow-purple-600/25 transition hover:bg-purple-700 hover:shadow-purple-600/40 w-full sm:w-auto">
-                  Apply Now
-                  <ArrowRight className="h-5 w-5" />
-                </button>
-              </Link>
-              <a href="#eligibility">
-                <button className="inline-flex h-13 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 text-base font-semibold text-slate-700 shadow-xs transition hover:bg-slate-50 w-full sm:w-auto">
-                  Check Your Eligibility →
-                </button>
-              </a>
-            </div>
-
-            {/* Highlights badges */}
-            <div className="grid sm:grid-cols-3 gap-3 pt-4">
-              <div className="flex items-center gap-2.5 bg-white p-3 rounded-xl border border-slate-200/80 shadow-2xs">
-                <ShieldCheck className="h-5 w-5 text-purple-600 shrink-0" />
-                <span className="text-xs font-semibold text-slate-700">Regulated NBFC</span>
-              </div>
-              <div className="flex items-center gap-2.5 bg-white p-3 rounded-xl border border-slate-200/80 shadow-2xs">
-                <Lock className="h-5 w-5 text-purple-600 shrink-0" />
-                <span className="text-xs font-semibold text-slate-700">Encrypted Digital KYC</span>
-              </div>
-              <div className="flex items-center gap-2.5 bg-white p-3 rounded-xl border border-slate-200/80 shadow-2xs">
-                <CheckCircle2 className="h-5 w-5 text-purple-600 shrink-0" />
-                <span className="text-xs font-semibold text-slate-700">Zero Physical Branch Visit</span>
-              </div>
-            </div>
+        <section className="container mx-auto px-4 py-12 md:py-16 text-center max-w-4xl">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-purple-800 mb-5">
+            <Zap className="h-3.5 w-3.5" /> Instant Salary Advance
+          </span>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+            Payday Loan Online
+          </h1>
+          <p className="mt-6 text-base md:text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto">
+            Urgent cash before your next salary? Get a Payday Loan of up to ₹1,00,000, minimal documents, quick digital verification, and funds credited straight to your bank account.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <Link to="/user/apply">
+              <button className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#8048e2] px-7 text-sm sm:text-base font-bold text-white transition-all duration-200 hover:bg-[#6d28d9] shadow-[0_4px_14px_rgba(128,72,226,0.35)] hover:shadow-[0_6px_20px_rgba(128,72,226,0.45)] hover:scale-[1.02] cursor-pointer">
+                Apply Now
+                <ArrowRight className="h-4 w-4 stroke-[2.5]" />
+              </button>
+            </Link>
+            <a href="#estimator">
+              <button className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-slate-300/90 bg-white px-7 text-sm sm:text-base font-semibold text-slate-800 transition-all duration-200 hover:bg-purple-50/60 hover:border-purple-300 hover:text-purple-700 cursor-pointer shadow-2xs">
+                Check Your Eligibility →
+              </button>
+            </a>
           </div>
+        </section>
 
-          {/* Quick Summary Card */}
-          <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-purple-100 shadow-xl relative overflow-hidden">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <Clock className="h-5 w-5 text-purple-600" />
-                Payday Loan Overview
-              </h2>
-              <span className="text-xs font-bold bg-purple-50 text-purple-700 px-2.5 py-1 rounded-md border border-purple-200">
-                Salary Advance
-              </span>
+        {/* Snapshot Cards */}
+        <section className="container mx-auto px-4 py-6 max-w-5xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-xs text-center">
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Loan Amount</p>
+              <p className="text-xl font-bold text-slate-900 mt-1">₹5,000 - ₹1,00,000</p>
+              <p className="text-[11px] text-purple-600 font-medium mt-0.5">Based on salary profile</p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100/60">
-                <p className="text-xs text-slate-500 uppercase font-bold tracking-wider">Loan Amount</p>
-                <p className="text-xl font-extrabold text-purple-900 mt-1">₹5,000 to ₹1,00,000</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100/60">
-                <p className="text-xs text-slate-500 uppercase font-bold tracking-wider">Interest Rate</p>
-                <p className="text-xl font-extrabold text-purple-900 mt-1">1% per day</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100/60">
-                <p className="text-xs text-slate-500 uppercase font-bold tracking-wider">Tenure Range</p>
-                <p className="text-xl font-extrabold text-purple-900 mt-1">15 to 45 Days</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100/60">
-                <p className="text-xs text-slate-500 uppercase font-bold tracking-wider">Processing Fee</p>
-                <p className="text-xl font-extrabold text-purple-900 mt-1">7% – 10% (+18% GST)</p>
-              </div>
+            <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-xs text-center">
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Interest Rate</p>
+              <p className="text-xl font-bold text-purple-600 mt-1">1.0% / day</p>
+              <p className="text-[11px] text-slate-500 mt-0.5">Flat daily charge</p>
             </div>
 
-            <div className="mt-6 p-4 rounded-2xl bg-slate-900 text-white flex items-center justify-between">
-              <div>
-                <p className="text-xs text-purple-300 font-medium">Borrower Target</p>
-                <p className="text-sm font-bold">Salaried Employees Only</p>
-              </div>
-              <Link to="/user/apply">
-                <span className="text-xs font-bold bg-purple-600 hover:bg-purple-500 px-3.5 py-2 rounded-lg text-white transition flex items-center gap-1">
-                  Apply Now <ChevronRight className="h-3.5 w-3.5" />
-                </span>
-              </Link>
+            <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-xs text-center">
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Tenure</p>
+              <p className="text-xl font-bold text-slate-900 mt-1">15 - 45 Days</p>
+              <p className="text-[11px] text-slate-500 mt-0.5">Tied to payday</p>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-xs text-center">
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Processing Fee</p>
+              <p className="text-xl font-bold text-slate-900 mt-1">7% - 10%</p>
+              <p className="text-[11px] text-slate-500 mt-0.5">+18% GST on fee</p>
             </div>
           </div>
         </section>
 
-        {/* Interactive Estimator Widget */}
-        <section className="py-12 bg-white border-y border-purple-100">
-          <div className="container mx-auto px-4 max-w-5xl">
-            <div className="text-center max-w-2xl mx-auto mb-8">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 px-3.5 py-1 text-xs font-bold text-purple-700 border border-purple-200">
-                <Percent className="h-3.5 w-3.5" />
-                Transparent 1% Per Day Estimator
-              </span>
-              <h2 className="text-2xl font-bold text-slate-900 mt-3">
-                Estimate Your Payday Loan Repayment
-              </h2>
+        {/* Repayment Estimator Slider */}
+        <section id="estimator" className="container mx-auto px-4 py-12 max-w-4xl scroll-mt-24">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-md space-y-6">
+            <div className="text-center max-w-xl mx-auto">
+              <h2 className="text-2xl font-bold text-slate-900">Payday Loan Cost Estimator</h2>
+              <p className="text-slate-600 text-xs sm:text-sm mt-1">
+                Estimate your single-payment total cost based on 1% per day interest rate.
+              </p>
             </div>
 
-            <div className="grid lg:grid-cols-12 gap-8 bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xs">
-              <div className="lg:col-span-7 space-y-6">
+            <div className="grid md:grid-cols-2 gap-8 items-center pt-2">
+              <div className="space-y-6">
                 <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <label className="text-sm font-bold text-slate-800">Loan Amount Required</label>
-                    <span className="text-lg font-extrabold text-purple-700">₹{loanAmount.toLocaleString("en-IN")}</span>
+                  <div className="flex justify-between text-sm font-semibold mb-2">
+                    <span className="text-slate-700">Loan Amount:</span>
+                    <span className="text-purple-600 font-bold text-base">₹{loanAmount.toLocaleString("en-IN")}</span>
                   </div>
                   <input
                     type="range"
-                    min="5000"
-                    max="100000"
-                    step="5000"
+                    min={5000}
+                    max={100000}
+                    step={5000}
                     value={loanAmount}
                     onChange={(e) => setLoanAmount(Number(e.target.value))}
-                    className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
                   />
-                  <div className="flex justify-between text-xs text-slate-400 mt-1 font-medium">
+                  <div className="flex justify-between text-[11px] text-slate-400 mt-1">
                     <span>₹5,000</span>
-                    <span>₹50,000</span>
                     <span>₹1,00,000</span>
                   </div>
                 </div>
 
                 <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <label className="text-sm font-bold text-slate-800">Tenure (Days)</label>
-                    <span className="text-lg font-extrabold text-purple-700">{tenureDays} Days</span>
+                  <div className="flex justify-between text-sm font-semibold mb-2">
+                    <span className="text-slate-700">Tenure (Days):</span>
+                    <span className="text-purple-600 font-bold text-base">{tenureDays} Days</span>
                   </div>
                   <input
                     type="range"
-                    min="15"
-                    max="45"
-                    step="5"
+                    min={15}
+                    max={45}
+                    step={1}
                     value={tenureDays}
                     onChange={(e) => setTenureDays(Number(e.target.value))}
-                    className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
                   />
-                  <div className="flex justify-between text-xs text-slate-400 mt-1 font-medium">
+                  <div className="flex justify-between text-[11px] text-slate-400 mt-1">
                     <span>15 Days</span>
-                    <span>30 Days</span>
                     <span>45 Days</span>
                   </div>
                 </div>
-
-                <div className="p-4 bg-purple-50/70 rounded-2xl border border-purple-100 text-xs text-slate-600 space-y-1">
-                  <p className="font-semibold text-slate-800 flex items-center gap-1.5">
-                    <Info className="h-4 w-4 text-purple-600" />
-                    Important Repayment Note:
-                  </p>
-                  <p>
-                    Because interest accrues daily at 1% per day, choosing the shortest tenure you can comfortably manage will meaningfully reduce your total repayment amount.
-                  </p>
-                </div>
               </div>
 
-              <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-purple-100 shadow-sm flex flex-col justify-between">
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100 flex items-center justify-between">
-                    <span>Breakdown Estimate</span>
-                    <Calendar className="h-4 w-4 text-purple-600" />
-                  </h3>
-
-                  <div className="space-y-3 text-xs sm:text-sm">
-                    <div className="flex justify-between text-slate-600">
-                      <span>Principal Amount:</span>
-                      <span className="font-bold text-slate-800">₹{loanAmount.toLocaleString("en-IN")}</span>
-                    </div>
-                    <div className="flex justify-between text-slate-600">
-                      <span>Interest (1%/day x {tenureDays} days):</span>
-                      <span className="font-bold text-slate-800">₹{interestAmount.toLocaleString("en-IN")}</span>
-                    </div>
-                    <div className="flex justify-between text-slate-600">
-                      <span>Processing Fee (~8% avg):</span>
-                      <span className="font-bold text-slate-800">₹{processingFee.toLocaleString("en-IN")}</span>
-                    </div>
-                    <div className="flex justify-between text-slate-600">
-                      <span>GST @ 18% on Fee:</span>
-                      <span className="font-bold text-slate-800">₹{gstOnFee.toLocaleString("en-IN")}</span>
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-100 flex justify-between items-center">
-                      <span className="font-extrabold text-slate-900 text-sm">Total Repayment:</span>
-                      <span className="font-black text-lg text-purple-700">₹{totalRepayment.toLocaleString("en-IN")}</span>
-                    </div>
-                  </div>
+              <div className="bg-purple-50 p-6 rounded-2xl border border-purple-100 space-y-3">
+                <div className="flex justify-between text-xs text-slate-600">
+                  <span>Principal Amount:</span>
+                  <span className="font-semibold text-slate-900">₹{loanAmount.toLocaleString("en-IN")}</span>
                 </div>
-
-                <div className="mt-6">
-                  <Link to="/user/apply">
-                    <button className="w-full h-11 rounded-xl bg-purple-600 text-white font-bold text-xs hover:bg-purple-700 transition flex items-center justify-center gap-2 shadow-sm">
-                      Apply For ₹{loanAmount.toLocaleString("en-IN")} Now
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
-                  </Link>
+                <div className="flex justify-between text-xs text-slate-600">
+                  <span>Interest ({tenureDays} days @ 1%/day):</span>
+                  <span className="font-semibold text-purple-700">₹{totalInterest.toLocaleString("en-IN")}</span>
                 </div>
+                <div className="flex justify-between text-xs text-slate-600">
+                  <span>Estimated Processing Fee (8% + GST):</span>
+                  <span className="font-semibold text-slate-900">₹{(processingFee + gstOnFee).toLocaleString("en-IN")}</span>
+                </div>
+                <div className="pt-3 border-t border-purple-200 flex justify-between items-center">
+                  <span className="text-sm font-bold text-slate-900">Total Due on Payday:</span>
+                  <span className="text-xl font-extrabold text-purple-800">₹{totalRepayment.toLocaleString("en-IN")}</span>
+                </div>
+                <p className="text-[10px] text-slate-500 text-center pt-1">
+                  *Estimates are for illustration. Final terms depend on verification.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
         {/* What is a Payday Loan? */}
-        <section className="bg-white py-16 border-b border-purple-50">
+        <section className="bg-white py-16 border-t border-purple-50">
           <div className="container mx-auto px-4 max-w-4xl space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
-              <BookOpen className="h-6 w-6 text-purple-600" />
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
               What is a Payday Loan?
             </h2>
-
-            <p className="text-slate-600 leading-relaxed text-sm md:text-base">
-              A Payday Loan is a Short-Term Loan created for one specific situation — when an expense arrives before your Monthly Salary does. Rather than waiting anxiously for payday or turning to informal borrowing, salaried employees can apply for a Payday Loan in India and access Emergency Funds ranging from ₹5,000 to ₹1,00,000 through a fast, structured process.
+            <p className="text-slate-600 leading-relaxed text-base">
+              A Payday Loan is a short-term, unsecured loan meant to help salaried individuals manage expenses that come up before their next paycheck. Unlike a traditional personal loan that may run for years, a Payday Loan India product is designed for a much shorter window — typically a matter of weeks — and is repaid once your salary is credited.
             </p>
-
-            <p className="text-slate-600 leading-relaxed text-sm md:text-base">
-              In practical terms, this is a Loan Before Salary: a bridge between something urgent — a medical bill, a delayed paycheck, a utility payment — and the income you already know is coming. As a borrower, the loan application itself is built to move quickly, since the entire purpose of this Salary Advance is speed, not a drawn-out approval cycle.
-            </p>
-
-            <p className="text-slate-600 leading-relaxed text-sm md:text-base">
-              At Waqt Money, this experience is fully digital — from Payday Loan Online application to fund transfer — designed specifically for salaried individuals with a stable income who need short-term liquidity. Waqt Money operates under the same registered NBFC as a https://waqtfinance.com, so every loan is processed under the same regulated, compliant lending standards. This makes the Payday Loan a distinct category within consumer finance: smaller in size, shorter in tenure, and built around your salary cycle rather than years of repayment.
+            <p className="text-slate-600 leading-relaxed text-base">
+              Also referred to as a Salary Advance Loan, it works on a simple principle: you access cash now against the income you know is arriving soon. Because it is an Unsecured Payday Loan, you do not need to pledge assets or collateral. Instead, eligibility is linked to your regular employment and monthly salary credit.
             </p>
           </div>
         </section>
 
-        {/* Features & Benefits of Payday Loan */}
-        <section className="py-16 container mx-auto px-4 max-w-5xl">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
-              Features & Benefits of Payday Loan
+        {/* Key Features of Waqt Money Payday Loan */}
+        <section className="container mx-auto px-4 py-16 max-w-5xl space-y-12">
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">
+              Key Features of Waqt Money Payday Loan
             </h2>
-            <p className="text-slate-600 mt-2 text-sm">
-              Every feature of Waqt Money's Instant Payday Loan is shaped around what salaried employees actually need when an expense can't wait.
+            <p className="text-slate-600 text-base">
+              Designed around your salary cycle for maximum transparency and speed:
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-              <div className="h-10 w-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
-                <Zap className="h-5 w-5" />
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-2">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-3">
+                <IndianRupee className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Quick Processing</h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Our Instant Payday Loan Online application is structured to reduce back-and-forth, so once your documents are verified, you can expect a decision without unnecessary delay.
+              <h3 className="font-bold text-slate-900 text-base">Loan Amount</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Borrow between ₹5,000 and ₹1,00,000 (up to ₹2,00,000 for top profiles), tailored to bridge short-term cash flow gaps.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-              <div className="h-10 w-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
-                <Lock className="h-5 w-5" />
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-2">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-3">
+                <Clock className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Simple Digital Application</h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                There's no branch visit required. The entire Digital Application — from submitting your details to receiving Loan Disbursement — happens online, so you can apply from wherever you are.
+              <h3 className="font-bold text-slate-900 text-base">Short Tenure</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Repayment window generally spans 15 to 45 days, matching your upcoming salary date.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-              <div className="h-10 w-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
-                <Percent className="h-5 w-5" />
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-2">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-3">
+                <Scale className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Clear, Disclosed Interest Rate</h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                As a form of Short-Term Finance, your Interest Rate is calculated at 1% per day on the outstanding Loan Amount, disclosed clearly upfront so you know your total repayment obligation before you commit.
+              <h3 className="font-bold text-slate-900 text-base">Transparent Charges</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Processing fee between 7% and 10% plus 18% GST. Daily interest calculated transparently at 1% per day.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-              <div className="h-10 w-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-2">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-3">
                 <CheckCircle2 className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Built for Real Needs</h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Borrow anywhere from ₹5,000 to ₹1,00,000, matched to your salary and repayment capacity — enough to cover a genuine emergency without pushing you into unnecessary debt.
+              <h3 className="font-bold text-slate-900 text-base">Minimal Documents</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Requires standard identity proof, address proof, salary slips, and recent bank statements.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-              <div className="h-10 w-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
-                <FileText className="h-5 w-5" />
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-2">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-3">
+                <Zap className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Minimal Documentation</h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Basic KYC, a recent salary slip, and bank statements are typically all that's required — no lengthy paperwork trail to slow things down.
+              <h3 className="font-bold text-slate-900 text-base">Fully Digital</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                From Payday Loan Apply Online to verification and disbursal, the process is completed digitally.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-              <div className="h-10 w-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
-                <ShieldCheck className="h-5 w-5" />
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-2">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-3">
+                <UserCheck className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Secure Digital Process</h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Every stage of Digital Lending, from application to disbursement, runs through encrypted, secure systems that protect your personal and financial information.
+              <h3 className="font-bold text-slate-900 text-base">Payday Advance</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Repaid in one lump sum when your salary is credited, avoiding multi-year EMI commitments.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Payday Loan Eligibility Criteria */}
-        <section id="eligibility" className="bg-white py-16 border-t border-purple-50">
-          <div className="container mx-auto px-4 max-w-4xl space-y-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
-                <UserCheck className="h-6 w-6 text-purple-600" />
-                Payday Loan Eligibility Criteria
-              </h2>
-              <p className="text-slate-600 mt-2 text-sm leading-relaxed">
-                Payday Loan Eligibility at Waqt Money is built specifically for salaried employees, not business owners or self-employed applicants. You may qualify as a Payday Loan for Salaried Employees applicant if you meet the following requirements:
-              </p>
-            </div>
+        {/* Common Uses & Who Can Apply */}
+        <section className="bg-slate-50 py-16">
+          <div className="container mx-auto px-4 max-w-5xl space-y-12">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Common Uses */}
+              <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-purple-600" /> Common Uses for a Payday Loan
+                </h3>
+                <ul className="space-y-3 text-xs sm:text-sm text-slate-600">
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                    <strong>Salary Advance Before Payday:</strong> Cover daily expenses when month-end funds run low.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                    <strong>Emergency Cash Requirements:</strong> Unplanned medical bills or household repair costs.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                    <strong>Covering Bills:</strong> Pay utility bills, credit card dues, or rent due before your salary arrives.
+                  </li>
+                </ul>
+              </div>
 
-            {/* Eligibility Table */}
-            <div className="overflow-x-auto rounded-2xl border border-slate-200">
-              <table className="w-full text-left text-xs sm:text-sm text-slate-700">
-                <thead className="bg-slate-900 text-white text-xs font-bold uppercase">
-                  <tr>
-                    <th className="p-4">Criteria</th>
-                    <th className="p-4">Requirement</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 bg-white">
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Age</td>
-                    <td className="p-4 font-semibold text-purple-700">21–58 years</td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Income</td>
-                    <td className="p-4">Regular Monthly Salary</td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Bank Account</td>
-                    <td className="p-4">Active Salary Account</td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Employment</td>
-                    <td className="p-4">Registered company or organization</td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Contact Details</td>
-                    <td className="p-4">Valid mobile number and email ID</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Approval here leans heavily on income stability rather than assets, since this is an unsecured, short-term product. That said, your Credit Score still plays a meaningful role in the overall Income Verification process — a stronger score generally supports smoother, faster approval and access to a higher Loan Amount within the ₹5,000–₹1,00,000 range.
-            </p>
-
-            <div className="p-5 bg-purple-50/70 rounded-2xl border border-purple-100 text-xs text-slate-600 space-y-1">
-              <p className="font-bold text-slate-900">Self-Employed Applicants Note:</p>
-              <p>
-                If you're self-employed, this particular loan isn't the right fit for your income pattern — Waqt Money also offers other financing options, such as a Business Loan or EDI Loan, structured around variable business income rather than a fixed monthly salary.
-              </p>
+              {/* Who Can Apply */}
+              <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                  <UserCheck className="h-5 w-5 text-purple-600" /> Who Can Apply?
+                </h3>
+                <div className="space-y-3">
+                  <div className="p-3 bg-purple-50 rounded-xl">
+                    <p className="text-sm font-semibold text-slate-900">Salaried Employees</p>
+                    <p className="text-xs text-slate-600">Working in corporate, public, or private companies with salary credited directly into a bank account.</p>
+                  </div>
+                  <div className="p-3 bg-purple-50 rounded-xl">
+                    <p className="text-sm font-semibold text-slate-900">Working Professionals</p>
+                    <p className="text-xs text-slate-600">Anyone in stable employment looking for a short-term cash bridge before their next payday.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Documents Required for Payday Loan */}
-        <section className="py-16 container mx-auto px-4 max-w-4xl space-y-8">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="h-6 w-6 text-purple-600" />
-              Documents Required for Payday Loan
+        {/* Eligibility & Documents */}
+        <section className="container mx-auto px-4 py-16 max-w-5xl space-y-12">
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Eligibility */}
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+              <h3 className="text-xl font-bold text-slate-900">Payday Loan Eligibility</h3>
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                  Indian resident, generally between 21 and 58 years of age.
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                  Regular monthly salary credited directly to a bank account.
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                  Minimum monthly salary meeting lender requirements.
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                  Standard credit check and income evaluation.
+                </li>
+              </ul>
+            </div>
+
+            {/* Documents */}
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+              <h3 className="text-xl font-bold text-slate-900">Required Documents</h3>
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                  <strong>Identity Proof:</strong> Aadhaar Card, PAN Card, Passport, or Voter ID.
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                  <strong>Address Proof:</strong> Aadhaar Card, utility bills, or rental agreement.
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                  <strong>Income Proof:</strong> Recent salary slips (1 to 3 months).
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-purple-600 shrink-0 mt-0.5" />
+                  <strong>Bank Statement:</strong> 3 to 6 months showing salary credits.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Comparison Table */}
+        <section className="container mx-auto px-4 py-16 max-w-5xl space-y-6">
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center justify-center gap-2">
+              <ArrowRightLeft className="h-6 w-6 text-purple-600" />
+              Payday Loan vs Personal Loan
             </h2>
-            <p className="text-slate-600 mt-2 text-sm">
-              Getting your Payday Loan Documents ready in advance helps move your application through verification faster.
-            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider text-purple-700 mb-3 pb-2 border-b border-slate-100">
-                Identity Proof
-              </h3>
-              <ul className="space-y-2 text-xs text-slate-700">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-purple-600" />
-                  Aadhaar Card
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-purple-600" />
-                  PAN Card
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-purple-600" />
-                  Voter ID
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider text-purple-700 mb-3 pb-2 border-b border-slate-100">
-                Address Proof
-              </h3>
-              <ul className="space-y-2 text-xs text-slate-700">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-purple-600" />
-                  Utility bills (&lt; 3 months old)
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-purple-600" />
-                  Passport
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-purple-600" />
-                  Aadhaar Card
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider text-purple-700 mb-3 pb-2 border-b border-slate-100">
-                Income Proof
-              </h3>
-              <ul className="space-y-2 text-xs text-slate-700">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-purple-600" />
-                  Salary Slip (most recent)
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-purple-600" />
-                  Employment ID Card
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-purple-600" />
-                  Bank Statement (last 6 months)
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-200">
-            This Documentation process exists purely to confirm your identity, address, and income — since Payday Loan Eligibility depends significantly on Income Proof, having your salary slip and bank statements ready is the fastest way to move through the Verification Process without delay.
-          </p>
-        </section>
-
-        {/* Payday Loan Interest Rate, Charges & Fees */}
-        <section className="bg-white py-16 border-t border-purple-50">
-          <div className="container mx-auto px-4 max-w-4xl space-y-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
-                <Percent className="h-6 w-6 text-purple-600" />
-                Payday Loan Interest Rate, Charges & Fees
-              </h2>
-              <p className="text-slate-600 mt-2 text-sm leading-relaxed">
-                Payday Loan Interest Rate at Waqt Money is charged at 1% per day on your outstanding Loan Amount — a rate structure common to short-term, salary-cycle lending, disclosed in full as part of your Loan Agreement so you can calculate your exact repayment before accepting the offer.
-              </p>
-            </div>
-
-            {/* Charges Table */}
-            <div className="overflow-x-auto rounded-2xl border border-slate-200">
-              <table className="w-full text-left text-xs sm:text-sm text-slate-700">
-                <thead className="bg-slate-900 text-white text-xs font-bold uppercase">
-                  <tr>
-                    <th className="p-4">Charge</th>
-                    <th className="p-4">Details</th>
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="bg-purple-900 text-white font-semibold">
+                    <th className="py-3.5 px-5 w-1/4">Feature</th>
+                    <th className="py-3.5 px-5 w-3/8">Payday Loan</th>
+                    <th className="py-3.5 px-5 w-3/8">Personal Loan</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 bg-white">
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Payday Loan Processing Fee</td>
-                    <td className="p-4 font-semibold text-purple-700">7%–10% of the loan amount</td>
+                <tbody className="divide-y divide-slate-100">
+                  <tr className="hover:bg-slate-50/50">
+                    <td className="py-3.5 px-5 font-semibold text-slate-800">Loan Amount</td>
+                    <td className="py-3.5 px-5 text-slate-600">₹5,000 to ₹1,00,000</td>
+                    <td className="py-3.5 px-5 text-slate-600">₹50,000 to ₹5,00,000+</td>
                   </tr>
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Applicable Taxes</td>
-                    <td className="p-4">GST @ 18% on all fees and charges</td>
+                  <tr className="hover:bg-slate-50/50">
+                    <td className="py-3.5 px-5 font-semibold text-slate-800">Tenure</td>
+                    <td className="py-3.5 px-5 text-slate-600">15 to 45 Days</td>
+                    <td className="py-3.5 px-5 text-slate-600">12 to 60 Months</td>
                   </tr>
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Late Payment Charges</td>
-                    <td className="p-4">Applicable on any overdue amount, as per your loan agreement</td>
+                  <tr className="hover:bg-slate-50/50">
+                    <td className="py-3.5 px-5 font-semibold text-slate-800">Repayment Structure</td>
+                    <td className="py-3.5 px-5 text-slate-600">Single payment on payday</td>
+                    <td className="py-3.5 px-5 text-slate-600">Monthly EMIs over years</td>
                   </tr>
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Bounce Charges</td>
-                    <td className="p-4">Applicable if a scheduled repayment fails</td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 font-bold text-slate-900">Documentation Charges</td>
-                    <td className="p-4">A fixed processing charge, disclosed upfront</td>
+                  <tr className="hover:bg-slate-50/50">
+                    <td className="py-3.5 px-5 font-semibold text-slate-800">Best For</td>
+                    <td className="py-3.5 px-5 text-slate-600">Urgent cash gap before salary</td>
+                    <td className="py-3.5 px-5 text-slate-600">Large, planned expenses</td>
                   </tr>
                 </tbody>
               </table>
             </div>
+          </div>
+        </section>
 
-            <div className="p-5 bg-amber-50/70 rounded-2xl border border-amber-200 text-xs text-slate-700 space-y-1">
-              <p className="font-bold flex items-center gap-1.5 text-amber-900">
-                <AlertTriangle className="h-4 w-4 text-amber-600" />
-                Borrower Advisory:
-              </p>
-              <p>
-                Since a 1% daily rate compounds meaningfully over even a short tenure, we recommend reviewing your total repayment amount — principal, interest, and processing fee combined — before accepting your loan offer. Waqt Money and Waqt Finance operate under the same registered NBFC, so all charges follow consistent, RBI-compliant disclosure standards across both platforms.
-              </p>
+        {/* 5-Step Process */}
+        <section className="bg-slate-50 py-16">
+          <div className="container mx-auto px-4 max-w-5xl space-y-12">
+            <div className="text-center max-w-3xl mx-auto">
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">
+                How to Apply for a Payday Loan Online
+              </h2>
+              <p className="text-slate-600 text-base">5 simple digital steps:</p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center mb-3 text-sm">1</div>
+                <h3 className="font-bold text-slate-900 mb-1 text-sm">Check Eligibility</h3>
+                <p className="text-xs text-slate-600">Fill in basic personal and employment details.</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center mb-3 text-sm">2</div>
+                <h3 className="font-bold text-slate-900 mb-1 text-sm">Upload Documents</h3>
+                <p className="text-xs text-slate-600">Provide Aadhaar, PAN, salary slips, and bank statements.</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center mb-3 text-sm">3</div>
+                <h3 className="font-bold text-slate-900 mb-1 text-sm">Digital Verification</h3>
+                <p className="text-xs text-slate-600">Our system quickly verifies income and details.</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center mb-3 text-sm">4</div>
+                <h3 className="font-bold text-slate-900 mb-1 text-sm">Review Offer</h3>
+                <p className="text-xs text-slate-600">Check loan amount, daily interest, fee, and due date.</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center mb-3 text-sm">5</div>
+                <h3 className="font-bold text-slate-900 mb-1 text-sm">Disbursal</h3>
+                <p className="text-xs text-slate-600">Funds transferred directly to your bank account.</p>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Loan Amount, Tenure & Repayment */}
-        <section className="py-16 container mx-auto px-4 max-w-4xl space-y-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
-            <Scale className="h-6 w-6 text-purple-600" />
-            Loan Amount, Tenure & Repayment
+        {/* FAQs */}
+        <section className="container mx-auto px-4 py-16 max-w-3xl">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 text-center mb-8 flex items-center justify-center gap-2">
+            <HelpCircle className="h-7 w-7 text-purple-600" />
+            Frequently Asked Questions
           </h2>
 
-          <p className="text-slate-600 leading-relaxed text-sm md:text-base">
-            Your Payday Loan Amount ranges from ₹5,000 to ₹1,00,000, determined by your salary, existing financial obligations, and internal assessment — giving you access to Instant Cash Before Salary sized appropriately to your repayment capacity.
-          </p>
-
-          <p className="text-slate-600 leading-relaxed text-sm md:text-base">
-            Payday Loan Tenure ranges from 15 to 45 days, aligned to your salary cycle rather than the longer multi-year tenures seen with personal or business loans. This is what defines a Payday Loan as genuine Short-Term Finance: designed to be borrowed and repaid within weeks, not carried for years.
-          </p>
-
-          <p className="text-slate-600 leading-relaxed text-sm md:text-base">
-            Repayment is typically scheduled around your next salary credit date, through common digital payment methods. Because interest accrues daily at 1% per day, choosing the shortest tenure you can comfortably manage — rather than the maximum 45 days — will meaningfully reduce your total repayment amount. If your circumstances change, early repayment is generally supported as per your approved Repayment Schedule and loan terms.
-          </p>
-        </section>
-
-        {/* How to Apply for a Payday Loan Online? */}
-        <section className="bg-slate-900 text-white py-16">
-          <div className="container mx-auto px-4 max-w-5xl">
-            <div className="text-center max-w-2xl mx-auto mb-12">
-              <span className="text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-950/80 px-3 py-1 rounded-full border border-purple-800">
-                Simple 4-Step Process
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold mt-3">How to Apply for a Payday Loan Online?</h2>
-              <p className="text-slate-400 text-sm mt-2">
-                Apply Payday Loan Online with Waqt Money through a simple, four-step Digital Application:
-              </p>
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-slate-800/80 p-6 rounded-2xl border border-slate-700">
-                <div className="h-8 w-8 rounded-lg bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm mb-4">1</div>
-                <h3 className="font-bold text-base text-white">Submit Your Application</h3>
-                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                  Complete the Payday Loan Online Application with your basic details and required documents.
-                </p>
-              </div>
-
-              <div className="bg-slate-800/80 p-6 rounded-2xl border border-slate-700">
-                <div className="h-8 w-8 rounded-lg bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm mb-4">2</div>
-                <h3 className="font-bold text-base text-white">Document Verification</h3>
-                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                  Our team reviews your submitted documents and assesses your eligibility as part of the Verification Process.
-                </p>
-              </div>
-
-              <div className="bg-slate-800/80 p-6 rounded-2xl border border-slate-700">
-                <div className="h-8 w-8 rounded-lg bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm mb-4">3</div>
-                <h3 className="font-bold text-base text-white">Loan Approval</h3>
-                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                  Once verification is complete, you'll receive confirmation of your approved loan amount (₹5,000–₹1,00,000) and tenure (15–45 days).
-                </p>
-              </div>
-
-              <div className="bg-slate-800/80 p-6 rounded-2xl border border-slate-700">
-                <div className="h-8 w-8 rounded-lg bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm mb-4">4</div>
-                <h3 className="font-bold text-base text-white">Fund Disbursement</h3>
-                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                  After completing your loan agreement, the approved amount is transferred to your bank account.
-                </p>
-              </div>
-            </div>
-
-            <p className="mt-8 text-center text-xs sm:text-sm text-slate-400 max-w-3xl mx-auto leading-relaxed">
-              This entire process is designed to minimize Processing Time without cutting corners on verification — because a Payday Loan is only useful if it actually arrives when you need it, through a process you can trust.
-            </p>
-          </div>
-        </section>
-
-        {/* Why Choose Waqt Money for a Payday Loan? */}
-        <section className="py-16 container mx-auto px-4 max-w-5xl">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
-              Why Choose Waqt Money for a Payday Loan?
-            </h2>
-            <p className="text-slate-600 mt-2 text-sm leading-relaxed">
-              When you're dealing with an Emergency Cash Loan situation, the lender you choose matters as much as the loan itself. Waqt Money operates under the same registered NBFC as Waqt Finance, which means your Payday Loan is processed under the same regulated, transparent lending standards — not through an informal or unlicensed channel.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <Zap className="h-6 w-6 text-purple-600 mb-3" />
-              <h3 className="text-sm font-bold text-slate-900">Quick Processing</h3>
-              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                A Payday Loan Online experience built to move fast, without sacrificing proper verification.
-              </p>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <Lock className="h-6 w-6 text-purple-600 mb-3" />
-              <h3 className="text-sm font-bold text-slate-900">Fast Online Application</h3>
-              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                Apply anytime, from anywhere, without visiting a branch.
-              </p>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <FileText className="h-6 w-6 text-purple-600 mb-3" />
-              <h3 className="text-sm font-bold text-slate-900">Minimal Documentation</h3>
-              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                Only the essentials required to verify your identity, address, and income.
-              </p>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <CheckCircle2 className="h-6 w-6 text-purple-600 mb-3" />
-              <h3 className="text-sm font-bold text-slate-900">A Loan Amount That Fits</h3>
-              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                Borrow between ₹5,000 and ₹1,00,000, based on your actual need and repayment ability.
-              </p>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <Percent className="h-6 w-6 text-purple-600 mb-3" />
-              <h3 className="text-sm font-bold text-slate-900">Transparent Charges</h3>
-              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                Interest at 1% per day, processing fee of 7%–10%, and GST @ 18% — all disclosed clearly before you commit.
-              </p>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <ShieldCheck className="h-6 w-6 text-purple-600 mb-3" />
-              <h3 className="text-sm font-bold text-slate-900">Secure Digital Process</h3>
-              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                Your data is protected through encrypted systems at every stage of Digital Lending.
-              </p>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <Headphones className="h-6 w-6 text-purple-600 mb-3" />
-              <h3 className="text-sm font-bold text-slate-900">Dedicated Support</h3>
-              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                Real assistance available throughout your Payday Loan journey.
-              </p>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <UserCheck className="h-6 w-6 text-purple-600 mb-3" />
-              <h3 className="text-sm font-bold text-slate-900">Salaried Focus</h3>
-              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                Built specifically around the needs of salaried employees needing short-term funds.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Frequently Asked Questions */}
-        <section className="bg-slate-50 py-16 border-t border-slate-200/60">
-          <div className="container mx-auto px-4 max-w-3xl">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 text-center mb-8 flex items-center justify-center gap-2">
-              <HelpCircle className="h-6 w-6 text-purple-600" />
-              Frequently Asked Questions
-            </h2>
-            <div className="space-y-4">
-              {faqs.map((faq, index) => (
-                <div key={index} className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-                  <h3 className="text-base font-bold text-slate-900">{faq.q}</h3>
-                  <p className="mt-2 text-sm text-slate-600 leading-relaxed">{faq.a}</p>
+          <div className="space-y-4">
+            {faqs.map((faq, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div key={index} className="bg-white rounded-xl border border-slate-200 shadow-sm transition overflow-hidden">
+                  <button
+                    onClick={() => toggleFaq(index)}
+                    className="w-full text-left p-5 font-semibold text-slate-900 flex justify-between items-center gap-4 hover:bg-slate-50/80 transition"
+                  >
+                    <span>{faq.q}</span>
+                    <ChevronRight className={`h-5 w-5 text-slate-500 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-90 text-purple-600" : ""}`} />
+                  </button>
+                  {isOpen && (
+                    <div className="px-5 pb-5 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                      {faq.a}
+                    </div>
+                  )}
                 </div>
-              ))}
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="bg-purple-900 text-white py-16">
+          <div className="container mx-auto px-4 max-w-3xl text-center space-y-6">
+            <h2 className="text-2xl md:text-4xl font-bold">
+              Apply for Your Payday Loan Today
+            </h2>
+            <p className="text-purple-100 text-base md:text-lg leading-relaxed">
+              Don't let a few days before salary hold you back. Apply Payday Loan Online with Waqt Money and get a transparent, quick Salary Advance Loan when you need it most.
+            </p>
+            <div className="pt-4 flex justify-center">
+              <Link to="/user/apply">
+                <button className="h-12 px-8 rounded-xl bg-white text-purple-900 font-bold text-base hover:bg-purple-50 transition shadow-lg">
+                  Apply Payday Loan Online
+                </button>
+              </Link>
             </div>
           </div>
         </section>
 
-        {/* Final CTA Banner (Heading removed as requested) */}
-        <section className="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white py-16 border-t border-purple-800">
-          <div className="container mx-auto px-4 max-w-4xl text-center space-y-6">
-            <p className="text-base sm:text-lg text-purple-100 max-w-3xl mx-auto leading-relaxed">
-              Facing an urgent expense before your next salary? Apply Payday Loan Online with Waqt Money today and access ₹5,000 to ₹1,00,000 through a simple, secure digital process built for salaried employees.
-            </p>
-
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/user/apply">
-                <button className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-purple-600 px-8 text-sm font-bold text-white shadow-lg shadow-purple-600/30 transition hover:bg-purple-500 w-full sm:w-auto">
-                  Apply Now
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </Link>
-              <Link to="/contact">
-                <button className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-purple-300/40 bg-white/10 px-8 text-sm font-bold text-white transition hover:bg-white/20 w-full sm:w-auto">
-                  Talk to an Expert
-                </button>
-              </Link>
+        {/* Related Links */}
+        <section className="bg-slate-100 py-12 border-t border-slate-200">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h3 className="text-lg font-bold text-slate-900 mb-6">You May Also Be Interested In</h3>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link to="/loans/personal-loan" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Personal Loan</Link>
+              <Link to="/loans/business-loan" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Business Loan</Link>
+              <Link to="/loans/vehicle-loan" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Vehicle Loan</Link>
+              <Link to="/loans/loan-against-property" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Loan Against Property</Link>
+              <Link to="/loans/short-term-loan" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Short Term Loan</Link>
+              <Link to="/contact" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Contact Us</Link>
             </div>
           </div>
         </section>

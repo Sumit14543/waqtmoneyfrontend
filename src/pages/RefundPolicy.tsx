@@ -68,7 +68,7 @@ export default function RefundPolicy() {
             <p>
               For refund status or queries, please email us with your transaction details and Loan Application ID at:
               <br />
-              <strong className="text-slate-900">Email:</strong> support@waqtmoney.com
+              <strong className="text-slate-900">Email:</strong> support@waqtmoney.in
             </p>
           </div>
         </section>

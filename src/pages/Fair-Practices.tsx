@@ -76,7 +76,7 @@ export default function FairPracticesCode() {
 
             <h2 className="text-lg font-bold text-slate-900 pt-2">4. Grievances and escalation</h2>
             <p>
-              For concerns regarding the Fair Practices Code compliance, please escalate directly to our Grievance Officer at <strong className="text-slate-900">grievance@waqtmoney.com</strong>.
+              For concerns regarding the Fair Practices Code compliance, please escalate directly to our Grievance Officer at <strong className="text-slate-900">support@waqtmoney.in</strong>.
             </p>
           </div>
         </section>

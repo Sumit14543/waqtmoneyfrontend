@@ -169,7 +169,7 @@ export default function PrivacyPolicy() {
                   <p className="text-sm text-purple-100 mt-1">Get in touch with our team for account or data questions.</p>
                 </div>
                 <a
-                  href="mailto:support@waqtmoney.com"
+                  href="mailto:support@waqtmoney.in"
                   className="inline-flex h-11 items-center justify-center rounded-lg bg-white px-5 text-sm font-semibold text-purple-700 hover:bg-purple-50 transition"
                 >
                   <Mail className="h-4 w-4 mr-2" />

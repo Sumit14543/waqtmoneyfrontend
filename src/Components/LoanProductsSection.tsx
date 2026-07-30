@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Wallet, GraduationCap, Briefcase, Heart, Zap } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 const products = [
   {
     icon: Wallet,
@@ -94,15 +93,13 @@ const LoanProductsSection = () => {
                   <p className="text-xs font-semibold text-foreground">{p.tenure}</p>
                 </div>
               </div>
-              <Link to={p.path} aria-label={`Explore ${p.title} options`}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-primary hover:text-primary/80 p-0 h-auto font-semibold flex items-center gap-1 hover:gap-2 transition-all"
-                >
-                  Explore {p.title}
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
+              <Link
+                to={p.path}
+                aria-label={`Explore ${p.title} options`}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-purple-700 bg-purple-100/70 hover:bg-purple-600 hover:text-white transition-all duration-200 group/btn shadow-xs hover:shadow-md"
+              >
+                <span>Explore {p.title}</span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" />
               </Link>
             </motion.div>
           ))}

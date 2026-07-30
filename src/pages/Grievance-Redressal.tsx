@@ -48,7 +48,7 @@ export default function GrievanceRedressal() {
               For general queries, loan updates, or minor discrepancies, please contact our customer support team. Most issues are successfully resolved at this stage.
             </p>
             <ul className="list-disc pl-5 space-y-2">
-              <li><strong>Support Email:</strong> support@waqtmoney.com</li>
+              <li><strong>Support Email:</strong> support@waqtmoney.in</li>
               <li><strong>Operational Hours:</strong> 9:00 AM to 6:00 PM (Monday to Saturday, excluding public holidays)</li>
               <li><strong>Expected Resolution Time:</strong> 24 to 48 business hours</li>
             </ul>
@@ -62,7 +62,7 @@ export default function GrievanceRedressal() {
             </p>
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Officer Name:</strong> Grievance Officer – Waqt Money</li>
-              <li><strong>Contact Email:</strong> grievance@waqtmoney.com</li>
+              <li><strong>Contact Email:</strong> support@waqtmoney.in</li>
               <li><strong>Address:</strong> Waqt Finance Pvt Ltd, H-15 BSI Business Park, H Block, Sector 63, Noida, Uttar Pradesh, India</li>
               <li><strong>Expected Resolution Time:</strong> Within 7 working days</li>
             </ul>

@@ -70,7 +70,7 @@ const BusinessLoan = lazy(() => import("./pages/loans/BusinessLoan.tsx"));
 const PaydayLoan = lazy(() => import("./pages/loans/PaydayLoan.tsx"));
 const LoanAgainstProperty = lazy(() => import("./pages/loans/LoanAgainstProperty.tsx"));
 const VehicleLoan = lazy(() => import("./pages/loans/VehicleLoan.tsx"));
-const CreditServices = lazy(() => import("./pages/loans/CreditServices.tsx"));
+const ShortTermLoan = lazy(() => import("./pages/loans/ShortTermLoan.tsx"));
 const EducationLoan = lazy(() => import("./pages/loans/EducationLoan.tsx"));
 const MedicalLoan = lazy(() => import("./pages/loans/MedicalLoan.tsx"));
 
@@ -107,6 +107,9 @@ const App = () => (
           <Route path="/privacy-policy" element={withSuspense(PrivacyPolicy, <ContentPageFallback />)} />
           <Route path="/privacy-policies" element={<Navigate to="/privacy-policy" replace />} />
           <Route path="/terms-conditions" element={withSuspense(TermsConditions, <ContentPageFallback />)} />
+          <Route path="/terms-and-conditions" element={<Navigate to="/terms-conditions" replace />} />
+          <Route path="/terms" element={<Navigate to="/terms-conditions" replace />} />
+          <Route path="/terms-condition" element={<Navigate to="/terms-conditions" replace />} />
           <Route path="/grievance-redressal" element={withSuspense(GrievanceRedressal, <ContentPageFallback />)} />
           <Route path="/fair-practices-code" element={withSuspense(FairPracticesCode, <ContentPageFallback />)} />
           <Route path="/refund-policy" element={withSuspense(RefundPolicy, <ContentPageFallback />)} />
@@ -115,14 +118,22 @@ const App = () => (
 
           {/* Loan Landing Pages */}
           <Route path="/loans/personal-loan" element={withSuspense(PersonalLoan, <ContentPageFallback />)} />
+          <Route path="/personal-loan" element={withSuspense(PersonalLoan, <ContentPageFallback />)} />
           <Route path="/loans/business-loan" element={withSuspense(BusinessLoan, <ContentPageFallback />)} />
+          <Route path="/business-loan" element={withSuspense(BusinessLoan, <ContentPageFallback />)} />
           <Route path="/loans/payday-loan" element={withSuspense(PaydayLoan, <ContentPageFallback />)} />
           <Route path="/pay-day-loan" element={withSuspense(PaydayLoan, <ContentPageFallback />)} />
+          <Route path="/payday-loan" element={withSuspense(PaydayLoan, <ContentPageFallback />)} />
           <Route path="/loans/loan-against-property" element={withSuspense(LoanAgainstProperty, <ContentPageFallback />)} />
+          <Route path="/loan-against-property" element={withSuspense(LoanAgainstProperty, <ContentPageFallback />)} />
           <Route path="/loans/vehicle-loan" element={withSuspense(VehicleLoan, <ContentPageFallback />)} />
-          <Route path="/loans/credit-services" element={withSuspense(CreditServices, <ContentPageFallback />)} />
+          <Route path="/vehicle-loan" element={withSuspense(VehicleLoan, <ContentPageFallback />)} />
+          <Route path="/loans/short-term-loan" element={withSuspense(ShortTermLoan, <ContentPageFallback />)} />
+          <Route path="/short-term-loan" element={withSuspense(ShortTermLoan, <ContentPageFallback />)} />
+          <Route path="/loans/credit-services" element={withSuspense(ShortTermLoan, <ContentPageFallback />)} />
           <Route path="/loans/education-loan" element={withSuspense(EducationLoan, <ContentPageFallback />)} />
           <Route path="/loans/medical-loan" element={withSuspense(MedicalLoan, <ContentPageFallback />)} />
+          <Route path="/medical-loan" element={withSuspense(MedicalLoan, <ContentPageFallback />)} />
 
           <Route path="/login" element={withSuspense(Login, <AuthPageFallback />)} />
           <Route path="/user/dashboard" element={withSuspense(LoanDashboard, <DashboardPageFallback />)} />

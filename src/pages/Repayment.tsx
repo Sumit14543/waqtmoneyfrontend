@@ -326,33 +326,45 @@ const Repayment = () => {
       />
       <Navbar />
 
-      <main className="px-4 pb-16 pt-24 sm:px-6 lg:px-8">
-        <section className="mx-auto grid max-w-7xl items-center gap-10 py-8 lg:grid-cols-[1fr_minmax(420px,0.86fr)] lg:py-14">
+      <main className="relative px-4 pb-16 pt-24 sm:px-6 lg:px-8">
+        {/* Decorative Background Ambient Glow Blobs */}
+        <div className="pointer-events-none absolute left-1/2 top-12 -z-10 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-purple-300/30 to-indigo-200/20 blur-3xl" />
+        <div className="pointer-events-none absolute right-10 top-40 -z-10 h-72 w-72 rounded-full bg-purple-400/15 blur-2xl" />
+
+        <section className="mx-auto grid max-w-7xl items-center gap-10 py-8 lg:grid-cols-[1fr_minmax(440px,0.88fr)] lg:py-14">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-purple-100 bg-white px-4 py-2 text-sm font-bold text-purple-700 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-purple-200/80 bg-white/90 px-4 py-1.5 text-xs font-bold text-purple-700 shadow-sm backdrop-blur-md">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-purple-600"></span>
+              </span>
               <ShieldCheck className="h-4 w-4" />
               Secure repayment assistance
             </div>
 
-            <h1 className="mt-6 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
-              Repay your Waqt Money loan with confidence.
+            <h1 className="mt-6 max-w-3xl text-4xl font-extrabold leading-[1.15] tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+              Repay your{" "}
+              <span className="bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                Waqt Money
+              </span>{" "}
+              loan with confidence.
             </h1>
 
             <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
               Choose a simple repayment option, complete your transfer safely, and keep your loan record clean with timely confirmation.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-slate-600">
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5  text-purple-700" />
+            <div className="mt-8 flex flex-wrap gap-3 text-xs font-bold text-slate-700">
+              <span className="inline-flex items-center gap-2 rounded-full border border-purple-100 bg-white/80 px-4 py-2 shadow-sm backdrop-blur-sm">
+                <CheckCircle2 className="h-4 w-4 text-purple-600" />
                 RBI-registered NBFC
               </span>
-              <span className="inline-flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-purple-700" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-purple-100 bg-white/80 px-4 py-2 shadow-sm backdrop-blur-sm">
+                <ShieldCheck className="h-4 w-4 text-purple-600" />
                 256-bit encryption
               </span>
-              <span className="inline-flex items-center gap-2">
-                <ArrowRight className="h-5 w-5 text-purple-700" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-purple-100 bg-white/80 px-4 py-2 shadow-sm backdrop-blur-sm">
+                <ArrowRight className="h-4 w-4 text-purple-600" />
                 Instant confirmation
               </span>
             </div>
@@ -360,44 +372,53 @@ const Repayment = () => {
 
           <form
             onSubmit={handleGetOtp}
-            className="rounded-[28px] border border-purple-100 bg-white p-6 shadow-[0_24px_70px_rgba(91,33,182,0.13)] sm:p-8"
+            className="relative overflow-hidden rounded-[28px] border border-purple-100/80 bg-white/95 p-6 shadow-[0_20px_60px_-15px_rgba(91,33,182,0.12)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_25px_70px_-15px_rgba(91,33,182,0.18)] sm:p-8"
           >
+            {/* Form Top Accent Glow Line */}
+            <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600" />
+
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-3xl font-black text-slate-950">Repay Loan</h2>
-                <p className="mt-2 text-sm leading-6 text-slate-500 sm:text-base">
+                <h2 className="text-3xl font-extrabold text-slate-950">Repay Loan</h2>
+                <p className="mt-1.5 text-sm leading-6 text-slate-500">
                   Verify your details before making any payment.
                 </p>
               </div>
-              <span className="rounded-full bg-purple-50 px-4 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-purple-700">
-                Secure
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50/80 px-3.5 py-1.5 text-[11px] font-bold tracking-wider text-emerald-700">
+                <Lock className="h-3 w-3" />
+                SECURE
               </span>
             </div>
 
-            <p className="mt-7 text-sm leading-6 text-slate-600 sm:text-base">
+            <p className="mt-6 text-xs leading-6 text-slate-500 sm:text-sm">
               For support contact{" "}
-              <a href="mailto:support@waqtmoney.com" className="font-extrabold text-purple-700">
-                support@waqtmoney.com
+              <a href="mailto:support@waqtmoney.in" className="font-bold text-purple-700 underline decoration-purple-300 underline-offset-2 transition hover:text-purple-800">
+                support@waqtmoney.in
               </a>
             </p>
 
-            <div className="mt-7">
-              <label className="text-sm font-extrabold text-slate-600">PAN Number</label>
-              <input
-                type="text"
-                value={pan}
-                onChange={(event) => handlePanChange(event.target.value)}
-                autoComplete="off"
-                maxLength={10}
-                placeholder="ABCDE1234F"
-                className="mt-3 h-14 w-full rounded-xl border border-purple-100 bg-white px-4 text-base font-black uppercase tracking-[0.22em] text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-purple-600 focus:ring-4 focus:ring-purple-50"
-              />
-              <p className="mt-3 text-sm text-slate-500 sm:text-base">
+            <div className="mt-6">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500">PAN Number</label>
+              <div className="relative mt-2">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-purple-500">
+                  <CreditCard className="h-5 w-5" />
+                </div>
+                <input
+                  type="text"
+                  value={pan}
+                  onChange={(event) => handlePanChange(event.target.value)}
+                  autoComplete="off"
+                  maxLength={10}
+                  placeholder="ABCDE1234F"
+                  className="h-14 w-full rounded-2xl border border-purple-100 bg-purple-50/30 pl-12 pr-4 text-base font-extrabold tracking-widest text-slate-900 outline-none transition placeholder:tracking-widest placeholder:text-slate-300 focus:border-purple-600 focus:bg-white focus:ring-4 focus:ring-purple-500/10"
+                />
+              </div>
+              <p className="mt-2.5 text-xs leading-relaxed text-slate-500">
                 Enter PAN to receive OTP on your registered mobile. Repayment details are fetched using that mobile number.
               </p>
             </div>
 
-            <label className="mt-5 flex items-start gap-3 text-sm font-bold leading-6 text-slate-700">
+            <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl border border-purple-100/60 bg-purple-50/20 p-3 transition hover:bg-purple-50/50">
               <input
                 type="checkbox"
                 checked={securityAccepted}
@@ -408,18 +429,20 @@ const Repayment = () => {
                   }
                   openSecurityAlert();
                 }}
-                className="mt-1 h-4 w-4 rounded border-slate-300 accent-purple-600"
+                className="mt-1 h-4 w-4 rounded border-slate-300 text-purple-600 accent-purple-600 focus:ring-purple-500"
               />
-              <span>I have read the Security Alert / मैंने सुरक्षा चेतावनी पढ़ ली है</span>
+              <span className="text-xs font-semibold leading-relaxed text-slate-700">
+                I have read the Security Alert / मैंने सुरक्षा चेतावनी पढ़ ली है
+              </span>
             </label>
 
             {error && (
-              <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-bold text-red-600">
+              <p className="mt-4 rounded-xl bg-red-50/90 border border-red-100 px-4 py-3 text-xs font-bold text-red-600">
                 {error}
               </p>
             )}
             {message && (
-              <p className="mt-4 rounded-xl bg-green-50 px-4 py-3 text-sm font-bold text-green-700">
+              <p className="mt-4 rounded-xl bg-emerald-50/90 border border-emerald-100 px-4 py-3 text-xs font-bold text-emerald-700">
                 {message}
               </p>
             )}
@@ -428,14 +451,16 @@ const Repayment = () => {
               <button
                 type="submit"
                 disabled={sendingOtp}
-                className="mt-7 flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-purple-600 text-base font-black text-white shadow-lg shadow-purple-100 transition hover:bg-purple-700"
+                className="group relative mt-6 flex h-14 w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 text-base font-bold text-white shadow-lg shadow-purple-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-purple-500/35 active:scale-[0.99] disabled:opacity-70"
               >
-                {sendingOtp ? "Sending..." : otpRequested && secondsLeft > 0 ? "Open OTP Popup" : otpRequested ? "Send OTP Again" : "Get OTP"}
-                <ArrowRight className="h-5 w-5" />
+                <span>
+                  {sendingOtp ? "Sending..." : otpRequested && secondsLeft > 0 ? "Open OTP Popup" : otpRequested ? "Send OTP Again" : "Get OTP"}
+                </span>
+                <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
               </button>
             )}
 
-            <p className="mt-6 text-center text-sm leading-6 text-slate-500">
+            <p className="mt-5 text-center text-xs leading-5 text-slate-400">
               By proceeding, you agree to our terms and privacy policy.
             </p>
           </form>
@@ -639,17 +664,20 @@ const Repayment = () => {
         )}
 
         <section className="mx-auto max-w-7xl py-6">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-3">
             {paymentOptions.map((option) => {
               const Icon = option.icon;
 
               return (
-                <div key={option.title} className="rounded-2xl border border-purple-100 bg-white p-5 shadow-sm">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-700">
-                    <Icon className="h-5 w-5" />
+                <div
+                  key={option.title}
+                  className="group rounded-2xl border border-purple-100/80 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-purple-200 hover:shadow-md"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50/90 text-purple-700 transition-colors duration-300 group-hover:bg-purple-600 group-hover:text-white">
+                    <Icon className="h-6 w-6" />
                   </span>
-                  <h3 className="mt-4 text-lg font-extrabold text-slate-950">{option.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{option.description}</p>
+                  <h3 className="mt-5 text-lg font-bold text-slate-900">{option.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">{option.description}</p>
                 </div>
               );
             })}

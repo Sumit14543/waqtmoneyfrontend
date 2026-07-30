@@ -19,18 +19,19 @@ import BrandLogo from "@/Components/BrandLogo";
 
 const quickLinks = [
   { name: "Home", link: "/", icon: Home },
-  { name: "All Services", link: "/services", icon: BriefcaseBusiness },
+  { name: "Services", link: "/services", icon: BriefcaseBusiness },
+  { name: "FAQs", link: "/faqs", icon: HelpCircle },
+  { name: "EMI Calculator", link: "/emi-calculator", icon: CreditCard },
   { name: "Blog Articles", link: "/blog", icon: FileText },
   { name: "About Us", link: "/about", icon: Info },
   { name: "Contact Us", link: "/contact", icon: PhoneCall },
-  { name: "FAQs", link: "/faqs", icon: HelpCircle },
 ];
 
 const loanProducts = [
   { name: "Personal Loan", link: "/loans/personal-loan", icon: CreditCard },
   { name: "Business Loan", link: "/loans/business-loan", icon: BriefcaseBusiness },
-  { name: "Payday Loan", link: "/pay-day-loan", icon: Zap },
-  { name: "Short Term Loan", link: "/loans/credit-services", icon: CreditCard },
+  { name: "Payday Loan", link: "/loans/payday-loan", icon: Zap },
+  { name: "Short Term Loan", link: "/loans/short-term-loan", icon: CreditCard },
   { name: "Loan Against Property", link: "/loans/loan-against-property", icon: Home },
   { name: "Vehicle Loan", link: "/loans/vehicle-loan", icon: CreditCard },
   { name: "Medical Loan", link: "/loans/medical-loan", icon: ShieldCheck },
@@ -48,7 +49,7 @@ const policies = [
 
 const contactItems = [
   { label: "Call Us", value: "+91 9217086608", icon: PhoneCall },
-  { label: "Email", value: "support@waqtmoney.com", icon: Mail },
+  { label: "Email", value: "support@waqtmoney.in", icon: Mail },
   { label: "Address", value: "H-15, Sector 63, Noida (UP)", icon: MapPin },
 ];
 

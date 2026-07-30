@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import SEO from "@/Components/SEO";
-import { CheckCircle2, ShieldCheck, Mail, Info, FileText } from "lucide-react";
+import { CheckCircle2, ShieldCheck, Mail, Info, FileText, AlertTriangle } from "lucide-react";
 
 export default function TermsConditions() {
   const schema = {
@@ -93,7 +93,7 @@ export default function TermsConditions() {
             <p>
               For legal inquiries or clarifications regarding these terms, please contact us:
               <br />
-              <strong className="text-slate-900">Email:</strong> support@waqtmoney.com
+              <strong className="text-slate-900">Email:</strong> support@waqtmoney.in
             </p>
           </div>
         </section>
