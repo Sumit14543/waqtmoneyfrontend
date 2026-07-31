@@ -62,14 +62,18 @@ DirectoryIndex index.html
   Header set Permissions-Policy "geolocation=*, camera=*, microphone=*"
 </IfModule>
 
-# 5. React SPA Routing & Force HTTPS
+# 5. React SPA Routing, Non-WWW Redirect & Force HTTPS
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # Force HTTPS
+  # 1. Force Non-WWW (Redirect www.waqtmoney.com to waqtmoney.com)
+  RewriteCond %{HTTP_HOST} ^www\.(.+) [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+  # 2. Force HTTPS
   RewriteCond %{HTTPS} !=on
-  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  RewriteRule ^ https://waqtmoney.com%{REQUEST_URI} [R=301,L]
 
   # Serve existing physical static files directly
   RewriteCond %{REQUEST_FILENAME} -f
