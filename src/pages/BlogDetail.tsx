@@ -86,10 +86,11 @@ export default function BlogDetail() {
   }, [slug]);
 
   const getImageUrl = (imgPath?: string) => {
-    if (!imgPath) return "/blog/blog-1-personal-loan-guide.webp";
+    if (!imgPath) return "/blog-assets/blog-1-personal-loan-guide.webp";
     if (imgPath.startsWith("http://") || imgPath.startsWith("https://")) return imgPath;
-    if (imgPath.startsWith("/blog/") || imgPath.startsWith("/uploads/")) return imgPath;
-    return `/blog/${imgPath}`;
+    if (imgPath.startsWith("/blog-assets/") || imgPath.startsWith("/uploads/")) return imgPath;
+    if (imgPath.startsWith("/blog/")) return imgPath.replace(/^\/blog\//, "/blog-assets/");
+    return `/blog-assets/${imgPath}`;
   };
 
   // Helper function to render Markdown cleanly without raw ## or **

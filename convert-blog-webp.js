@@ -6,7 +6,7 @@ import sharp from "sharp";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BLOG_DIR = path.join(__dirname, "public", "blog");
+const BLOG_DIR = path.join(__dirname, "public", "blog-assets");
 
 async function convertToWebp() {
   console.log("Starting WebP conversion for blog images...");

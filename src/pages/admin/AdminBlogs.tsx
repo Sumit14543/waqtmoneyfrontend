@@ -288,7 +288,7 @@ export default function AdminBlogs() {
                 </tr>
               ) : (
                 filteredBlogs.map((blog) => {
-                  const coverImg = blog.image || "/blog/blog-1-personal-loan-guide.webp";
+                  const coverImg = blog.image || "/blog-assets/blog-1-personal-loan-guide.webp";
                   const status = blog.status || "ACTIVE";
                   return (
                     <tr key={blog.id} className="hover:bg-slate-50/60 transition">

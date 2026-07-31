@@ -1152,7 +1152,7 @@ export default function AdminBlogForm() {
                       type="text"
                       value={inlineImgUrl}
                       onChange={(e) => setInlineImgUrl(e.target.value)}
-                      placeholder="https://... or /blog/sample.webp"
+                      placeholder="https://... or /blog-assets/sample.webp"
                       className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-600 font-mono"
                     />
                   </div>

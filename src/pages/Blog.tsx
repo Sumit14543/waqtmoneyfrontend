@@ -113,32 +113,32 @@ export default function Blog() {
         return clean;
       }
       clean = clean.replace(/\.(png|jpg|jpeg)$/i, ".webp");
-      if (clean.startsWith("/blog/blog-") || clean.startsWith("blog/blog-")) {
-        return clean.startsWith("/") ? clean : `/${clean}`;
+      if (clean.startsWith("/blog-assets/blog-") || clean.startsWith("blog-assets/blog-") || clean.startsWith("/blog/blog-") || clean.startsWith("blog/blog-")) {
+        return clean.replace(/^\/blog\//, "/blog-assets/").replace(/^blog\//, "blog-assets/").startsWith("/") ? clean.replace(/^\/blog\//, "/blog-assets/") : `/${clean.replace(/^blog\//, "blog-assets/")}`;
       }
     }
 
     const text = `${slug || ""} ${category || ""} ${title || ""}`.toLowerCase();
 
-    if (text.includes("short-term-emergency") || text.includes("emergency-cash-guide")) return "/blog/blog-7-short-term-emergency.webp";
-    if (text.includes("salary-advance") || text.includes("short-term-credit")) return "/blog/blog-8-salary-advance-credit.webp";
-    if (text.includes("cibil") || text.includes("score")) return "/blog/blog-2-cibil-score-approval.webp";
-    if (text.includes("working") || text.includes("factory")) return "/blog/blog-4-working-capital-factory.webp";
-    if (text.includes("business") || text.includes("msme") || text.includes("owner")) return "/blog/blog-3-small-business-owner.webp";
-    if (text.includes("payday-hygiene") || text.includes("debt consolidation")) return "/blog/blog-5-payday-cash-advance.webp";
-    if (text.includes("payday") || text.includes("instant-payday")) return "/blog/blog-6-emergency-salary-loan.webp";
-    if (text.includes("education") || text.includes("80e") || text.includes("tax")) return "/blog/blog-2-cibil-score-approval.webp";
-    if (text.includes("aadhaar") || text.includes("kyc") || text.includes("technology")) return "/blog/blog-7-short-term-emergency.webp";
+    if (text.includes("short-term-emergency") || text.includes("emergency-cash-guide")) return "/blog-assets/blog-7-short-term-emergency.webp";
+    if (text.includes("salary-advance") || text.includes("short-term-credit")) return "/blog-assets/blog-8-salary-advance-credit.webp";
+    if (text.includes("cibil") || text.includes("score")) return "/blog-assets/blog-2-cibil-score-approval.webp";
+    if (text.includes("working") || text.includes("factory")) return "/blog-assets/blog-4-working-capital-factory.webp";
+    if (text.includes("business") || text.includes("msme") || text.includes("owner")) return "/blog-assets/blog-3-small-business-owner.webp";
+    if (text.includes("payday-hygiene") || text.includes("debt consolidation")) return "/blog-assets/blog-5-payday-cash-advance.webp";
+    if (text.includes("payday") || text.includes("instant-payday")) return "/blog-assets/blog-6-emergency-salary-loan.webp";
+    if (text.includes("education") || text.includes("80e") || text.includes("tax")) return "/blog-assets/blog-2-cibil-score-approval.webp";
+    if (text.includes("aadhaar") || text.includes("kyc") || text.includes("technology")) return "/blog-assets/blog-7-short-term-emergency.webp";
 
     const uniqueImages = [
-      "/blog/blog-1-personal-loan-guide.webp",
-      "/blog/blog-2-cibil-score-approval.webp",
-      "/blog/blog-3-small-business-owner.webp",
-      "/blog/blog-4-working-capital-factory.webp",
-      "/blog/blog-5-payday-cash-advance.webp",
-      "/blog/blog-6-emergency-salary-loan.webp",
-      "/blog/blog-7-short-term-emergency.webp",
-      "/blog/blog-8-salary-advance-credit.webp"
+      "/blog-assets/blog-1-personal-loan-guide.webp",
+      "/blog-assets/blog-2-cibil-score-approval.webp",
+      "/blog-assets/blog-3-small-business-owner.webp",
+      "/blog-assets/blog-4-working-capital-factory.webp",
+      "/blog-assets/blog-5-payday-cash-advance.webp",
+      "/blog-assets/blog-6-emergency-salary-loan.webp",
+      "/blog-assets/blog-7-short-term-emergency.webp",
+      "/blog-assets/blog-8-salary-advance-credit.webp"
     ];
 
     const idx = Math.abs((id || 0) + (title ? title.length : 0)) % uniqueImages.length;

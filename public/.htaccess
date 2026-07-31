@@ -75,8 +75,14 @@ DirectoryIndex index.html
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
+  # Fallback directories without an index.html to main index.html
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_FILENAME}/index.html !-f
+  RewriteRule ^ index.html [L]
+
   # React Router fallback to index.html
   RewriteRule ^ index.html [L]
 </IfModule>
 
 ErrorDocument 404 /index.html
+
