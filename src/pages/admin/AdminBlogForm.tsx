@@ -70,10 +70,13 @@ export default function AdminBlogForm() {
   const [metaTitle, setMetaTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
   const [ctaHeading, setCtaHeading] = useState("Need Quick Funds Today?");
-  const [ctaLink, setCtaLink] = useState("/user/apply");
 
   // Sidebar Settings Tab
   const [activeTab, setActiveTab] = useState<"SETTINGS" | "EEAT" | "SEO">("SETTINGS");
+
+  // DOM Path Breadcrumb & Word Count
+  const [domPath, setDomPath] = useState("p");
+  const [wordCount, setWordCount] = useState(0);
 
   // Live Clock
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString("en-GB", {
@@ -97,8 +100,9 @@ export default function AdminBlogForm() {
 
   const [showHelpModal, setShowHelpModal] = useState(false);
 
-  // Textarea Ref for Insertion
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // Visual ContentEditable Ref
+  const editorRef = useRef<HTMLDivElement>(null);
+  const isInitializedRef = useRef(false);
 
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(false);
@@ -120,7 +124,7 @@ export default function AdminBlogForm() {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch blog data if editing
+  // Fetch blog details if editing
   useEffect(() => {
     if (isEdit && id) {
       const fetchBlogDetails = async () => {
@@ -159,10 +163,17 @@ export default function AdminBlogForm() {
             );
             setAuthor(String(blog.author || "Waqt Money Team"));
             setExcerpt(String(blog.excerpt || ""));
-            setContent(String(blog.content || ""));
+            const fetchedContent = String(blog.content || "");
+            setContent(fetchedContent);
             setExistingImage(String(blog.image || ""));
             setMetaTitle(String(blog.title || ""));
             setMetaDescription(String(blog.excerpt || ""));
+
+            if (editorRef.current && !isInitializedRef.current) {
+              editorRef.current.innerHTML = fetchedContent;
+              isInitializedRef.current = true;
+              updateEditorStats();
+            }
           }
         } catch (err) {
           console.error("Error fetching blog details:", err);
@@ -178,6 +189,11 @@ export default function AdminBlogForm() {
             setExcerpt(found.excerpt);
             setContent(found.content);
             setExistingImage(found.image);
+            if (editorRef.current && !isInitializedRef.current) {
+              editorRef.current.innerHTML = found.content;
+              isInitializedRef.current = true;
+              updateEditorStats();
+            }
           }
         } finally {
           setFetchLoading(false);
@@ -187,6 +203,35 @@ export default function AdminBlogForm() {
       fetchBlogDetails();
     }
   }, [isEdit, id]);
+
+  // Update Stats & DOM Path Breadcrumbs on selection/type
+  const updateEditorStats = () => {
+    if (!editorRef.current) return;
+    const html = editorRef.current.innerHTML;
+    const text = editorRef.current.innerText || "";
+    setContent(html);
+
+    // Calculate word count
+    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    setWordCount(words);
+
+    // Calculate DOM Path Breadcrumbs
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      let node: Node | null = selection.anchorNode;
+      const pathTags: string[] = [];
+      while (node && node !== editorRef.current) {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          const tag = (node as HTMLElement).tagName.toLowerCase();
+          if (tag !== "div" || pathTags.length === 0) {
+            pathTags.unshift(tag);
+          }
+        }
+        node = node.parentNode;
+      }
+      setDomPath(pathTags.length > 0 ? pathTags.join(" > ") : "p");
+    }
+  };
 
   // Auto-generate URL slug from title
   const handleTitleChange = (val: string) => {
@@ -219,49 +264,25 @@ export default function AdminBlogForm() {
     }
   };
 
-  // Helper to insert formatted text cleanly into content without raw `#` or `**`
-  const insertContentFormat = (startTag: string, endTag: string = "", defaultPlaceholder: string = "") => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = content.substring(start, end) || defaultPlaceholder;
-
-    const replacement = `${startTag}${selectedText}${endTag}`;
-    const newContent = content.substring(0, start) + replacement + content.substring(end);
-    setContent(newContent);
-
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + startTag.length, start + startTag.length + selectedText.length);
-    }, 50);
+  // Execute Visual ExecCommand (Bold, Italic, Underline, FormatBlock, etc.)
+  const execCmd = (command: string, value: string | undefined = undefined) => {
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+    document.execCommand(command, false, value);
+    updateEditorStats();
   };
 
-  // Toolbar Quick Insertion Actions
-  const handleInsertHeading = (level: 1 | 2 | 3) => {
-    if (level === 1) insertContentFormat("<h2>", "</h2>", "Heading Title");
-    else if (level === 2) insertContentFormat("<h2>", "</h2>", "Section Subtitle");
-    else insertContentFormat("<h3>", "</h3>", "Subsection Heading");
-  };
-
-  const handleInsertTable = () => {
-    const tableHTML = `\n| Feature | Salary Advance | Personal Loan |\n|---|---|---|\n| Loan Amount | ₹5,000 to ₹1,000,000 | ₹50,000 to ₹10,00,000 |\n| Disbursal Time | Instant (30 Mins) | 24 to 48 Hours |\n| Interest Rate | Transparent Daily Rate | Annual Percentage Rate |\n\n`;
-    insertContentFormat(tableHTML);
-  };
-
-  const handleInsertCallout = () => {
-    insertContentFormat("> Note: ", "\n\n", "Important financial tip or requirement...");
-  };
-
-  const handleInsertDivider = () => {
-    insertContentFormat("\n---\n\n");
+  // Visual Insertion Helpers
+  const handleFormatBlock = (tag: string) => {
+    execCmd("formatBlock", `<${tag}>`);
   };
 
   const handleInsertLink = () => {
     if (!linkUrl) return;
-    const linkHTML = `[${linkText || linkUrl}](${linkUrl})`;
-    insertContentFormat(linkHTML);
+    if (editorRef.current) editorRef.current.focus();
+    const linkHTML = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="font-bold text-purple-600 underline hover:text-purple-800">${linkText || linkUrl}</a>`;
+    execCmd("insertHTML", linkHTML);
     setLinkUrl("");
     setLinkText("");
     setShowLinkModal(false);
@@ -269,17 +290,32 @@ export default function AdminBlogForm() {
 
   const handleInsertImageModal = () => {
     if (!inlineImgUrl) return;
-    const imgHTML = `![${inlineImgAlt || "Blog Image"}](${inlineImgUrl})\n\n`;
-    insertContentFormat(imgHTML);
+    if (editorRef.current) editorRef.current.focus();
+    const imgHTML = `<img src="${inlineImgUrl}" alt="${inlineImgAlt || "Article Image"}" class="my-4 rounded-2xl max-w-full h-auto shadow-md border border-purple-100" /><p><br></p>`;
+    execCmd("insertHTML", imgHTML);
     setInlineImgUrl("");
     setInlineImgAlt("");
     setShowImageModal(false);
   };
 
-  // Save Post Submit Handler
+  const handleInsertTable = () => {
+    if (editorRef.current) editorRef.current.focus();
+    const tableHTML = `<table className="w-full my-6 border border-purple-200 rounded-xl overflow-hidden text-xs sm:text-sm"><thead><tr className="bg-purple-900 text-white font-bold"><th className="p-3 text-left">Feature</th><th className="p-3 text-left">Salary Advance</th><th className="p-3 text-left">Personal Loan</th></tr></thead><tbody><tr className="border-b border-purple-100 bg-white"><td className="p-3 font-semibold">Disbursal Speed</td><td className="p-3">Instant (30 Mins)</td><td className="p-3">24-48 Hours</td></tr><tr className="border-b border-purple-100 bg-purple-50/30"><td className="p-3 font-semibold">Tenure</td><td className="p-3">15 to 45 Days</td><td className="p-3">12 to 60 Months</td></tr></tbody></table><p><br></p>`;
+    execCmd("insertHTML", tableHTML);
+  };
+
+  const handleInsertCallout = () => {
+    if (editorRef.current) editorRef.current.focus();
+    const calloutHTML = `<div class="my-6 p-4 rounded-2xl bg-purple-50/90 border-l-4 border-purple-600 text-purple-950 font-semibold text-sm shadow-2xs"><strong>Note:</strong> Important financial tip or requirement details here...</div><p><br></p>`;
+    execCmd("insertHTML", calloutHTML);
+  };
+
+  // Submit Handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !slug.trim() || !content.trim()) {
+    const finalContent = editorRef.current ? editorRef.current.innerHTML : content;
+
+    if (!title.trim() || !slug.trim() || !finalContent.trim()) {
       setError("Please fill in Article Title, URL Slug, and Content Body.");
       return;
     }
@@ -297,7 +333,7 @@ export default function AdminBlogForm() {
       formData.append("status", visibility === "Active" ? "ACTIVE" : "INACTIVE");
       formData.append("author", author);
       formData.append("excerpt", excerpt || title);
-      formData.append("content", content);
+      formData.append("content", finalContent);
 
       if (imageFile) {
         formData.append("image", imageFile);
@@ -321,7 +357,6 @@ export default function AdminBlogForm() {
         setSuccess(isEdit ? "Blog article updated successfully!" : "New blog article published successfully!");
         setTimeout(() => navigate("/admin/blogs"), 1200);
       } else {
-        // Fallback local update
         setSuccess("Blog saved successfully!");
         setTimeout(() => navigate("/admin/blogs"), 1200);
       }
@@ -337,15 +372,12 @@ export default function AdminBlogForm() {
   const checklist = [
     { label: "Title", ready: Boolean(title.trim()) },
     { label: "Slug", ready: Boolean(slug.trim()) },
-    { label: "Content", ready: Boolean(content.trim() && content.length > 50) },
+    { label: "Content", ready: Boolean(content.trim() && wordCount > 10) },
     { label: "Cover", ready: Boolean(imageFile || imagePreview || existingImage) },
     { label: "Author", ready: Boolean(author.trim()) },
     { label: "SEO", ready: Boolean(excerpt.trim() || focusKeyword.trim() || metaTitle.trim()) }
   ];
   const readyCount = checklist.filter((item) => item.ready).length;
-
-  // Word count & read time calculation
-  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
   const computedReadTime = `${Math.max(1, Math.ceil(wordCount / 200))} Min Read`;
 
   return (
@@ -472,7 +504,7 @@ export default function AdminBlogForm() {
                   />
                 </div>
 
-                {/* CONTENT BODY WYSIWYG EDITOR */}
+                {/* CONTENT BODY VISUAL WYSIWYG EDITOR */}
                 <div>
                   <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
                     CONTENT BODY
@@ -491,21 +523,16 @@ export default function AdminBlogForm() {
                       <span className="hover:text-purple-600 cursor-pointer" onClick={() => setShowHelpModal(true)}>Help</span>
                     </div>
 
-                    {/* Icon Toolbar Row */}
+                    {/* Visual ExecCommand Icon Toolbar Row */}
                     <div className="px-3 py-2 bg-slate-100/80 border-b border-slate-200 flex flex-wrap items-center gap-1.5 text-slate-700">
                       {/* Undo / Redo */}
-                      <button type="button" onClick={() => insertContentFormat("")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Undo"><RotateCcw size={14} /></button>
-                      <button type="button" onClick={() => insertContentFormat("")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Redo"><RotateCw size={14} /></button>
+                      <button type="button" onClick={() => execCmd("undo")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Undo"><RotateCcw size={14} /></button>
+                      <button type="button" onClick={() => execCmd("redo")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Redo"><RotateCw size={14} /></button>
                       <div className="h-4 w-px bg-slate-300 mx-1" />
 
                       {/* Format Selector */}
                       <select
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === "h1") handleInsertHeading(1);
-                          else if (val === "h2") handleInsertHeading(2);
-                          else if (val === "h3") handleInsertHeading(3);
-                        }}
+                        onChange={(e) => handleFormatBlock(e.target.value)}
                         className="px-2 py-1 bg-white border border-slate-200 rounded text-xs font-bold text-slate-700 outline-none"
                       >
                         <option value="p">Paragraph</option>
@@ -529,23 +556,23 @@ export default function AdminBlogForm() {
                       <div className="h-4 w-px bg-slate-300 mx-1" />
 
                       {/* Formatting Buttons */}
-                      <button type="button" onClick={() => insertContentFormat("<strong>", "</strong>", "bold text")} className="p-1.5 hover:bg-white rounded font-bold" title="Bold"><BoldIcon size={14} /></button>
-                      <button type="button" onClick={() => insertContentFormat("<em>", "</em>", "italic text")} className="p-1.5 hover:bg-white rounded italic" title="Italic"><ItalicIcon size={14} /></button>
-                      <button type="button" onClick={() => insertContentFormat("<u>", "</u>", "underlined text")} className="p-1.5 hover:bg-white rounded underline" title="Underline"><UnderlineIcon size={14} /></button>
-                      <button type="button" onClick={() => insertContentFormat("<s>", "</s>", "strikethrough text")} className="p-1.5 hover:bg-white rounded line-through" title="Strikethrough"><StrikeIcon size={14} /></button>
+                      <button type="button" onClick={() => execCmd("bold")} className="p-1.5 hover:bg-white rounded font-bold" title="Bold"><BoldIcon size={14} /></button>
+                      <button type="button" onClick={() => execCmd("italic")} className="p-1.5 hover:bg-white rounded italic" title="Italic"><ItalicIcon size={14} /></button>
+                      <button type="button" onClick={() => execCmd("underline")} className="p-1.5 hover:bg-white rounded underline" title="Underline"><UnderlineIcon size={14} /></button>
+                      <button type="button" onClick={() => execCmd("strikeThrough")} className="p-1.5 hover:bg-white rounded line-through" title="Strikethrough"><StrikeIcon size={14} /></button>
 
                       <div className="h-4 w-px bg-slate-300 mx-1" />
 
                       {/* Alignments */}
-                      <button type="button" className="p-1.5 hover:bg-white rounded text-slate-600" title="Align Left"><AlignLeft size={14} /></button>
-                      <button type="button" className="p-1.5 hover:bg-white rounded text-slate-600" title="Align Center"><AlignCenter size={14} /></button>
-                      <button type="button" className="p-1.5 hover:bg-white rounded text-slate-600" title="Align Right"><AlignRight size={14} /></button>
+                      <button type="button" onClick={() => execCmd("justifyLeft")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Align Left"><AlignLeft size={14} /></button>
+                      <button type="button" onClick={() => execCmd("justifyCenter")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Align Center"><AlignCenter size={14} /></button>
+                      <button type="button" onClick={() => execCmd("justifyRight")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Align Right"><AlignRight size={14} /></button>
 
                       <div className="h-4 w-px bg-slate-300 mx-1" />
 
                       {/* Lists */}
-                      <button type="button" onClick={() => insertContentFormat("<ul>\n  <li>", "</li>\n</ul>", "List item")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Bullet List"><List size={14} /></button>
-                      <button type="button" onClick={() => insertContentFormat("<ol>\n  <li>", "</li>\n</ol>", "Step 1")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Numbered List"><ListOrdered size={14} /></button>
+                      <button type="button" onClick={() => execCmd("insertUnorderedList")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Bullet List"><List size={14} /></button>
+                      <button type="button" onClick={() => execCmd("insertOrderedList")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Numbered List"><ListOrdered size={14} /></button>
 
                       <div className="h-4 w-px bg-slate-300 mx-1" />
 
@@ -554,32 +581,30 @@ export default function AdminBlogForm() {
                       <button type="button" onClick={() => setShowImageModal(true)} className="p-1.5 hover:bg-white rounded text-slate-600" title="Insert Image"><ImageIcon size={14} /></button>
                       <button type="button" onClick={handleInsertTable} className="p-1.5 hover:bg-white rounded text-slate-600" title="Insert Table"><TableIcon size={14} /></button>
                       <button type="button" onClick={handleInsertCallout} className="p-1.5 hover:bg-white rounded text-slate-600" title="Insert Note Box"><Quote size={14} /></button>
-                      <button type="button" onClick={handleInsertDivider} className="p-1.5 hover:bg-white rounded text-slate-600" title="Horizontal Line"><Minus size={14} /></button>
+                      <button type="button" onClick={() => execCmd("insertHorizontalRule")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Horizontal Line"><Minus size={14} /></button>
                     </div>
 
-                    {/* Textarea Editor Input */}
-                    <textarea
-                      ref={textareaRef}
-                      rows={14}
-                      placeholder="Write your article content here..."
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      className="w-full p-4 text-xs sm:text-sm font-sans leading-relaxed outline-none focus:bg-white resize-y"
+                    {/* Interactive ContentEditable Visual Editor Area */}
+                    <div
+                      ref={editorRef}
+                      contentEditable
+                      suppressContentEditableWarning
+                      onInput={updateEditorStats}
+                      onKeyUp={updateEditorStats}
+                      onMouseUp={updateEditorStats}
+                      onBlur={updateEditorStats}
+                      className="w-full min-h-[360px] max-h-[600px] overflow-y-auto p-4 text-xs sm:text-sm font-sans leading-relaxed text-slate-900 outline-none focus:bg-white transition prose max-w-none"
                     />
 
-                    {/* Editor Footer Status Bar */}
-                    <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] font-medium text-slate-500">
-                      <div className="flex items-center gap-4">
-                        <span className="flex items-center gap-1">
-                          <FileText size={12} className="text-purple-600" />
-                          {wordCount} words
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock size={12} className="text-purple-600" />
-                          {computedReadTime}
-                        </span>
+                    {/* Editor Footer Status Bar (DOM path & Word Count like Image 1) */}
+                    <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] font-mono text-slate-500">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-600">{domPath}</span>
                       </div>
-                      <span className="text-slate-400">Press Alt+0 for help</span>
+                      <div className="flex items-center gap-4 text-slate-500 font-sans">
+                        <span>Press Alt+0 for help</span>
+                        <span className="font-bold text-slate-800">{wordCount} words</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -947,9 +972,9 @@ export default function AdminBlogForm() {
               <button onClick={() => setShowHelpModal(false)}><X size={16} /></button>
             </div>
             <div className="space-y-2 text-xs text-slate-600 leading-relaxed font-sans">
-              <p>• Select options from the toolbar to format headers, bold text, lists, and tables directly.</p>
-              <p>• Setting <strong>Article Visibility</strong> to <em>Inactive</em> will hide the post from the public blog site.</p>
-              <p>• Click <strong>Save Post</strong> to commit your changes immediately.</p>
+              <p>• Type naturally inside the visual editor. Selected text will visually turn <strong>bold</strong>, <em>italic</em>, or underline.</p>
+              <p>• Select <strong>Heading 1/2/3</strong> to enlarge text into visual headings.</p>
+              <p>• Click <strong>Table</strong> or <strong>Image</strong> to insert visual tables/images directly into the editor.</p>
             </div>
             <div className="pt-2 text-right">
               <button onClick={() => setShowHelpModal(false)} className="px-5 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold">Got It</button>

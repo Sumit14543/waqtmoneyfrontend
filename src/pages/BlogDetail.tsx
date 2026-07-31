@@ -436,9 +436,16 @@ export default function BlogDetail() {
                     {blog.excerpt}
                   </div>
 
-                  {/* Formatted Content without raw ##, ** or | */}
+                  {/* Formatted Content */}
                   <div className="text-slate-700 text-base leading-relaxed space-y-6 font-sans">
-                    {renderContentBlocks(blog.content)}
+                    {blog.content && /<[a-z][\s\S]*>/i.test(blog.content) ? (
+                      <div
+                        dangerouslySetInnerHTML={{ __html: blog.content }}
+                        className="prose max-w-none text-slate-700 font-sans space-y-4"
+                      />
+                    ) : (
+                      renderContentBlocks(blog.content)
+                    )}
                   </div>
                 </article>
 
