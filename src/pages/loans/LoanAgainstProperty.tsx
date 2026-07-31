@@ -404,21 +404,6 @@ export default function LoanAgainstProperty() {
             </div>
           </div>
         </section>
-
-        {/* Related Links */}
-        <section className="bg-slate-100 py-12 border-t border-slate-200">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h3 className="text-lg font-bold text-slate-900 mb-6">You May Also Be Interested In</h3>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link to="/loans/personal-loan" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Personal Loan</Link>
-              <Link to="/loans/business-loan" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Business Loan</Link>
-              <Link to="/loans/payday-loan" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Payday Loan</Link>
-              <Link to="/loans/vehicle-loan" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Vehicle Loan</Link>
-              <Link to="/loans/short-term-loan" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Short Term Loan</Link>
-              <Link to="/contact" className="px-4 py-2 rounded-xl bg-white text-xs sm:text-sm font-medium text-slate-700 hover:text-purple-600 transition">Contact Us</Link>
-            </div>
-          </div>
-        </section>
       </main>
 
       <Footer />
