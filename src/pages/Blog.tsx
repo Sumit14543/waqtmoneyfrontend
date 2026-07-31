@@ -46,11 +46,17 @@ export default function Blog() {
         const response = await fetch(`${API_BASE_URL}/blogs`);
         const data = await response.json().catch(() => null);
         if (response.ok && data?.success && Array.isArray(data?.blogs) && data.blogs.length > 0) {
-          setBlogs(data.blogs);
-          setFilteredBlogs(data.blogs);
+          const activeOnly = data.blogs.filter(
+            (b: Record<string, unknown>) => String(b.status || "ACTIVE").toUpperCase() !== "INACTIVE"
+          );
+          setBlogs(activeOnly);
+          setFilteredBlogs(activeOnly);
         } else {
-          setBlogs(fallbackBlogs as unknown as Blog[]);
-          setFilteredBlogs(fallbackBlogs as unknown as Blog[]);
+          const activeOnly = fallbackBlogs.filter(
+            (b) => String(b.status || "ACTIVE").toUpperCase() !== "INACTIVE"
+          );
+          setBlogs(activeOnly as unknown as Blog[]);
+          setFilteredBlogs(activeOnly as unknown as Blog[]);
         }
       } catch (err) {
         console.error("Failed to load blog posts:", err);
