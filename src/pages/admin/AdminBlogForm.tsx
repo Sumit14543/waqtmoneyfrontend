@@ -9,42 +9,23 @@ import {
   Image as ImageIcon,
   Check,
   X,
-  Bold as BoldIcon,
-  Italic as ItalicIcon,
-  Underline as UnderlineIcon,
-  Strikethrough as StrikeIcon,
-  List,
-  ListOrdered,
   Link2,
   Table as TableIcon,
-  Sparkles,
-  Eye,
-  Columns,
-  HelpCircle,
-  Heading1,
-  Heading2,
-  Heading3,
-  Quote,
-  Minus,
-  RotateCcw,
-  RotateCw,
-  FileText,
   Clock,
   CheckCircle2,
   Settings,
   ShieldCheck,
-  Search,
-  Code,
-  Maximize2,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  AlignJustify,
-  Smile,
-  Palette
+  Search
 } from "lucide-react";
 import { API_BASE_URL } from "@/config/api";
 import { fallbackBlogs } from "@/data/mockBlogs";
+
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tinymce: any;
+  }
+}
 
 export default function AdminBlogForm() {
   const { id } = useParams<{ id: string }>();
@@ -74,9 +55,11 @@ export default function AdminBlogForm() {
   // Sidebar Settings Tab
   const [activeTab, setActiveTab] = useState<"SETTINGS" | "EEAT" | "SEO">("SETTINGS");
 
-  // DOM Path Breadcrumb & Word Count
-  const [domPath, setDomPath] = useState("p");
-  const [wordCount, setWordCount] = useState(0);
+  // TinyMCE Ready & Loading States
+  const [editorReady, setEditorReady] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const editorRef = useRef<any>(null);
+  const initialContentRef = useRef("");
 
   // Live Clock
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString("en-GB", {
@@ -89,26 +72,12 @@ export default function AdminBlogForm() {
     hour12: true
   }));
 
-  // Modals
-  const [showImageModal, setShowImageModal] = useState(false);
-  const [inlineImgUrl, setInlineImgUrl] = useState("");
-  const [inlineImgAlt, setInlineImgAlt] = useState("");
-
-  const [showLinkModal, setShowLinkModal] = useState(false);
-  const [linkUrl, setLinkUrl] = useState("");
-  const [linkText, setLinkText] = useState("");
-
-  const [showHelpModal, setShowHelpModal] = useState(false);
-
-  // Visual ContentEditable Ref
-  const editorRef = useRef<HTMLDivElement>(null);
-  const isInitializedRef = useRef(false);
-
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Live clock timer
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date().toLocaleString("en-GB", {
@@ -122,6 +91,72 @@ export default function AdminBlogForm() {
       }));
     }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Load TinyMCE CDN script dynamically
+  useEffect(() => {
+    const initEditor = () => {
+      if (!window.tinymce) return;
+
+      window.tinymce.remove("#blog-content-editor");
+      window.tinymce.init({
+        selector: "#blog-content-editor",
+        height: 480,
+        menubar: "file edit view insert format tools table help",
+        plugins: [
+          "advlist", "autolink", "lists", "link", "image", "charmap", "preview",
+          "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
+          "insertdatetime", "media", "table", "code", "help", "wordcount"
+        ],
+        toolbar: "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table | forecolor backcolor | code fullscreen help",
+        statusbar: true,
+        elementpath: true,
+        content_style: `
+          body { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 14px; line-height: 1.6; color: #1e293b; padding: 12px; }
+          h1 { font-size: 2rem; font-weight: 800; color: #0f172a; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+          h2 { font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+          h3 { font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
+          p { margin-bottom: 1rem; }
+          table { border-collapse: collapse; width: 100%; margin: 1.5rem 0; font-size: 13px; }
+          th, td { border: 1px solid #cbd5e1; padding: 10px 14px; text-align: left; }
+          th { background-color: #581c87; color: white; font-weight: 700; }
+          tr:nth-child(even) { background-color: #f8fafc; }
+          blockquote { border-left: 4px solid #9333ea; background-color: #faf5ff; padding: 10px 16px; border-radius: 0 12px 12px 0; color: #581c87; margin: 1.25rem 0; font-weight: 600; }
+        `,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setup: (editor: any) => {
+          editorRef.current = editor;
+          editor.on("init", () => {
+            setEditorReady(true);
+            if (initialContentRef.current) {
+              editor.setContent(initialContentRef.current);
+            }
+          });
+          editor.on("change keyup input NodeChange", () => {
+            const html = editor.getContent();
+            setContent(html);
+          });
+        }
+      });
+    };
+
+    if (window.tinymce) {
+      initEditor();
+    } else {
+      const script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js";
+      script.referrerPolicy = "origin";
+      script.onload = () => {
+        initEditor();
+      };
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      if (window.tinymce) {
+        window.tinymce.remove("#blog-content-editor");
+      }
+    };
   }, []);
 
   // Fetch blog details if editing
@@ -165,14 +200,13 @@ export default function AdminBlogForm() {
             setExcerpt(String(blog.excerpt || ""));
             const fetchedContent = String(blog.content || "");
             setContent(fetchedContent);
+            initialContentRef.current = fetchedContent;
             setExistingImage(String(blog.image || ""));
             setMetaTitle(String(blog.title || ""));
             setMetaDescription(String(blog.excerpt || ""));
 
-            if (editorRef.current && !isInitializedRef.current) {
-              editorRef.current.innerHTML = fetchedContent;
-              isInitializedRef.current = true;
-              updateEditorStats();
+            if (editorRef.current) {
+              editorRef.current.setContent(fetchedContent);
             }
           }
         } catch (err) {
@@ -188,11 +222,11 @@ export default function AdminBlogForm() {
             setAuthor(found.author || "Waqt Money Team");
             setExcerpt(found.excerpt);
             setContent(found.content);
+            initialContentRef.current = found.content;
             setExistingImage(found.image);
-            if (editorRef.current && !isInitializedRef.current) {
-              editorRef.current.innerHTML = found.content;
-              isInitializedRef.current = true;
-              updateEditorStats();
+
+            if (editorRef.current) {
+              editorRef.current.setContent(found.content);
             }
           }
         } finally {
@@ -203,35 +237,6 @@ export default function AdminBlogForm() {
       fetchBlogDetails();
     }
   }, [isEdit, id]);
-
-  // Update Stats & DOM Path Breadcrumbs on selection/type
-  const updateEditorStats = () => {
-    if (!editorRef.current) return;
-    const html = editorRef.current.innerHTML;
-    const text = editorRef.current.innerText || "";
-    setContent(html);
-
-    // Calculate word count
-    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-    setWordCount(words);
-
-    // Calculate DOM Path Breadcrumbs
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-      let node: Node | null = selection.anchorNode;
-      const pathTags: string[] = [];
-      while (node && node !== editorRef.current) {
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          const tag = (node as HTMLElement).tagName.toLowerCase();
-          if (tag !== "div" || pathTags.length === 0) {
-            pathTags.unshift(tag);
-          }
-        }
-        node = node.parentNode;
-      }
-      setDomPath(pathTags.length > 0 ? pathTags.join(" > ") : "p");
-    }
-  };
 
   // Auto-generate URL slug from title
   const handleTitleChange = (val: string) => {
@@ -264,56 +269,10 @@ export default function AdminBlogForm() {
     }
   };
 
-  // Execute Visual ExecCommand (Bold, Italic, Underline, FormatBlock, etc.)
-  const execCmd = (command: string, value: string | undefined = undefined) => {
-    if (editorRef.current) {
-      editorRef.current.focus();
-    }
-    document.execCommand(command, false, value);
-    updateEditorStats();
-  };
-
-  // Visual Insertion Helpers
-  const handleFormatBlock = (tag: string) => {
-    execCmd("formatBlock", `<${tag}>`);
-  };
-
-  const handleInsertLink = () => {
-    if (!linkUrl) return;
-    if (editorRef.current) editorRef.current.focus();
-    const linkHTML = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="font-bold text-purple-600 underline hover:text-purple-800">${linkText || linkUrl}</a>`;
-    execCmd("insertHTML", linkHTML);
-    setLinkUrl("");
-    setLinkText("");
-    setShowLinkModal(false);
-  };
-
-  const handleInsertImageModal = () => {
-    if (!inlineImgUrl) return;
-    if (editorRef.current) editorRef.current.focus();
-    const imgHTML = `<img src="${inlineImgUrl}" alt="${inlineImgAlt || "Article Image"}" class="my-4 rounded-2xl max-w-full h-auto shadow-md border border-purple-100" /><p><br></p>`;
-    execCmd("insertHTML", imgHTML);
-    setInlineImgUrl("");
-    setInlineImgAlt("");
-    setShowImageModal(false);
-  };
-
-  const handleInsertTable = () => {
-    if (editorRef.current) editorRef.current.focus();
-    const tableHTML = `<table className="w-full my-6 border border-purple-200 rounded-xl overflow-hidden text-xs sm:text-sm"><thead><tr className="bg-purple-900 text-white font-bold"><th className="p-3 text-left">Feature</th><th className="p-3 text-left">Salary Advance</th><th className="p-3 text-left">Personal Loan</th></tr></thead><tbody><tr className="border-b border-purple-100 bg-white"><td className="p-3 font-semibold">Disbursal Speed</td><td className="p-3">Instant (30 Mins)</td><td className="p-3">24-48 Hours</td></tr><tr className="border-b border-purple-100 bg-purple-50/30"><td className="p-3 font-semibold">Tenure</td><td className="p-3">15 to 45 Days</td><td className="p-3">12 to 60 Months</td></tr></tbody></table><p><br></p>`;
-    execCmd("insertHTML", tableHTML);
-  };
-
-  const handleInsertCallout = () => {
-    if (editorRef.current) editorRef.current.focus();
-    const calloutHTML = `<div class="my-6 p-4 rounded-2xl bg-purple-50/90 border-l-4 border-purple-600 text-purple-950 font-semibold text-sm shadow-2xs"><strong>Note:</strong> Important financial tip or requirement details here...</div><p><br></p>`;
-    execCmd("insertHTML", calloutHTML);
-  };
-
   // Submit Handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const finalContent = editorRef.current ? editorRef.current.innerHTML : content;
+    const finalContent = editorRef.current ? editorRef.current.getContent() : content;
 
     if (!title.trim() || !slug.trim() || !finalContent.trim()) {
       setError("Please fill in Article Title, URL Slug, and Content Body.");
@@ -372,13 +331,12 @@ export default function AdminBlogForm() {
   const checklist = [
     { label: "Title", ready: Boolean(title.trim()) },
     { label: "Slug", ready: Boolean(slug.trim()) },
-    { label: "Content", ready: Boolean(content.trim() && wordCount > 10) },
+    { label: "Content", ready: Boolean(content.trim()) },
     { label: "Cover", ready: Boolean(imageFile || imagePreview || existingImage) },
     { label: "Author", ready: Boolean(author.trim()) },
     { label: "SEO", ready: Boolean(excerpt.trim() || focusKeyword.trim() || metaTitle.trim()) }
   ];
   const readyCount = checklist.filter((item) => item.ready).length;
-  const computedReadTime = `${Math.max(1, Math.ceil(wordCount / 200))} Min Read`;
 
   return (
     <AdminLayout>
@@ -444,7 +402,7 @@ export default function AdminBlogForm() {
 
             {/* Main Form 2-Column Grid */}
             <div className="p-6 grid gap-8 lg:grid-cols-3">
-              {/* Left Column (Spans 2 cols): Form Fields & Content Editor */}
+              {/* Left Column (Spans 2 cols): Form Fields & TinyMCE Editor */}
               <div className="lg:col-span-2 space-y-5">
                 {/* ARTICLE TITLE */}
                 <div>
@@ -504,108 +462,19 @@ export default function AdminBlogForm() {
                   />
                 </div>
 
-                {/* CONTENT BODY VISUAL WYSIWYG EDITOR */}
+                {/* CONTENT BODY TINYMCE EDITOR CONTAINER */}
                 <div>
                   <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
                     CONTENT BODY
                   </label>
 
                   <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
-                    {/* Top Menu Bar */}
-                    <div className="px-4 py-2 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600">
-                      <span className="hover:text-purple-600 cursor-pointer">File</span>
-                      <span className="hover:text-purple-600 cursor-pointer">Edit</span>
-                      <span className="hover:text-purple-600 cursor-pointer">View</span>
-                      <span className="hover:text-purple-600 cursor-pointer" onClick={() => setShowLinkModal(true)}>Insert</span>
-                      <span className="hover:text-purple-600 cursor-pointer">Format</span>
-                      <span className="hover:text-purple-600 cursor-pointer">Tools</span>
-                      <span className="hover:text-purple-600 cursor-pointer" onClick={handleInsertTable}>Table</span>
-                      <span className="hover:text-purple-600 cursor-pointer" onClick={() => setShowHelpModal(true)}>Help</span>
-                    </div>
-
-                    {/* Visual ExecCommand Icon Toolbar Row */}
-                    <div className="px-3 py-2 bg-slate-100/80 border-b border-slate-200 flex flex-wrap items-center gap-1.5 text-slate-700">
-                      {/* Undo / Redo */}
-                      <button type="button" onClick={() => execCmd("undo")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Undo"><RotateCcw size={14} /></button>
-                      <button type="button" onClick={() => execCmd("redo")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Redo"><RotateCw size={14} /></button>
-                      <div className="h-4 w-px bg-slate-300 mx-1" />
-
-                      {/* Format Selector */}
-                      <select
-                        onChange={(e) => handleFormatBlock(e.target.value)}
-                        className="px-2 py-1 bg-white border border-slate-200 rounded text-xs font-bold text-slate-700 outline-none"
-                      >
-                        <option value="p">Paragraph</option>
-                        <option value="h1">Heading 1</option>
-                        <option value="h2">Heading 2</option>
-                        <option value="h3">Heading 3</option>
-                      </select>
-
-                      <select className="px-2 py-1 bg-white border border-slate-200 rounded text-xs font-bold text-slate-700 outline-none">
-                        <option>System Font</option>
-                        <option>Inter</option>
-                        <option>Roboto</option>
-                      </select>
-
-                      <select className="px-2 py-1 bg-white border border-slate-200 rounded text-xs font-bold text-slate-700 outline-none">
-                        <option>12pt</option>
-                        <option>14pt</option>
-                        <option>16pt</option>
-                      </select>
-
-                      <div className="h-4 w-px bg-slate-300 mx-1" />
-
-                      {/* Formatting Buttons */}
-                      <button type="button" onClick={() => execCmd("bold")} className="p-1.5 hover:bg-white rounded font-bold" title="Bold"><BoldIcon size={14} /></button>
-                      <button type="button" onClick={() => execCmd("italic")} className="p-1.5 hover:bg-white rounded italic" title="Italic"><ItalicIcon size={14} /></button>
-                      <button type="button" onClick={() => execCmd("underline")} className="p-1.5 hover:bg-white rounded underline" title="Underline"><UnderlineIcon size={14} /></button>
-                      <button type="button" onClick={() => execCmd("strikeThrough")} className="p-1.5 hover:bg-white rounded line-through" title="Strikethrough"><StrikeIcon size={14} /></button>
-
-                      <div className="h-4 w-px bg-slate-300 mx-1" />
-
-                      {/* Alignments */}
-                      <button type="button" onClick={() => execCmd("justifyLeft")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Align Left"><AlignLeft size={14} /></button>
-                      <button type="button" onClick={() => execCmd("justifyCenter")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Align Center"><AlignCenter size={14} /></button>
-                      <button type="button" onClick={() => execCmd("justifyRight")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Align Right"><AlignRight size={14} /></button>
-
-                      <div className="h-4 w-px bg-slate-300 mx-1" />
-
-                      {/* Lists */}
-                      <button type="button" onClick={() => execCmd("insertUnorderedList")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Bullet List"><List size={14} /></button>
-                      <button type="button" onClick={() => execCmd("insertOrderedList")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Numbered List"><ListOrdered size={14} /></button>
-
-                      <div className="h-4 w-px bg-slate-300 mx-1" />
-
-                      {/* Insert Media & Elements */}
-                      <button type="button" onClick={() => setShowLinkModal(true)} className="p-1.5 hover:bg-white rounded text-slate-600" title="Insert Link"><Link2 size={14} /></button>
-                      <button type="button" onClick={() => setShowImageModal(true)} className="p-1.5 hover:bg-white rounded text-slate-600" title="Insert Image"><ImageIcon size={14} /></button>
-                      <button type="button" onClick={handleInsertTable} className="p-1.5 hover:bg-white rounded text-slate-600" title="Insert Table"><TableIcon size={14} /></button>
-                      <button type="button" onClick={handleInsertCallout} className="p-1.5 hover:bg-white rounded text-slate-600" title="Insert Note Box"><Quote size={14} /></button>
-                      <button type="button" onClick={() => execCmd("insertHorizontalRule")} className="p-1.5 hover:bg-white rounded text-slate-600" title="Horizontal Line"><Minus size={14} /></button>
-                    </div>
-
-                    {/* Interactive ContentEditable Visual Editor Area */}
-                    <div
-                      ref={editorRef}
-                      contentEditable
-                      suppressContentEditableWarning
-                      onInput={updateEditorStats}
-                      onKeyUp={updateEditorStats}
-                      onMouseUp={updateEditorStats}
-                      onBlur={updateEditorStats}
-                      className="w-full min-h-[360px] max-h-[600px] overflow-y-auto p-4 text-xs sm:text-sm font-sans leading-relaxed text-slate-900 outline-none focus:bg-white transition prose max-w-none"
+                    <textarea
+                      id="blog-content-editor"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      className="w-full min-h-[400px]"
                     />
-
-                    {/* Editor Footer Status Bar (DOM path & Word Count like Image 1) */}
-                    <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] font-mono text-slate-500">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-slate-600">{domPath}</span>
-                      </div>
-                      <div className="flex items-center gap-4 text-slate-500 font-sans">
-                        <span>Press Alt+0 for help</span>
-                        <span className="font-bold text-slate-800">{wordCount} words</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -891,96 +760,6 @@ export default function AdminBlogForm() {
             </div>
           </div>
         </form>
-      )}
-
-      {/* Link Insertion Modal */}
-      {showLinkModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-slate-200 shadow-2xl space-y-4">
-            <h3 className="text-base font-extrabold text-slate-900">Insert Link</h3>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Link URL</label>
-                <input
-                  type="text"
-                  placeholder="https://waqtmoney.com/user/apply"
-                  value={linkUrl}
-                  onChange={(e) => setLinkUrl(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-purple-600"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Display Text (Optional)</label>
-                <input
-                  type="text"
-                  placeholder="Apply Now"
-                  value={linkText}
-                  onChange={(e) => setLinkText(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-purple-600"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-2 pt-2">
-              <button type="button" onClick={() => setShowLinkModal(false)} className="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">Cancel</button>
-              <button type="button" onClick={handleInsertLink} className="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold shadow">Insert Link</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Image Insertion Modal */}
-      {showImageModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-slate-200 shadow-2xl space-y-4">
-            <h3 className="text-base font-extrabold text-slate-900">Insert Image</h3>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Image URL</label>
-                <input
-                  type="text"
-                  placeholder="/blog-assets/sample.webp or https://..."
-                  value={inlineImgUrl}
-                  onChange={(e) => setInlineImgUrl(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-purple-600"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Alt Description</label>
-                <input
-                  type="text"
-                  placeholder="Blog Image Description"
-                  value={inlineImgAlt}
-                  onChange={(e) => setInlineImgAlt(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-purple-600"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-2 pt-2">
-              <button type="button" onClick={() => setShowImageModal(false)} className="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">Cancel</button>
-              <button type="button" onClick={handleInsertImageModal} className="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold shadow">Insert Image</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Help Modal */}
-      {showHelpModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full border border-slate-200 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-extrabold text-slate-900">Editor Help & Formatting</h3>
-              <button onClick={() => setShowHelpModal(false)}><X size={16} /></button>
-            </div>
-            <div className="space-y-2 text-xs text-slate-600 leading-relaxed font-sans">
-              <p>• Type naturally inside the visual editor. Selected text will visually turn <strong>bold</strong>, <em>italic</em>, or underline.</p>
-              <p>• Select <strong>Heading 1/2/3</strong> to enlarge text into visual headings.</p>
-              <p>• Click <strong>Table</strong> or <strong>Image</strong> to insert visual tables/images directly into the editor.</p>
-            </div>
-            <div className="pt-2 text-right">
-              <button onClick={() => setShowHelpModal(false)} className="px-5 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold">Got It</button>
-            </div>
-          </div>
-        </div>
       )}
     </AdminLayout>
   );
