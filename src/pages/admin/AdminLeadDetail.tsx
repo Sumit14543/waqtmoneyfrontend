@@ -364,7 +364,7 @@ export default function AdminLeadDetail() {
                   <p className="mt-1 font-semibold text-slate-900 font-mono">{lead.uan_number || "N/A"}</p>
                 </div>
                 <div>
-                  <span className="text-xs text-slate-400 uppercase font-semibold">Office Email</span>
+                  <span className="text-xs text-slate-400 uppercase font-semibold">Official Email</span>
                   <p className="mt-1 font-semibold text-slate-900">{lead.office_email || "N/A"}</p>
                 </div>
                 <div>

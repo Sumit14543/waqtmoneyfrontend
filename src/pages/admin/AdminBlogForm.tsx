@@ -298,7 +298,7 @@ export default function AdminBlogForm() {
         formData.append("image", imageFile);
       }
 
-      const token = localStorage.getItem("adminToken");
+      const token = localStorage.getItem("admin_token") || localStorage.getItem("adminToken");
       const url = isEdit ? `${API_BASE_URL}/blogs/${id}` : `${API_BASE_URL}/blogs`;
       const method = isEdit ? "PUT" : "POST";
 
@@ -316,12 +316,11 @@ export default function AdminBlogForm() {
         setSuccess(isEdit ? "Blog article updated successfully!" : "New blog article published successfully!");
         setTimeout(() => navigate("/admin/blogs"), 1200);
       } else {
-        setSuccess("Blog saved successfully!");
-        setTimeout(() => navigate("/admin/blogs"), 1200);
+        const msg = data?.message || (isEdit ? "Failed to update blog article." : "Failed to publish blog article.");
+        setError(msg);
       }
-    } catch {
-      setSuccess("Blog saved successfully!");
-      setTimeout(() => navigate("/admin/blogs"), 1200);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Network error while saving blog.");
     } finally {
       setLoading(false);
     }

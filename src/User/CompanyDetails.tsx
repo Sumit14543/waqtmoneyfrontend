@@ -273,7 +273,7 @@ const CompanyDetails = () => {
             {/* Email */}
             <div className="mb-4">
               <label className="text-sm font-bold text-[#071d3a]">
-                Office Email <span className="text-[#718096]">(optional)</span>
+                Official Email <span className="text-[#718096]">(optional)</span>
               </label>
               <input name="email" type="email" autoComplete="email" value={form.email} onChange={handleChange} className={inputClass} />
               {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
