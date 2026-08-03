@@ -14,7 +14,7 @@ import {
   Info,
   CheckCircle2
 } from "lucide-react";
-import { API_BASE_URL } from "@/config/api";
+import { API_BASE_URL, getBlogImageUrl } from "@/config/api";
 import { fallbackBlogs } from "@/data/mockBlogs";
 
 interface Blog {
@@ -82,11 +82,7 @@ export default function BlogDetail() {
   }, [slug]);
 
   const getImageUrl = (imgPath?: string) => {
-    if (!imgPath) return "/blog-assets/blog-1-personal-loan-guide.webp";
-    if (imgPath.startsWith("http://") || imgPath.startsWith("https://")) return imgPath;
-    if (imgPath.startsWith("/blog-assets/") || imgPath.startsWith("/uploads/")) return imgPath;
-    if (imgPath.startsWith("/blog/")) return imgPath.replace(/^\/blog\//, "/blog-assets/");
-    return `/blog-assets/${imgPath}`;
+    return getBlogImageUrl(imgPath);
   };
 
   // Helper function to render inline markdown (bold, links, code, clean text)
@@ -424,6 +420,13 @@ export default function BlogDetail() {
                   src={getImageUrl(blog.image)}
                   alt={blog.title}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.dataset.failed) {
+                      target.dataset.failed = "true";
+                      target.src = "/blog-assets/blog-1-personal-loan-guide.webp";
+                    }
+                  }}
                 />
               </div>
 

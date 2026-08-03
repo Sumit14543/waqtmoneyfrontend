@@ -17,7 +17,7 @@ import {
   ShieldCheck,
   Search
 } from "lucide-react";
-import { API_BASE_URL } from "@/config/api";
+import { API_BASE_URL, getBlogImageUrl } from "@/config/api";
 import { fallbackBlogs } from "@/data/mockBlogs";
 
 declare global {
@@ -597,7 +597,7 @@ export default function AdminBlogForm() {
                           {imagePreview || existingImage ? (
                             <div className="space-y-2">
                               <img
-                                src={imagePreview || existingImage}
+                                src={imagePreview || getBlogImageUrl(existingImage)}
                                 alt="Cover Preview"
                                 className="h-32 w-full object-cover rounded-xl border border-slate-200"
                               />

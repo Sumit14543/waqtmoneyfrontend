@@ -4,7 +4,7 @@ import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import SEO from "@/Components/SEO";
 import { Search, Eye, Clock, Flame, X, ArrowRight, Sparkles, BookOpen } from "lucide-react";
-import { API_BASE_URL } from "@/config/api";
+import { API_BASE_URL, getBlogImageUrl } from "@/config/api";
 import { fallbackBlogs } from "@/data/mockBlogs";
 
 interface Blog {
@@ -116,14 +116,7 @@ export default function Blog() {
   // Image Resolver with Fallbacks
   const getImageUrl = (img?: string, slug?: string, category?: string, title?: string, id?: number) => {
     if (img && img.trim()) {
-      let clean = img.trim();
-      if (clean.startsWith("http://") || clean.startsWith("https://")) {
-        return clean;
-      }
-      clean = clean.replace(/\.(png|jpg|jpeg)$/i, ".webp");
-      if (clean.startsWith("/blog-assets/blog-") || clean.startsWith("blog-assets/blog-") || clean.startsWith("/blog/blog-") || clean.startsWith("blog/blog-")) {
-        return clean.replace(/^\/blog\//, "/blog-assets/").replace(/^blog\//, "blog-assets/").startsWith("/") ? clean.replace(/^\/blog\//, "/blog-assets/") : `/${clean.replace(/^blog\//, "blog-assets/")}`;
-      }
+      return getBlogImageUrl(img);
     }
 
     const text = `${slug || ""} ${category || ""} ${title || ""}`.toLowerCase();

@@ -17,7 +17,7 @@ import {
   ToggleLeft,
   ToggleRight
 } from "lucide-react";
-import { API_BASE_URL } from "@/config/api";
+import { API_BASE_URL, getBlogImageUrl } from "@/config/api";
 import { fallbackBlogs } from "@/data/mockBlogs";
 
 interface Blog {
@@ -288,7 +288,7 @@ export default function AdminBlogs() {
                 </tr>
               ) : (
                 filteredBlogs.map((blog) => {
-                  const coverImg = blog.image || "/blog-assets/blog-1-personal-loan-guide.webp";
+                  const coverImg = getBlogImageUrl(blog.image);
                   const status = blog.status || "ACTIVE";
                   return (
                     <tr key={blog.id} className="hover:bg-slate-50/60 transition">
@@ -298,6 +298,13 @@ export default function AdminBlogs() {
                           src={coverImg}
                           alt={blog.title}
                           className="h-10 w-14 object-cover rounded-lg border border-slate-200 bg-slate-100"
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (!target.dataset.failed) {
+                              target.dataset.failed = "true";
+                              target.src = "/blog-assets/blog-1-personal-loan-guide.webp";
+                            }
+                          }}
                         />
                       </td>
 

@@ -68,3 +68,32 @@ export const getApiHeaders = (extraHeaders: Record<string, string> = {}) => {
 
   return headers;
 };
+
+export const getBlogImageUrl = (
+  imgPath?: string,
+  fallback = "/blog-assets/blog-1-personal-loan-guide.webp"
+): string => {
+  if (!imgPath || !imgPath.trim()) return fallback;
+  const path = imgPath.trim();
+
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+
+  if (path.startsWith("/uploads/") || path.startsWith("uploads/")) {
+    const apiBase = API_BASE_URL.replace(/\/api\/?$/, "");
+    const cleanPath = path.startsWith("/") ? path : `/${path}`;
+    return `${apiBase}${cleanPath}`;
+  }
+
+  if (path.startsWith("/blog-assets/") || path.startsWith("blog-assets/")) {
+    return path.startsWith("/") ? path : `/${path}`;
+  }
+
+  if (path.startsWith("/blog/")) {
+    return path.replace(/^\/blog\//, "/blog-assets/");
+  }
+
+  return `/blog-assets/${path}`;
+};
+
