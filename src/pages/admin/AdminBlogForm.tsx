@@ -128,13 +128,18 @@ export default function AdminBlogForm() {
           editorRef.current = editor;
           editor.on("init", () => {
             setEditorReady(true);
-            if (initialContentRef.current) {
-              editor.setContent(initialContentRef.current);
+            const contentToSet = initialContentRef.current || content;
+            if (contentToSet) {
+              try {
+                editor.setContent(contentToSet);
+              } catch (e) {
+                console.warn("TinyMCE setContent init error:", e);
+              }
             }
           });
           editor.on("change keyup input NodeChange", () => {
             const html = editor.getContent();
-            setContent(html);
+            if (html) setContent(html);
           });
         }
       });
@@ -206,7 +211,11 @@ export default function AdminBlogForm() {
             setMetaDescription(String(blog.excerpt || ""));
 
             if (editorRef.current) {
-              editorRef.current.setContent(fetchedContent);
+              try {
+                editorRef.current.setContent(fetchedContent);
+              } catch (e) {
+                console.warn("Editor setContent error:", e);
+              }
             }
           }
         } catch (err) {
@@ -226,7 +235,11 @@ export default function AdminBlogForm() {
             setExistingImage(found.image);
 
             if (editorRef.current) {
-              editorRef.current.setContent(found.content);
+              try {
+                editorRef.current.setContent(found.content);
+              } catch (e) {
+                console.warn("Editor setContent error:", e);
+              }
             }
           }
         } finally {
@@ -272,9 +285,28 @@ export default function AdminBlogForm() {
   // Submit Handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const finalContent = editorRef.current ? editorRef.current.getContent() : content;
 
-    if (!title.trim() || !slug.trim() || !finalContent.trim()) {
+    let finalContent = "";
+    if (editorRef.current) {
+      try {
+        finalContent = editorRef.current.getContent();
+      } catch (err) {
+        console.warn("Error reading editorRef content:", err);
+      }
+    }
+    if (!finalContent || !finalContent.trim() || finalContent.trim() === "<p></p>") {
+      const textareaVal = (document.getElementById("blog-content-editor") as HTMLTextAreaElement)?.value;
+      finalContent = content || textareaVal || initialContentRef.current || "";
+    }
+
+    const rawSlug = slug.trim() || title.trim();
+    const cleanSlug = rawSlug
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+
+    if (!title.trim() || !cleanSlug.trim() || !finalContent.trim()) {
       setError("Please fill in Article Title, URL Slug, and Content Body.");
       return;
     }
@@ -286,7 +318,7 @@ export default function AdminBlogForm() {
     try {
       const formData = new FormData();
       formData.append("title", title);
-      formData.append("slug", slug.toLowerCase().trim());
+      formData.append("slug", cleanSlug);
       formData.append("category", category);
       formData.append("readTime", readTime);
       formData.append("status", visibility === "Active" ? "ACTIVE" : "INACTIVE");
