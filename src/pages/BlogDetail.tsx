@@ -315,18 +315,33 @@ export default function BlogDetail() {
     });
   };
 
-  // Generate Table of Contents items dynamically without raw Markdown symbols
+  // Generate Table of Contents items dynamically from H2/H3 tags or Markdown headings
   const extractTableOfContents = (contentStr: string) => {
     if (!contentStr) return [];
     const headings: string[] = [];
-    const blocks = contentStr.split(/\n{2,}/);
-    blocks.forEach((block) => {
-      const match = block.match(/^(?:##\s*|###\s*|\d+\.\s+)(.+)$/m);
-      if (match) {
-        const clean = match[1].replace(/[#*_|]/g, "").trim();
-        if (clean.length > 3) headings.push(clean);
-      }
-    });
+
+    // 1. Extract HTML <h2> and <h3> tags
+    const htmlRegex = /<h[23][^>]*>(.*?)<\/h[23]>/gi;
+    let match;
+    while ((match = htmlRegex.exec(contentStr)) !== null) {
+      const rawText = match[1].replace(/<[^>]+>/g, "").trim();
+      const clean = rawText.replace(/^\d+[.)]\s*/, "").replace(/[#*_|]/g, "").trim();
+      if (clean && clean.length > 2) headings.push(clean);
+    }
+
+    // 2. If no HTML headings found, extract Markdown or numbered headings
+    if (headings.length === 0) {
+      const blocks = contentStr.split(/\n{2,}/);
+      blocks.forEach((block) => {
+        const m = block.match(/^(?:##\s*|###\s*|\d+[.)]\s+)(.+)$/m);
+        if (m) {
+          const rawText = m[1].trim();
+          const clean = rawText.replace(/^[#*_|]+|[#*_|]+$/g, "").replace(/^\d+[.)]\s*/, "").trim();
+          if (clean && clean.length > 2) headings.push(clean);
+        }
+      });
+    }
+
     return headings;
   };
 
@@ -339,21 +354,21 @@ export default function BlogDetail() {
       <main id="main-content" className="pt-24 pb-16">
         <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
           {loading ? (
-            <div className="space-y-6 animate-pulse">
-              <div className="h-8 bg-purple-100/60 rounded-xl w-1/3" />
-              <div className="h-12 bg-purple-100/60 rounded-xl w-3/4" />
-              <div className="h-96 bg-purple-100/60 rounded-3xl w-full" />
+            <div className="min-h-[400px] flex flex-col items-center justify-center gap-3">
+              <div className="h-10 w-10 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
+              <p className="text-sm font-semibold text-slate-500">Loading article...</p>
             </div>
           ) : error || !blog ? (
-            <div className="text-center py-20 bg-white rounded-3xl border border-purple-100 shadow-xs">
-              <h2 className="text-2xl font-bold text-slate-900 mb-4">Article Not Found</h2>
-              <p className="text-slate-600 mb-6">{error || "The requested blog post could not be located."}</p>
+            <div className="min-h-[400px] flex flex-col items-center justify-center gap-4 text-center">
+              <h2 className="text-2xl font-bold text-slate-800">Article Not Found</h2>
+              <p className="text-sm text-slate-500 max-w-md">
+                The article you are looking for might have been moved or removed.
+              </p>
               <Link
                 to="/blog"
-                className="inline-flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-purple-700 transition shadow-md"
+                className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md transition"
               >
-                <ArrowLeft size={16} />
-                Back to Blog Hub
+                ← Back to Blog Masterclass
               </Link>
             </div>
           ) : (
@@ -453,9 +468,11 @@ export default function BlogDetail() {
                 {/* Left Column: Article Body */}
                 <article className="bg-white rounded-3xl p-6 sm:p-10 border border-purple-100 shadow-xs space-y-6">
                   {/* Lead Excerpt */}
-                  <div className="text-slate-800 text-base sm:text-lg leading-relaxed font-semibold border-l-4 border-purple-600 pl-5 py-2.5 bg-gradient-to-r from-purple-50 to-purple-50/20 rounded-r-2xl">
-                    {blog.excerpt}
-                  </div>
+                  {blog.excerpt && (
+                    <div className="text-slate-800 text-base sm:text-lg leading-relaxed font-semibold border-l-4 border-purple-600 pl-5 py-2.5 bg-gradient-to-r from-purple-50 to-purple-50/20 rounded-r-2xl">
+                      {blog.excerpt}
+                    </div>
+                  )}
 
                   {/* Formatted Content */}
                   <div className="blog-content-body max-w-none">
