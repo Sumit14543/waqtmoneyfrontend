@@ -567,14 +567,114 @@ export default function AdminBlogForm() {
                   </div>
 
                   <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
-                    <div className={editorMode === "VISUAL" ? "block" : "hidden"}>
-                      <textarea
-                        id="blog-content-editor"
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        className="w-full min-h-[400px]"
-                      />
-                    </div>
+                    {editorMode === "VISUAL" && (
+                      <div>
+                        {/* Rich Formatting Toolbar */}
+                        <div className="bg-slate-50 border-b border-slate-200 p-2 flex flex-wrap items-center gap-1.5 text-xs select-none">
+                          <button
+                            type="button"
+                            onClick={() => document.execCommand("formatBlock", false, "<h2>")}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 font-extrabold text-slate-800 transition"
+                            title="Heading 2"
+                          >
+                            H2
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => document.execCommand("formatBlock", false, "<h3>")}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 font-bold text-slate-800 transition"
+                            title="Heading 3"
+                          >
+                            H3
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => document.execCommand("formatBlock", false, "<p>")}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 font-medium text-slate-700 transition"
+                            title="Paragraph"
+                          >
+                            Paragraph
+                          </button>
+
+                          <div className="h-4 w-px bg-slate-200 mx-1" />
+
+                          <button
+                            type="button"
+                            onClick={() => document.execCommand("bold", false)}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 font-black text-slate-900 transition"
+                            title="Bold"
+                          >
+                            B
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => document.execCommand("italic", false)}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 italic font-serif text-slate-800 transition"
+                            title="Italic"
+                          >
+                            I
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => document.execCommand("underline", false)}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 underline text-slate-800 transition"
+                            title="Underline"
+                          >
+                            U
+                          </button>
+
+                          <div className="h-4 w-px bg-slate-200 mx-1" />
+
+                          <button
+                            type="button"
+                            onClick={() => document.execCommand("insertUnorderedList", false)}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-700 transition flex items-center gap-1"
+                            title="Bullet List"
+                          >
+                            • Bullet List
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => document.execCommand("insertOrderedList", false)}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-700 transition flex items-center gap-1"
+                            title="Numbered List"
+                          >
+                            1. Numbered List
+                          </button>
+
+                          <div className="h-4 w-px bg-slate-200 mx-1" />
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const url = prompt("Enter website link URL:");
+                              if (url) document.execCommand("createLink", false, url);
+                            }}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-700 transition flex items-center gap-1"
+                            title="Insert Link"
+                          >
+                            🔗 Insert Link
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => document.execCommand("removeFormat", false)}
+                            className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-500 transition"
+                            title="Clear Formatting"
+                          >
+                            🧹 Clear Formatting
+                          </button>
+                        </div>
+
+                        {/* ContentEditable Document Area */}
+                        <div
+                          contentEditable={true}
+                          suppressContentEditableWarning={true}
+                          onInput={(e) => setContent(e.currentTarget.innerHTML)}
+                          dangerouslySetInnerHTML={{ __html: content }}
+                          className="blog-content-body min-h-[420px] p-6 focus:outline-none bg-white text-slate-800 font-sans leading-relaxed"
+                        />
+                      </div>
+                    )}
                     {editorMode === "CODE" && (
                       <textarea
                         value={content}
