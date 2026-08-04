@@ -87,11 +87,15 @@ export default function AdminBlogForm() {
         try {
           const currentHtml = editorRef.current.getContent();
           setContent(currentHtml);
-        } catch (e) {}
+        } catch (e) {
+          console.warn("Editor getContent error:", e);
+        }
       } else {
         try {
           editorRef.current.setContent(content);
-        } catch (e) {}
+        } catch (e) {
+          console.warn("Editor setContent error:", e);
+        }
       }
     }
   };
@@ -197,6 +201,7 @@ export default function AdminBlogForm() {
         window.tinymce.remove("#blog-content-editor");
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Fetch blog details if editing
