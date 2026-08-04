@@ -85,6 +85,24 @@ export default function BlogDetail() {
     return getBlogImageUrl(imgPath);
   };
 
+  const cleanAndSanitizeBlogHtml = (htmlStr: string): string => {
+    if (!htmlStr) return "";
+    let clean = htmlStr;
+
+    if (clean.includes("&lt;") && clean.includes("&gt;")) {
+      const txt = document.createElement("textarea");
+      txt.innerHTML = clean;
+      clean = txt.value;
+    }
+
+    clean = clean
+      .replace(/\s+data-(?:section-id|start|end|node-id)="[^"]*"/gi, "")
+      .replace(/\s+class="[^"]*PDq2pG[^"]*"/gi, "")
+      .replace(/\s+class=""/gi, "");
+
+    return clean;
+  };
+
   // Helper function to render inline markdown (bold, links, code, clean text)
   const parseInlineMarkdown = (text: string): React.ReactNode[] => {
     // Strip leading hash symbols if any slipped in
