@@ -222,13 +222,13 @@ export default function Blog() {
           <div className="grid gap-8 lg:grid-cols-3 items-stretch">
             {/* Featured Article Card (2 Cols) */}
             <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100 shadow-xs overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition duration-300 group">
-              <div className="md:w-1/2 relative bg-gradient-to-br from-purple-50/80 via-slate-100 to-indigo-50/80 min-h-[260px] p-2.5 sm:p-3 overflow-hidden flex items-center justify-center border-b md:border-b-0 md:border-r border-purple-100">
+              <div className="md:w-1/2 relative bg-slate-100 min-h-[260px] overflow-hidden">
                 <img
                   src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
                   alt={featuredPost.title}
-                  className="w-full h-full object-contain rounded-2xl group-hover:scale-[1.02] transition duration-500 shadow-2xs"
+                  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                 />
-                <span className="absolute top-4 left-4 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md z-10">
+                <span className="absolute top-4 left-4 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
                   FEATURED GUIDE
                 </span>
               </div>
@@ -350,14 +350,14 @@ export default function Blog() {
               >
                 <div>
                   {/* Image Banner */}
-                  <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-purple-50/80 via-slate-100 to-indigo-50/80 p-2.5 sm:p-3 flex items-center justify-center border-b border-purple-100">
+                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                     <img
                       src={getImageUrl(blog.image, blog.slug, blog.category, blog.title, blog.id)}
                       alt={blog.title}
                       loading="lazy"
-                      className="w-full h-full object-contain rounded-2xl transition-transform duration-500 group-hover:scale-[1.02] shadow-2xs"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <span className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold text-purple-700 uppercase tracking-wider shadow-sm border border-purple-100 z-10">
+                    <span className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold text-purple-700 uppercase tracking-wider shadow-sm border border-purple-100">
                       {blog.category}
                     </span>
                   </div>

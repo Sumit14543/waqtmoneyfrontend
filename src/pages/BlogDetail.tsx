@@ -448,11 +448,11 @@ export default function BlogDetail() {
               </div>
 
               {/* Hero Cover Image Banner */}
-              <div className="aspect-[21/9] rounded-3xl overflow-hidden bg-gradient-to-br from-purple-50/80 via-slate-100 to-indigo-50/80 p-2.5 sm:p-4 shadow-md mb-10 border border-purple-100 flex items-center justify-center">
+              <div className="aspect-[21/9] rounded-3xl overflow-hidden bg-slate-100 shadow-md mb-10 border border-purple-100">
                 <img
                   src={getImageUrl(blog.image)}
                   alt={blog.title}
-                  className="w-full h-full object-contain rounded-2xl"
+                  className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.currentTarget;
                     if (!target.dataset.failed) {
