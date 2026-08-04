@@ -54,12 +54,47 @@ export default function AdminBlogForm() {
 
   // Sidebar Settings Tab
   const [activeTab, setActiveTab] = useState<"SETTINGS" | "EEAT" | "SEO">("SETTINGS");
+  const [editorMode, setEditorMode] = useState<"VISUAL" | "CODE">("VISUAL");
 
   // TinyMCE Ready & Loading States
   const [editorReady, setEditorReady] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editorRef = useRef<any>(null);
   const initialContentRef = useRef("");
+
+  const cleanHtmlForEditor = (htmlStr: string): string => {
+    if (!htmlStr) return "";
+    let clean = htmlStr;
+
+    if (clean.includes("&lt;") && clean.includes("&gt;")) {
+      const txt = document.createElement("textarea");
+      txt.innerHTML = clean;
+      clean = txt.value;
+    }
+
+    clean = clean
+      .replace(/\s+data-(?:section-id|start|end|node-id)="[^"]*"/gi, "")
+      .replace(/\s+class="[^"]*PDq2pG[^"]*"/gi, "")
+      .replace(/\s+class=""/gi, "");
+
+    return clean;
+  };
+
+  const switchEditorMode = (mode: "VISUAL" | "CODE") => {
+    setEditorMode(mode);
+    if (editorRef.current) {
+      if (mode === "CODE") {
+        try {
+          const currentHtml = editorRef.current.getContent();
+          setContent(currentHtml);
+        } catch (e) {}
+      } else {
+        try {
+          editorRef.current.setContent(content);
+        } catch (e) {}
+      }
+    }
+  };
 
   // Live Clock
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString("en-GB", {
@@ -203,7 +238,7 @@ export default function AdminBlogForm() {
             );
             setAuthor(String(blog.author || "Waqt Money Team"));
             setExcerpt(String(blog.excerpt || ""));
-            const fetchedContent = String(blog.content || "");
+            const fetchedContent = cleanHtmlForEditor(String(blog.content || ""));
             setContent(fetchedContent);
             initialContentRef.current = fetchedContent;
             setExistingImage(String(blog.image || ""));
@@ -230,13 +265,14 @@ export default function AdminBlogForm() {
             setReadTime(found.readTime || "5 Min Read");
             setAuthor(found.author || "Waqt Money Team");
             setExcerpt(found.excerpt);
-            setContent(found.content);
-            initialContentRef.current = found.content;
+            const fallbackContent = cleanHtmlForEditor(found.content);
+            setContent(fallbackContent);
+            initialContentRef.current = fallbackContent;
             setExistingImage(found.image);
 
             if (editorRef.current) {
               try {
-                editorRef.current.setContent(found.content);
+                editorRef.current.setContent(fallbackContent);
               } catch (e) {
                 console.warn("Editor setContent error:", e);
               }
@@ -495,17 +531,53 @@ export default function AdminBlogForm() {
 
                 {/* CONTENT BODY TINYMCE EDITOR CONTAINER */}
                 <div>
-                  <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
-                    CONTENT BODY
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
+                      CONTENT BODY
+                    </label>
+                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-[11px] font-bold">
+                      <button
+                        type="button"
+                        onClick={() => switchEditorMode("VISUAL")}
+                        className={`px-3 py-1 rounded-lg transition flex items-center gap-1.5 ${
+                          editorMode === "VISUAL"
+                            ? "bg-white text-purple-700 shadow-2xs font-black border border-purple-100"
+                            : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        🎨 Visual Editor
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => switchEditorMode("CODE")}
+                        className={`px-3 py-1 rounded-lg transition flex items-center gap-1.5 ${
+                          editorMode === "CODE"
+                            ? "bg-white text-purple-700 shadow-2xs font-black border border-purple-100"
+                            : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        💻 HTML Code
+                      </button>
+                    </div>
+                  </div>
 
                   <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
-                    <textarea
-                      id="blog-content-editor"
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      className="w-full min-h-[400px]"
-                    />
+                    <div className={editorMode === "VISUAL" ? "block" : "hidden"}>
+                      <textarea
+                        id="blog-content-editor"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        className="w-full min-h-[400px]"
+                      />
+                    </div>
+                    {editorMode === "CODE" && (
+                      <textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="Enter HTML or plain text content here..."
+                        className="w-full min-h-[420px] p-4 font-mono text-xs bg-slate-950 text-emerald-400 outline-none leading-relaxed"
+                      />
+                    )}
                   </div>
                 </div>
               </div>

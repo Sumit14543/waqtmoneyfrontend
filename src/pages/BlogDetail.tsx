@@ -440,11 +440,11 @@ export default function BlogDetail() {
                   </div>
 
                   {/* Formatted Content */}
-                  <div className="text-slate-700 text-base leading-relaxed space-y-6 font-sans">
+                  <div className="blog-content-body max-w-none">
                     {blog.content && /<[a-z][\s\S]*>/i.test(blog.content) ? (
                       <div
-                        dangerouslySetInnerHTML={{ __html: blog.content }}
-                        className="prose max-w-none text-slate-700 font-sans space-y-4"
+                        dangerouslySetInnerHTML={{ __html: cleanAndSanitizeBlogHtml(blog.content) }}
+                        className="blog-content-body max-w-none"
                       />
                     ) : (
                       renderContentBlocks(blog.content)
