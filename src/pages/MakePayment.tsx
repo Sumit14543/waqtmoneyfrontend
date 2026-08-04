@@ -443,6 +443,12 @@ const MakePayment = () => {
       dueDate && !Number.isNaN(dueDate.getTime()) && dueDate.getFullYear() >= 2020
         ? dueDate
         : null;
+    const disbursalDateValue = effectiveApplication?.disbursal_date || "";
+    const disbursalDate = disbursalDateValue ? new Date(disbursalDateValue) : null;
+    const validDisbursalDate =
+      disbursalDate && !Number.isNaN(disbursalDate.getTime()) && disbursalDate.getFullYear() >= 2020
+        ? disbursalDate
+        : null;
     const tenureDays = hasMeaningfulValue(effectiveApplication?.tenure_days) ? Number(effectiveApplication?.tenure_days) : null;
     const interestRate = hasMeaningfulValue(effectiveApplication?.interest_rate) ? effectiveApplication?.interest_rate : "";
     const interestAccrued = hasMeaningfulValue(effectiveApplication?.interest_accrued) ? Number(effectiveApplication?.interest_accrued) : null;
