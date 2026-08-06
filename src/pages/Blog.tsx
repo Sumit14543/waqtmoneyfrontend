@@ -357,9 +357,6 @@ export default function Blog() {
                       loading="lazy"
                       className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
                     />
-                    <span className="absolute top-4 left-4 z-20 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold text-purple-700 uppercase tracking-wider shadow-xs border border-purple-100">
-                      {blog.category}
-                    </span>
                   </div>
 
                   {/* Body Details */}
@@ -371,13 +368,18 @@ export default function Blog() {
                       {blog.excerpt}
                     </p>
 
-                    <Link
-                      to={`/blog/${blog.slug}`}
-                      aria-label={`Read full article: ${blog.title}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-extrabold text-purple-600 hover:text-purple-800 pt-2 transition"
-                    >
-                      Read Full Article <ArrowRight size={14} />
-                    </Link>
+                    <div className="flex items-center justify-between pt-2 gap-2">
+                      <Link
+                        to={`/blog/${blog.slug}`}
+                        aria-label={`Read full article: ${blog.title}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-extrabold text-purple-600 hover:text-purple-800 transition"
+                      >
+                        Read Full Article <ArrowRight size={14} />
+                      </Link>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 bg-purple-100/70 px-2.5 py-1 rounded-full border border-purple-200 shrink-0">
+                        {blog.category}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
