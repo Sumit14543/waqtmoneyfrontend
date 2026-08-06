@@ -220,62 +220,59 @@ export default function Blog() {
           <div className="h-96 bg-white rounded-3xl animate-pulse border border-purple-100 shadow-xs" />
         ) : featuredPost ? (
           <div className="grid gap-8 lg:grid-cols-3 items-stretch">
-            {/* Featured Article Card (2 Cols - Modern Stacked Banner Layout) */}
-            <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-xl transition duration-300 group">
-              <div>
-                {/* Full Width Hero Image Banner */}
-                <div className="relative aspect-[16/8] sm:aspect-[21/9] w-full overflow-hidden bg-slate-950">
+            {/* Featured Article Card (2 Cols) */}
+            <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100/90 shadow-xs overflow-hidden flex flex-col md:flex-row hover:shadow-xl transition duration-300 group">
+              {/* Left Column: Image Canvas */}
+              <div className="md:w-1/2 relative bg-gradient-to-br from-purple-50/70 via-slate-50 to-indigo-50/40 p-4 sm:p-5 flex items-center justify-center border-b md:border-b-0 md:border-r border-purple-100/60 shrink-0">
+                <div className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl shadow-xs border border-purple-100/60 bg-white">
                   <img
                     src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
                     alt={featuredPost.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-contain p-1 group-hover:scale-105 transition-transform duration-500"
                   />
-                  {/* Subtle Gradient Vignette Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
-                  
-                  {/* Floating Category Pill */}
-                  <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-                    <span className="bg-purple-600/90 text-white font-extrabold text-[10px] uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md backdrop-blur-md border border-purple-400/30 flex items-center gap-1.5">
-                      <Sparkles size={12} className="text-purple-200" />
-                      FEATURED GUIDE
-                    </span>
-                    <span className="bg-slate-900/80 text-purple-200 font-extrabold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-full backdrop-blur-md border border-purple-500/30 hidden sm:inline-block">
-                      {featuredPost.category}
-                    </span>
-                  </div>
                 </div>
+                <span className="absolute top-7 left-7 z-10 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
+                  <Sparkles size={11} className="text-purple-200" />
+                  FEATURED GUIDE
+                </span>
+              </div>
 
-                {/* Content Section */}
-                <div className="p-6 sm:p-8 space-y-3">
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-snug group-hover:text-purple-600 transition">
+              {/* Right Column: Title, Excerpt, Metadata & CTA */}
+              <div className="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 bg-purple-100/80 px-3 py-1 rounded-full inline-block border border-purple-200">
+                    {featuredPost.category}
+                  </span>
+
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-snug group-hover:text-purple-600 transition">
                     <Link to={`/blog/${featuredPost.slug}`}>{featuredPost.title}</Link>
                   </h2>
+
                   <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-sans line-clamp-3">
                     {featuredPost.excerpt}
                   </p>
                 </div>
-              </div>
 
-              {/* Action & Metadata Bar */}
-              <div className="px-6 sm:px-8 py-4 bg-gradient-to-r from-purple-50/50 via-white to-purple-50/30 border-t border-purple-100 flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-4 text-xs font-semibold text-slate-500">
-                  <span className="flex items-center gap-1.5">
-                    <Clock size={14} className="text-purple-600" />
-                    {featuredPost.readTime || "5 Min Read"}
-                  </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1.5">
-                    <Eye size={14} className="text-purple-600" />
-                    {featuredPost.viewsCount || "92 Views"}
-                  </span>
+                <div className="pt-4 border-t border-purple-50 flex items-center justify-between text-xs text-slate-500 font-medium">
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1.5">
+                      <Clock size={14} className="text-purple-600" />
+                      {featuredPost.readTime || "5 Min Read"}
+                    </span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1.5">
+                      <Eye size={14} className="text-purple-600" />
+                      {featuredPost.viewsCount || "92 Views"}
+                    </span>
+                  </div>
+
+                  <Link
+                    to={`/blog/${featuredPost.slug}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-extrabold text-purple-600 hover:text-purple-800 transition"
+                  >
+                    Read Article <ArrowRight size={14} />
+                  </Link>
                 </div>
-
-                <Link
-                  to={`/blog/${featuredPost.slug}`}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition duration-200"
-                >
-                  Read Masterclass Guide <ArrowRight size={14} />
-                </Link>
               </div>
             </div>
 
