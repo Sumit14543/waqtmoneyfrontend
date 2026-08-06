@@ -294,18 +294,25 @@ export default function AdminBlogs() {
                     <tr key={blog.id} className="hover:bg-slate-50/60 transition">
                       {/* Cover Thumbnail */}
                       <td className="py-3 px-5">
-                        <img
-                          src={coverImg}
-                          alt={blog.title}
-                          className="h-10 w-14 object-cover rounded-lg border border-slate-200 bg-slate-100"
-                          onError={(e) => {
-                            const target = e.currentTarget;
-                            if (!target.dataset.failed) {
-                              target.dataset.failed = "true";
-                              target.src = "/blog-assets/blog-1-personal-loan-guide.webp";
-                            }
-                          }}
-                        />
+                        <div className="h-10 w-16 relative bg-slate-900/5 rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center">
+                          <img
+                            src={coverImg}
+                            alt=""
+                            className="absolute inset-0 w-full h-full object-cover blur-sm opacity-40 pointer-events-none"
+                          />
+                          <img
+                            src={coverImg}
+                            alt={blog.title}
+                            className="relative z-10 max-h-full max-w-full object-contain p-0.5"
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              if (!target.dataset.failed) {
+                                target.dataset.failed = "true";
+                                target.src = "/blog-assets/blog-1-personal-loan-guide.webp";
+                              }
+                            }}
+                          />
+                        </div>
                       </td>
 
                       {/* Article Title */}

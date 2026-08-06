@@ -805,11 +805,18 @@ export default function AdminBlogForm() {
 
                           {imagePreview || existingImage ? (
                             <div className="space-y-2">
-                              <img
-                                src={imagePreview || getBlogImageUrl(existingImage)}
-                                alt="Cover Preview"
-                                className="h-32 w-full object-cover rounded-xl border border-slate-200"
-                              />
+                              <div className="relative h-44 w-full bg-slate-900/5 rounded-xl border border-slate-200 overflow-hidden flex items-center justify-center">
+                                <img
+                                  src={imagePreview || getBlogImageUrl(existingImage)}
+                                  alt=""
+                                  className="absolute inset-0 w-full h-full object-cover blur-md opacity-30 pointer-events-none"
+                                />
+                                <img
+                                  src={imagePreview || getBlogImageUrl(existingImage)}
+                                  alt="Cover Preview"
+                                  className="relative z-10 max-h-full max-w-full object-contain p-2"
+                                />
+                              </div>
                               <p className="text-[10px] font-bold text-purple-600">Click or drag new image to replace</p>
                             </div>
                           ) : (

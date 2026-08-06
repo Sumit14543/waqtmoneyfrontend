@@ -222,13 +222,18 @@ export default function Blog() {
           <div className="grid gap-8 lg:grid-cols-3 items-stretch">
             {/* Featured Article Card (2 Cols) */}
             <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100 shadow-xs overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition duration-300 group">
-              <div className="md:w-1/2 relative bg-slate-100 min-h-[260px] overflow-hidden">
+              <div className="md:w-1/2 relative bg-slate-900/5 min-h-[260px] overflow-hidden flex items-center justify-center">
+                <img
+                  src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-30 pointer-events-none"
+                />
                 <img
                   src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
                   alt={featuredPost.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  className="relative z-10 w-full h-full object-contain p-2 group-hover:scale-105 transition duration-500"
                 />
-                <span className="absolute top-4 left-4 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
+                <span className="absolute top-4 left-4 z-20 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
                   FEATURED GUIDE
                 </span>
               </div>
@@ -350,14 +355,19 @@ export default function Blog() {
               >
                 <div>
                   {/* Image Banner */}
-                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-900/5 flex items-center justify-center">
+                    <img
+                      src={getImageUrl(blog.image, blog.slug, blog.category, blog.title, blog.id)}
+                      alt=""
+                      className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-30 pointer-events-none"
+                    />
                     <img
                       src={getImageUrl(blog.image, blog.slug, blog.category, blog.title, blog.id)}
                       alt={blog.title}
                       loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="relative z-10 w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                     />
-                    <span className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold text-purple-700 uppercase tracking-wider shadow-sm border border-purple-100">
+                    <span className="absolute top-4 left-4 z-20 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold text-purple-700 uppercase tracking-wider shadow-sm border border-purple-100">
                       {blog.category}
                     </span>
                   </div>
