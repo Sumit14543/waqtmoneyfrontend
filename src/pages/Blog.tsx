@@ -224,16 +224,12 @@ export default function Blog() {
             <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100/90 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-xl transition duration-300 group">
               <div>
                 {/* Top Image Banner */}
-                <div className="relative aspect-[16/7] w-full overflow-hidden bg-slate-100 border-b border-purple-50">
+                <div className="relative aspect-[16/6] w-full overflow-hidden bg-slate-100 border-b border-purple-50">
                   <img
                     src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
                     alt={featuredPost.title}
                     className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500"
                   />
-                  <span className="absolute top-4 left-4 z-10 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
-                    <Sparkles size={11} className="text-purple-200" />
-                    FEATURED GUIDE
-                  </span>
                 </div>
 
                 {/* Details Section */}
