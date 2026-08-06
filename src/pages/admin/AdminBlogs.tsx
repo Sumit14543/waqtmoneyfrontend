@@ -294,11 +294,11 @@ export default function AdminBlogs() {
                     <tr key={blog.id} className="hover:bg-slate-50/60 transition">
                       {/* Cover Thumbnail */}
                       <td className="py-3 px-5">
-                        <div className="h-10 w-16 relative bg-white rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center">
+                        <div className="h-12 w-20 relative bg-slate-100 rounded-lg border border-slate-200 overflow-hidden">
                           <img
                             src={coverImg}
                             alt={blog.title}
-                            className="w-full h-full object-contain p-0.5"
+                            className="w-full h-full object-cover object-center"
                             onError={(e) => {
                               const target = e.currentTarget;
                               if (!target.dataset.failed) {

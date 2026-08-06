@@ -805,11 +805,11 @@ export default function AdminBlogForm() {
 
                           {imagePreview || existingImage ? (
                             <div className="space-y-2">
-                              <div className="relative h-44 w-full bg-white rounded-xl border border-slate-200 overflow-hidden flex items-center justify-center">
+                              <div className="relative h-56 w-full bg-slate-100 rounded-xl border border-slate-200 overflow-hidden">
                                 <img
                                   src={imagePreview || getBlogImageUrl(existingImage)}
                                   alt="Cover Preview"
-                                  className="w-full h-full object-contain p-1"
+                                  className="w-full h-full object-cover object-center"
                                 />
                               </div>
                               <p className="text-[10px] font-bold text-purple-600">Click or drag new image to replace</p>
