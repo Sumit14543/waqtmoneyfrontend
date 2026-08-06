@@ -226,7 +226,7 @@ export default function Blog() {
                 <img
                   src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
                   alt={featuredPost.title}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 <span className="absolute top-4 left-4 z-20 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
                   FEATURED GUIDE
@@ -355,7 +355,7 @@ export default function Blog() {
                       src={getImageUrl(blog.image, blog.slug, blog.category, blog.title, blog.id)}
                       alt={blog.title}
                       loading="lazy"
-                      className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
                     />
                     <span className="absolute top-4 left-4 z-20 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold text-purple-700 uppercase tracking-wider shadow-xs border border-purple-100">
                       {blog.category}

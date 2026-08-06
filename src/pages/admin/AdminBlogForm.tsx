@@ -809,7 +809,7 @@ export default function AdminBlogForm() {
                                 <img
                                   src={imagePreview || getBlogImageUrl(existingImage)}
                                   alt="Cover Preview"
-                                  className="w-full h-full object-cover object-center"
+                                  className="w-full h-full object-contain object-center"
                                 />
                               </div>
                               <p className="text-[10px] font-bold text-purple-600">Click or drag new image to replace</p>

@@ -298,7 +298,7 @@ export default function AdminBlogs() {
                           <img
                             src={coverImg}
                             alt={blog.title}
-                            className="w-full h-full object-cover object-center"
+                            className="w-full h-full object-contain object-center"
                             onError={(e) => {
                               const target = e.currentTarget;
                               if (!target.dataset.failed) {
