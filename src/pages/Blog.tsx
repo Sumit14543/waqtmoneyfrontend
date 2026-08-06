@@ -220,28 +220,24 @@ export default function Blog() {
           <div className="h-96 bg-white rounded-3xl animate-pulse border border-purple-100 shadow-xs" />
         ) : featuredPost ? (
           <div className="grid gap-8 lg:grid-cols-3 items-stretch">
-            {/* Featured Article Card (2 Cols) */}
-            <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100/90 shadow-xs overflow-hidden flex flex-col md:flex-row hover:shadow-xl transition duration-300 group">
-              {/* Left Column: Image Canvas */}
-              <div className="md:w-1/2 relative bg-slate-50/80 p-3 sm:p-4 flex items-center justify-center border-b md:border-b-0 md:border-r border-purple-100/60 shrink-0 overflow-hidden">
-                <img
-                  src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
-                  alt={featuredPost.title}
-                  className="w-full h-full max-h-[260px] object-contain rounded-2xl group-hover:scale-105 transition-transform duration-500"
-                />
-                <span className="absolute top-5 left-5 z-10 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
-                  <Sparkles size={11} className="text-purple-200" />
-                  FEATURED GUIDE
-                </span>
-              </div>
-
-              {/* Right Column: Title, Excerpt, Metadata & CTA */}
-              <div className="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between space-y-4">
-                <div className="space-y-3">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 bg-purple-100/80 px-3 py-1 rounded-full inline-block border border-purple-200">
-                    {featuredPost.category}
+            {/* Featured Article Card (2 Cols - Image Top, Details Bottom) */}
+            <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100/90 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-xl transition duration-300 group">
+              <div>
+                {/* Top Image Banner */}
+                <div className="relative aspect-[16/7] w-full overflow-hidden bg-slate-100 border-b border-purple-50">
+                  <img
+                    src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
+                    alt={featuredPost.title}
+                    className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <span className="absolute top-4 left-4 z-10 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
+                    <Sparkles size={11} className="text-purple-200" />
+                    FEATURED GUIDE
                   </span>
+                </div>
 
+                {/* Details Section */}
+                <div className="p-6 sm:p-7 space-y-3">
                   <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-snug group-hover:text-purple-600 transition">
                     <Link to={`/blog/${featuredPost.slug}`}>{featuredPost.title}</Link>
                   </h2>
@@ -250,20 +246,26 @@ export default function Blog() {
                     {featuredPost.excerpt}
                   </p>
                 </div>
+              </div>
 
-                <div className="pt-4 border-t border-purple-50 flex items-center justify-between text-xs text-slate-500 font-medium">
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1.5">
-                      <Clock size={14} className="text-purple-600" />
-                      {featuredPost.readTime || "5 Min Read"}
-                    </span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1.5">
-                      <Eye size={14} className="text-purple-600" />
-                      {featuredPost.viewsCount || "92 Views"}
-                    </span>
-                  </div>
+              {/* Action & Metadata Footer Bar */}
+              <div className="px-6 sm:px-7 py-4 border-t border-purple-50 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 font-medium">
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1.5">
+                    <Clock size={14} className="text-purple-600" />
+                    {featuredPost.readTime || "5 Min Read"}
+                  </span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1.5">
+                    <Eye size={14} className="text-purple-600" />
+                    {featuredPost.viewsCount || "92 Views"}
+                  </span>
+                </div>
 
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 bg-purple-100/80 px-3 py-1 rounded-full border border-purple-200 shrink-0">
+                    {featuredPost.category}
+                  </span>
                   <Link
                     to={`/blog/${featuredPost.slug}`}
                     className="inline-flex items-center gap-1.5 text-xs font-extrabold text-purple-600 hover:text-purple-800 transition"
