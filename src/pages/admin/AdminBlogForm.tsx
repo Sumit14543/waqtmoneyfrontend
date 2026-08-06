@@ -568,9 +568,9 @@ export default function AdminBlogForm() {
 
                   <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
                     {editorMode === "VISUAL" && (
-                      <div>
-                        {/* Rich Formatting Toolbar */}
-                        <div className="bg-slate-50 border-b border-slate-200 p-2 flex flex-wrap items-center gap-1.5 text-xs select-none">
+                      <div className="relative">
+                        {/* Rich Formatting Toolbar - Sticky Top */}
+                        <div className="sticky top-0 z-30 bg-slate-50 border-b border-slate-200 p-2.5 flex flex-wrap items-center gap-1.5 text-xs select-none shadow-2xs">
                           <button
                             type="button"
                             onClick={() => document.execCommand("formatBlock", false, "<h2>")}
@@ -665,14 +665,16 @@ export default function AdminBlogForm() {
                           </button>
                         </div>
 
-                        {/* ContentEditable Document Area */}
-                        <div
-                          contentEditable={true}
-                          suppressContentEditableWarning={true}
-                          onInput={(e) => setContent(e.currentTarget.innerHTML)}
-                          dangerouslySetInnerHTML={{ __html: content }}
-                          className="blog-content-body min-h-[420px] p-6 focus:outline-none bg-white text-slate-800 font-sans leading-relaxed"
-                        />
+                        {/* ContentEditable Document Area - Scrollable Container */}
+                        <div className="max-h-[550px] overflow-y-auto">
+                          <div
+                            contentEditable={true}
+                            suppressContentEditableWarning={true}
+                            onInput={(e) => setContent(e.currentTarget.innerHTML)}
+                            dangerouslySetInnerHTML={{ __html: content }}
+                            className="blog-content-body min-h-[400px] p-6 focus:outline-none bg-white text-slate-800 font-sans leading-relaxed"
+                          />
+                        </div>
                       </div>
                     )}
                     {editorMode === "CODE" && (
@@ -680,15 +682,15 @@ export default function AdminBlogForm() {
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="Enter HTML or plain text content here..."
-                        className="w-full min-h-[420px] p-4 font-mono text-xs bg-slate-950 text-emerald-400 outline-none leading-relaxed"
+                        className="w-full min-h-[400px] max-h-[550px] overflow-y-auto p-4 font-mono text-xs bg-slate-950 text-emerald-400 outline-none leading-relaxed"
                       />
                     )}
                   </div>
                 </div>
               </div>
 
-              {/* Right Column (Spans 1 col): Settings Tabs, Upload, & Readiness Checklist */}
-              <div className="space-y-6">
+              {/* Right Column (Spans 1 col): Sticky Settings Tabs, Upload, & Readiness Checklist */}
+              <div className="space-y-6 lg:sticky lg:top-20 lg:self-start">
                 {/* Settings Tab Selector Bar */}
                 <div className="bg-slate-50 p-1 rounded-2xl border border-slate-200 flex items-center gap-1 text-xs font-bold">
                   <button
