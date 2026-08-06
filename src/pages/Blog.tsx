@@ -223,15 +223,13 @@ export default function Blog() {
             {/* Featured Article Card (2 Cols) */}
             <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100/90 shadow-xs overflow-hidden flex flex-col md:flex-row hover:shadow-xl transition duration-300 group">
               {/* Left Column: Image Canvas */}
-              <div className="md:w-1/2 relative bg-gradient-to-br from-purple-50/70 via-slate-50 to-indigo-50/40 p-4 sm:p-5 flex items-center justify-center border-b md:border-b-0 md:border-r border-purple-100/60 shrink-0">
-                <div className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl shadow-xs border border-purple-100/60 bg-white">
-                  <img
-                    src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
-                    alt={featuredPost.title}
-                    className="w-full h-full object-contain p-1 group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <span className="absolute top-7 left-7 z-10 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
+              <div className="md:w-1/2 relative bg-slate-50/80 p-3 sm:p-4 flex items-center justify-center border-b md:border-b-0 md:border-r border-purple-100/60 shrink-0 overflow-hidden">
+                <img
+                  src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
+                  alt={featuredPost.title}
+                  className="w-full h-full max-h-[260px] object-contain rounded-2xl group-hover:scale-105 transition-transform duration-500"
+                />
+                <span className="absolute top-5 left-5 z-10 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
                   <Sparkles size={11} className="text-purple-200" />
                   FEATURED GUIDE
                 </span>
