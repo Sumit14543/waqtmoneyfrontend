@@ -345,7 +345,7 @@ export default function BlogDetail() {
     return headings;
   };
 
-  const tableOfContents = blog ? extractTableOfContents(blog.content) : [];
+  const tableOfContents = blog ? extractTableOfContents(blog.content).slice(0, 5) : [];
 
   return (
     <div className="min-h-screen bg-[#faf9ff] font-sans text-slate-900">
