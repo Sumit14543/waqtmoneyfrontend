@@ -220,41 +220,62 @@ export default function Blog() {
           <div className="h-96 bg-white rounded-3xl animate-pulse border border-purple-100 shadow-xs" />
         ) : featuredPost ? (
           <div className="grid gap-8 lg:grid-cols-3 items-stretch">
-            {/* Featured Article Card (2 Cols) */}
-            <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100 shadow-xs overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition duration-300 group">
-              <div className="md:w-1/2 relative bg-slate-100 min-h-[180px] sm:min-h-[200px] overflow-hidden">
-                <img
-                  src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
-                  alt={featuredPost.title}
-                  className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500"
-                />
-                <span className="absolute top-4 left-4 z-20 bg-purple-600 text-white font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
-                  FEATURED GUIDE
-                </span>
-              </div>
-              <div className="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between">
-                <div>
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-purple-700 bg-purple-100/70 px-3 py-1 rounded-full inline-block mb-3 border border-purple-200">
-                    {featuredPost.category}
-                  </span>
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 leading-snug group-hover:text-purple-600 transition">
+            {/* Featured Article Card (2 Cols - Modern Stacked Banner Layout) */}
+            <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100/80 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-xl transition duration-300 group">
+              <div>
+                {/* Full Width Hero Image Banner */}
+                <div className="relative aspect-[16/8] sm:aspect-[21/9] w-full overflow-hidden bg-slate-950">
+                  <img
+                    src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
+                    alt={featuredPost.title}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  />
+                  {/* Subtle Gradient Vignette Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
+                  
+                  {/* Floating Category Pill */}
+                  <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+                    <span className="bg-purple-600/90 text-white font-extrabold text-[10px] uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md backdrop-blur-md border border-purple-400/30 flex items-center gap-1.5">
+                      <Sparkles size={12} className="text-purple-200" />
+                      FEATURED GUIDE
+                    </span>
+                    <span className="bg-slate-900/80 text-purple-200 font-extrabold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-full backdrop-blur-md border border-purple-500/30 hidden sm:inline-block">
+                      {featuredPost.category}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content Section */}
+                <div className="p-6 sm:p-8 space-y-3">
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-snug group-hover:text-purple-600 transition">
                     <Link to={`/blog/${featuredPost.slug}`}>{featuredPost.title}</Link>
                   </h2>
-                  <p className="mt-3 text-slate-600 text-xs sm:text-sm leading-relaxed line-clamp-3 font-sans">
+                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-sans line-clamp-3">
                     {featuredPost.excerpt}
                   </p>
                 </div>
+              </div>
 
-                <div className="mt-6 pt-4 border-t border-purple-50 flex items-center justify-between text-xs text-slate-500 font-medium">
+              {/* Action & Metadata Bar */}
+              <div className="px-6 sm:px-8 py-4 bg-gradient-to-r from-purple-50/50 via-white to-purple-50/30 border-t border-purple-100 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-4 text-xs font-semibold text-slate-500">
                   <span className="flex items-center gap-1.5">
-                    <Clock size={14} className="text-purple-500" />
+                    <Clock size={14} className="text-purple-600" />
                     {featuredPost.readTime || "5 Min Read"}
                   </span>
+                  <span>•</span>
                   <span className="flex items-center gap-1.5">
-                    <Eye size={14} className="text-purple-500" />
+                    <Eye size={14} className="text-purple-600" />
                     {featuredPost.viewsCount || "92 Views"}
                   </span>
                 </div>
+
+                <Link
+                  to={`/blog/${featuredPost.slug}`}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition duration-200"
+                >
+                  Read Masterclass Guide <ArrowRight size={14} />
+                </Link>
               </div>
             </div>
 
