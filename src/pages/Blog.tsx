@@ -222,7 +222,7 @@ export default function Blog() {
           <div className="grid gap-8 lg:grid-cols-3 items-stretch">
             {/* Featured Article Card (2 Cols) */}
             <div className="lg:col-span-2 bg-white rounded-3xl border border-purple-100 shadow-xs overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition duration-300 group">
-              <div className="md:w-1/2 relative bg-slate-100 min-h-[280px] sm:min-h-[320px] overflow-hidden">
+              <div className="md:w-1/2 relative bg-slate-100 min-h-[220px] sm:min-h-[240px] overflow-hidden">
                 <img
                   src={getImageUrl(featuredPost.image, featuredPost.slug, featuredPost.category, featuredPost.title, featuredPost.id)}
                   alt={featuredPost.title}
@@ -350,7 +350,7 @@ export default function Blog() {
               >
                 <div>
                   {/* Image Banner */}
-                  <div className="relative aspect-[16/11] sm:aspect-[16/10.5] overflow-hidden bg-slate-100">
+                  <div className="relative aspect-[16/8.5] overflow-hidden bg-slate-100">
                     <img
                       src={getImageUrl(blog.image, blog.slug, blog.category, blog.title, blog.id)}
                       alt={blog.title}
