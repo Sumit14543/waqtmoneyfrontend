@@ -75,8 +75,17 @@ export default function PersonalLoan() {
       "@type": "FinancialService",
       "name": "Waqt Money Personal Loan",
       "description": "Apply Personal Loan Online with Waqt Money. Access an Unsecured Personal Loan for medical emergency, wedding, home renovation, or debt consolidation.",
-      "url": "https://waqtmoney.com/personal-loan",
+      "url": "https://waqtmoney.com/loans/personal-loan",
       "image": "https://waqtmoney.com/waqt-money-logo-img.png",
+      "telephone": "+91-9217086608",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "postalCode": "201301",
+        "addressCountry": "IN"
+      },
       "provider": {
         "@type": "Organization",
         "name": "Waqt Finance Pvt Ltd"
@@ -85,14 +94,96 @@ export default function PersonalLoan() {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": faqs.map((f) => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": f.a
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "1. What is a Personal Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A Personal Loan is an unsecured form of financing that helps you cover personal expenses — medical, wedding, education, or debt consolidation — repaid through a monthly EMI."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "2. What is the Personal Loan Eligibility Criteria?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Salaried applicants need to be 21–58 years old with a minimum income of ₹25,000/month and a Credit Score of 700+; self-employed applicants need 3+ years of business vintage, ₹10 Lakhs+ annual turnover, and 2 years of filed ITRs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "3. What documents are required?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aadhaar Card, PAN Card, salary slips or ITR, and bank statements from the last 6 months."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "4. What is the Personal Loan interest rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Rates range from 10.49% to 24% p.a., depending on your Credit Score, income, and financial profile."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "5. What is the Personal Loan EMI, and how is it calculated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your EMI depends on your loan amount, interest rate, and tenure — use our EMI Calculator to see an exact breakdown before applying."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "6. What is the maximum Personal Loan tenure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Repayment tenure ranges from 12 to 60 months, depending on your loan amount and profile."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "7. Is collateral required for a Personal Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No — Personal Loans are unsecured, so no property, gold, or asset pledge is required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "8. Is Waqt Money a registered lender?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — Waqt Money operates under the same registered NBFC as Waqt Finance, ensuring your loan is processed under regulated, compliant standards."
+          }
         }
-      }))
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Loans",
+          "item": "https://waqtmoney.com/services"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Personal Loan",
+          "item": "https://waqtmoney.com/loans/personal-loan"
+        }
+      ]
     }
   ];
 
@@ -102,6 +193,7 @@ export default function PersonalLoan() {
         title="Personal Loan in India | Apply Online | Waqt Money"
         description="Apply Personal Loan Online with Waqt Money. An Unsecured Personal Loan for medical emergencies, weddings, home renovation, or debt consolidation — fast digital approval & transparent charges."
         keywords="Personal Loan in India, Apply Personal Loan Online, Unsecured Personal Loan, Instant Personal Loan, Personal loan eligibility, Low interest personal loan, Medical emergency loan, Debt consolidation loan"
+        canonicalUrl="https://waqtmoney.com/loans/personal-loan"
         schema={schema}
       />
       <Navbar />

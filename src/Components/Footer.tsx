@@ -174,23 +174,26 @@ const Footer = () => {
                 const Icon = item.icon;
 
                 return (
-                  <div
+                  <a
                     key={item.label}
-                    className="flex min-w-0 items-center gap-3 rounded-lg border border-purple-100 bg-white px-3 py-3 text-left shadow-sm"
+                    href={item.href}
+                    target={item.target}
+                    rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
+                    className="group flex min-w-0 items-center gap-3 rounded-xl border border-purple-100/90 bg-white px-3.5 py-3 text-left shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-50/50 hover:shadow-md cursor-pointer"
                   >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-50 text-purple-600">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-50 text-purple-600 transition-colors group-hover:bg-purple-600 group-hover:text-white">
                       <Icon className="h-4 w-4" />
                     </span>
 
-                    <div className="min-w-0">
-                      <p className="text-xs font-medium text-slate-500">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
                         {item.label}
                       </p>
-                      <p className="mt-1 break-words text-sm font-semibold leading-5 text-slate-900">
+                      <p className="mt-0.5 truncate text-xs sm:text-sm font-semibold leading-5 text-slate-900 transition-colors group-hover:text-purple-700">
                         {item.value}
                       </p>
                     </div>
-                  </div>
+                  </a>
                 );
               })}
             </div>

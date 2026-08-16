@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, Shield, Clock, CheckCircle2, PhoneCall, X } from "lucide-react";
+import { ArrowRight, Shield, Clock, CheckCircle2, PhoneCall, X, Zap, Wallet, ShieldCheck, Sparkles, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { API_BASE_URL, normalizeApiMessage } from "@/config/api";
 
@@ -71,11 +71,11 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-hero pb-10 pt-16 lg:pb-12 lg:pt-20 xl:pb-14 xl:pt-20">
+    <section className="relative overflow-hidden bg-gradient-hero pb-0 pt-16 lg:pb-0 lg:pt-20 xl:pb-0 xl:pt-20">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="grid items-center gap-8 lg:gap-10 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:gap-12">
+        <div className="grid items-center gap-4 sm:gap-6 lg:gap-8 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-6">
           <div className="animate-fade-up text-center xl:text-left">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary sm:mb-6">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary sm:mb-5">
               <Shield className="w-4 h-4" />
               RBI Registered NBFC
             </div>
@@ -83,114 +83,83 @@ const HeroSection = () => {
               Fast Approvals{" "}
               <span className="text-gradient">Money in Minutes.</span>
             </h1>
-            <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg xl:mx-0 xl:max-w-lg">
+            <p className="mx-auto mb-4 sm:mb-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg xl:mx-0 xl:max-w-lg">
               Instant personal loans with zero paperwork, no hidden charges. Apply in 2 minutes. Funds disbursed within 5 minutes.
             </p>
-            <div className="mx-auto mb-3 flex w-full max-w-md flex-col items-stretch gap-2 transition-all sm:flex-row sm:items-center sm:gap-0 sm:rounded-full sm:border sm:border-gray-200 sm:bg-white sm:p-2 sm:shadow-md sm:hover:shadow-lg xl:mx-0">
-
-              {/* Input */}
-              <input
-                type="text"
-                inputMode="numeric"
-                value={mobile}
-                onChange={(event) => {
-                  setMobile(digitsOnly(event.target.value).slice(0, 10));
-                  setError("");
-                }}
-                placeholder="Enter your mobile number"
-                className="hidden min-w-0 flex-1 bg-transparent px-5 py-3 text-sm text-gray-700 outline-none placeholder-black sm:block"
-              />
-
-              {/* Button */}
-              <button
-                type="button"
-                onClick={handleLeadSubmit}
-                disabled={loading}
-                className="hidden w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3 font-semibold text-white transition-all hover:scale-105 disabled:opacity-60 sm:flex sm:w-auto sm:rounded-full"
-              >
-                Apply Now
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
+            <div className="mx-auto mb-4 flex flex-wrap items-center justify-center gap-4 xl:justify-start">
               <Link
                 to="/user/apply"
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3 font-semibold text-white transition-all hover:scale-105 sm:hidden"
+                className="group inline-flex h-[50px] items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#8048e2] to-[#bd56e4] px-8 text-base font-bold text-white shadow-[0_9px_18px_rgba(128,72,226,0.22)] transition-all hover:scale-105 hover:shadow-[0_12px_24px_rgba(128,72,226,0.32)]"
               >
-                Apply Now
-                <ArrowRight className="w-4 h-4" />
+                <span>Apply Now</span>
+                <ArrowRight className="h-4.5 w-4.5 transition-transform group-hover:translate-x-1" />
               </Link>
 
+              <span className="flex items-center gap-1.5 rounded-full bg-purple-50/80 px-3.5 py-1.5 text-xs font-semibold text-slate-600 ring-1 ring-purple-100">
+                <Lock className="h-3.5 w-3.5 text-[#8048e2]" />
+                100% Safe & Secure | Instant Check
+              </span>
             </div>
-            {error && (
-              <p className="mx-auto mb-5 hidden max-w-md rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 sm:block xl:mx-0">
-                {error}
-              </p>
-            )}
-            <div className="mx-auto mt-7 grid w-full max-w-xl gap-5 sm:grid-cols-2 xl:mx-0">
+
+            <div className="mx-auto mt-3 sm:mt-6 grid w-full max-w-xl gap-3 sm:gap-4 sm:grid-cols-2 xl:mx-0">
               {[
                 {
                   title: "Funds in Minutes*",
                   description: "Quick disbursals",
+                  icon: Zap,
+                  bg: "bg-amber-50 text-amber-600 ring-amber-200/60",
                 },
                 {
                   title: "Money When You Need It",
                   description: "Fast approvals, quick transfers",
+                  icon: Wallet,
+                  bg: "bg-purple-50 text-purple-600 ring-purple-200/60",
                 },
                 {
                   title: "Instant Payday Support",
                   description: "No delays, just funds",
+                  icon: ShieldCheck,
+                  bg: "bg-emerald-50 text-emerald-600 ring-emerald-200/60",
                 },
                 {
                   title: "Get Paid Faster",
                   description: "Hassle-free quick credit",
+                  icon: Sparkles,
+                  bg: "bg-indigo-50 text-indigo-600 ring-indigo-200/60",
                 },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="flex items-start gap-3 text-left"
-                >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 ring-1 ring-slate-200">
-                    <Clock className="h-5 w-5" />
-                  </span>
+              ].map((item) => {
+                const ItemIcon = item.icon;
+                return (
+                  <div key={item.title} className="flex items-start gap-3 text-left">
+                    <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ring-1 ${item.bg}`}>
+                      <ItemIcon className="h-5 w-5" />
+                    </span>
 
-                  <div>
-                    <p className="text-base font-bold leading-5 text-slate-950">
-                      {item.title}
-                    </p>
-                    <p className="mt-1 text-sm leading-5 text-slate-500">
-                      {item.description}
-                    </p>
+                    <div>
+                      <p className="text-base font-bold leading-5 text-slate-950">{item.title}</p>
+                      <p className="mt-1 text-sm leading-5 text-slate-500">{item.description}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
           <div className="relative w-full justify-self-center animate-slide-right xl:max-w-none">
-            <div className="mx-auto w-full max-w-[315px] rounded-3xl bg-white/80 p-2 shadow-lg sm:max-w-md sm:bg-transparent sm:p-0 sm:shadow-none md:max-w-lg lg:max-w-[520px] xl:max-w-2xl">
-              <div className="relative w-full">
-                <div className="absolute -inset-3 rounded-3xl bg-primary/5 blur-3xl sm:-inset-4" />
+            <div className="mx-auto w-full max-w-full sm:max-w-lg md:max-w-xl lg:max-w-[700px] xl:max-w-3xl lg:-translate-x-14 xl:-translate-x-20">
+              <div className="relative w-full text-center">
+                <div className="absolute -inset-4 rounded-full bg-primary/10 blur-3xl sm:-inset-12" />
                 <img
-                  src="/landing_banner_img.webp"
-                  alt="Happy customer enjoying instant loan disbursal with Waqt Money"
+                  src="/hero_banner_custom.png"
+                  alt="Waqt Money instant loan features with up to 50000, flexible repayment, instant approval and low interest rates"
                   width={604}
                   height={511}
                   style={{ aspectRatio: "604 / 511" }}
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"
-                  className="relative mx-auto aspect-[5/4] w-full rounded-3xl object-contain object-bottom shadow-elevated sm:aspect-square xl:max-w-2xl"
+                  className="relative mx-auto w-[138%] sm:w-full max-w-none -ml-[40%] sm:ml-0 pr-1 sm:pr-0 object-contain mix-blend-multiply scale-105 sm:scale-110 lg:scale-125 xl:scale-130 pointer-events-none"
                 />
-                <div className="absolute bottom-4 left-3 hidden rounded-2xl bg-primary p-3 text-primary-foreground shadow-glow animate-fade-in sm:bottom-8 sm:p-4 xl:left-5 xl:block" style={{ animationDelay: "0.5s" }}>
-                  <p className="text-xs font-semibold sm:text-sm">Get Approved Fast.</p>
-                  <p className="text-sm font-bold sm:text-base">Get Funded Faster.</p>
-                </div>
-              </div>
-              <div className="mt-3 w-full xl:hidden">
-                <div className="rounded-2xl bg-primary px-4 py-3 text-center text-primary-foreground shadow-glow">
-                  <p className="text-xs font-semibold">Get Approved Fast.</p>
-                  <p className="text-sm font-bold">Get Funded Faster.</p>
-                </div>
               </div>
             </div>
           </div>

@@ -58,13 +58,112 @@ const policyDirectory = [
 ];
 
 export default function Policies() {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Waqt Money Policies Directory Hub",
-    "description": "Access all legal agreements, policies, grievance redressal paths, and disclaimers for Waqt Money services.",
-    "url": "https://waqtmoney.com/policies"
-  };
+  const schema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "@id": "https://waqtmoney.com/policies#page",
+      "name": "Legal & Compliance Hub — Waqt Money Policies",
+      "description": "Access all official legal documents, privacy guidelines, customer grievance redressal procedures, fair practices code, responsible lending policy, and refund terms for Waqt Money.",
+      "url": "https://waqtmoney.com/policies",
+      "inLanguage": "en-IN",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://waqtmoney.com/#website",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "legalName": "Waqt Finance Pvt Ltd"
+      },
+      "about": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "@id": "https://waqtmoney.com/policies#list",
+      "name": "Waqt Money Legal & Policy Documents",
+      "description": "Complete list of legal, compliance, and governance documents for Waqt Money, an RBI-regulated digital lending platform.",
+      "url": "https://waqtmoney.com/policies",
+      "numberOfItems": 7,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Privacy Policy",
+          "description": "How Waqt Money protects, processes, and encrypts your personal and financial data.",
+          "url": "https://waqtmoney.com/privacy-policy"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Terms & Conditions",
+          "description": "Rules, user agreements, and borrowing mandates for Waqt Money credit services.",
+          "url": "https://waqtmoney.com/terms-conditions"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Grievance Redressal",
+          "description": "Structured resolution paths, grievance officer details, and regulatory escalation procedures for Waqt Money customers.",
+          "url": "https://waqtmoney.com/grievance-redressal"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Fair Practices Code",
+          "description": "Waqt Money's ethical lending commitment and compliance standards with RBI registered NBFC partners.",
+          "url": "https://waqtmoney.com/fair-practices-code"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Responsible Lending Policy",
+          "description": "Borrower protection mandates, credit education guidelines, and code of conduct for Waqt Money lending operations.",
+          "url": "https://waqtmoney.com/responsible-lending"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "Disclaimer Policy",
+          "description": "Key declarations regarding Waqt Money's loan facilitation services and NBFC integration terms.",
+          "url": "https://waqtmoney.com/disclaimer"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "Refund & Cancellation Policy",
+          "description": "Terms governing processing fee deductions and repayment return timelines for Waqt Money loans.",
+          "url": "https://waqtmoney.com/refund-policy"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Policies",
+          "item": "https://waqtmoney.com/policies"
+        }
+      ]
+    }
+  ];
 
   return (
     <>
@@ -72,6 +171,7 @@ export default function Policies() {
         title="Waqt Money Policies Hub - Legal & Compliance Documents"
         description="Access all official legal documents, privacy guidelines, customer grievance redressal procedures, refund policies, and lending terms for Waqt Money."
         keywords="loan policies, privacy guidelines, terms and conditions, fair practices, grievance officer, refund policy"
+        canonicalUrl="https://waqtmoney.com/policies"
         schema={schema}
       />
       <Navbar />

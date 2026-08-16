@@ -71,26 +71,169 @@ export default function ShortTermLoan() {
     {
       "@context": "https://schema.org",
       "@type": "FinancialService",
+      "@id": "https://waqtmoney.com/#organization",
+      "name": "Waqt Money",
+      "alternateName": "Waqt Finance Pvt Ltd",
+      "url": "https://waqtmoney.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
+        "width": 180,
+        "height": 50
+      },
+      "description": "Waqt Money is an RBI-compliant digital lending platform facilitating instant personal loans, payday loans, short term loans, and business loans through registered NBFC partners.",
+      "telephone": "+91-9217086608",
+      "email": "support@waqtmoney.in",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "H-15, Sector 63",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "addressCountry": "IN"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-9217086608",
+        "email": "support@waqtmoney.in",
+        "contactType": "Customer Service",
+        "availableLanguage": ["English", "Hindi"]
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "knowsAbout": ["Short Term Loans", "Payday Loans", "Personal Loans", "Business Loans", "Digital Lending"]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "LoanOrCredit",
+      "@id": "https://waqtmoney.com/loans/short-term-loan#product",
       "name": "Waqt Money Short Term Loan",
-      "description": "Need funds for a short period? Apply Short Term Loan Online with Waqt Money. Quick eligibility check, minimal documents, and flexible repayment for emergencies.",
+      "alternateName": "Personal Short Term Loan",
+      "loanType": "Short Term Loan",
+      "description": "Get a Short Term Loan Online with Waqt Money. Designed for salaried employees and working professionals facing temporary cash flow gaps. Unsecured, minimal documentation, fully digital process, and flexible repayment aligned to your income cycle.",
       "url": "https://waqtmoney.com/loans/short-term-loan",
-      "image": "https://waqtmoney.com/waqt-money-logo-img.png",
+      "currency": "INR",
+      "loanTerm": {
+        "@type": "QuantitativeValue",
+        "description": "Short tenure — typically a few weeks to a few months, aligned to the borrower's income cycle"
+      },
+      "feesAndCommissionsSpecification": "Processing fee applicable at time of disbursal. Interest rate determined based on loan amount, tenure, income profile, and credit history. All charges clearly disclosed before acceptance of loan offer.",
+      "requiredCollateral": "None — Unsecured Loan. No collateral or guarantor required.",
       "provider": {
         "@type": "Organization",
-        "name": "Waqt Finance Pvt Ltd"
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Salaried employees, private company employees, and working professionals aged 21–58 years with stable income"
+      },
+      "eligibilityToApply": "Indian resident aged 21–58 years with stable monthly income (salaried or self-employed). Requires Aadhaar Card, PAN Card, salary slip or income proof, and recent bank statements.",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://waqtmoney.com/waqt-money-logo-img.png"
       }
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": faqs.map((f) => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": f.a
+      "@id": "https://waqtmoney.com/loans/short-term-loan#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a Short Term Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A Short Term Loan is an unsecured loan meant to be repaid over a brief period — typically weeks to a few months — designed to bridge temporary cash flow gaps or emergencies."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who is eligible for a Short Term Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Salaried employees, working professionals, and in some cases self-employed individuals with a stable income and reasonable credit profile can apply. Applicants should generally be Indian residents between 21 and 58 years of age."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What documents are required for a Short Term Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You'll need your Aadhaar Card, PAN Card, salary slip or income proof, and recent bank statements for KYC and income verification."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the repayment period for a Short Term Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Short Term Loan tenure generally ranges from a few weeks to a few months, depending on your loan offer and eligibility."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is interest calculated on a Short Term Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Short Term Loan interest rate is determined based on your loan amount, tenure, income, and credit profile, and is disclosed clearly before you accept your offer."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I repay my Short Term Loan early?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If you wish to repay before your scheduled date, reach out to our support team at support@waqtmoney.in or +91-9217086608 to understand the applicable terms and conditions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I apply for a Short Term Loan online?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Fill out the online application with your basic personal and income details, upload your documents (Aadhaar, PAN, salary slips, bank statements), complete digital verification, review your loan offer, and receive disbursal directly to your bank account."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a Short Term Loan different from a Personal Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. A Short Term Loan has a shorter tenure and is meant for temporary, defined needs like emergencies or cash flow gaps. A Personal Loan typically covers larger amounts over a longer repayment period (months to years) and is suited for planned expenses like travel, weddings, or home renovation."
+          }
         }
-      }))
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Loans",
+          "item": "https://waqtmoney.com/services"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Short Term Loan",
+          "item": "https://waqtmoney.com/loans/short-term-loan"
+        }
+      ]
     }
   ];
 
@@ -100,6 +243,7 @@ export default function ShortTermLoan() {
         title="Short Term Loan Online – Quick Personal Short Term Loan | Waqt Money"
         description="Need funds for a short period? Apply Short Term Loan Online with Waqt Money. Quick eligibility check, minimal documents, and flexible repayment for emergencies."
         keywords="Short Term Loan Online, Personal Short Term Loan, Emergency Loan, Salary Advance Loan, Payday Loan, Instant Cash Loan, Short Term Loan India"
+        canonicalUrl="https://waqtmoney.com/loans/short-term-loan"
         schema={schema}
       />
       <Navbar />

@@ -5,63 +5,273 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DOMAIN = "https://waqtmoney.com";
-const CURRENT_DATE = new Date().toISOString().split("T")[0];
-
-const pages = [
-  { path: "", changefreq: "daily", priority: 1.0 },
-  { path: "services", changefreq: "weekly", priority: 0.8 },
-  { path: "about", changefreq: "monthly", priority: 0.8 },
-  { path: "faqs", changefreq: "weekly", priority: 0.8 },
-  { path: "blog", changefreq: "daily", priority: 0.9 },
-  { path: "blog/mastering-personal-loans-india-2026-guide", changefreq: "weekly", priority: 0.8 },
-  { path: "blog/cibil-score-750-instant-approval-hacks", changefreq: "weekly", priority: 0.8 },
-  { path: "blog/msme-business-loan-without-collateral-step-by-step", changefreq: "weekly", priority: 0.8 },
-  { path: "blog/working-capital-loans-small-businesses-guide", changefreq: "weekly", priority: 0.8 },
-  { path: "blog/payday-cash-advance-vs-personal-loans-explained", changefreq: "weekly", priority: 0.8 },
-  { path: "blog/emergency-salary-advance-loan-approval-minutes", changefreq: "weekly", priority: 0.8 },
-  { path: "blog/short-term-loans-salaried-professionals-complete-guide", changefreq: "weekly", priority: 0.8 },
-  { path: "blog/salary-advance-apps-india-smart-borrowing-tips", changefreq: "weekly", priority: 0.8 },
-  { path: "emi-calculator", changefreq: "monthly", priority: 0.8 },
-  { path: "repayment", changefreq: "monthly", priority: 0.7 },
-  { path: "policies", changefreq: "monthly", priority: 0.6 },
-  { path: "privacy-policy", changefreq: "monthly", priority: 0.6 },
-  { path: "terms-conditions", changefreq: "monthly", priority: 0.6 },
-  { path: "grievance-redressal", changefreq: "monthly", priority: 0.6 },
-  { path: "fair-practices-code", changefreq: "monthly", priority: 0.6 },
-  { path: "refund-policy", changefreq: "monthly", priority: 0.6 },
-  { path: "disclaimer", changefreq: "monthly", priority: 0.6 },
-  { path: "responsible-lending", changefreq: "monthly", priority: 0.6 },
-  { path: "loans/personal-loan", changefreq: "weekly", priority: 0.9 },
-  { path: "loans/business-loan", changefreq: "weekly", priority: 0.9 },
-  { path: "loans/payday-loan", changefreq: "weekly", priority: 0.9 },
-  { path: "loans/loan-against-property", changefreq: "weekly", priority: 0.9 },
-  { path: "loans/vehicle-loan", changefreq: "weekly", priority: 0.9 },
-  { path: "loans/credit-services", changefreq: "weekly", priority: 0.9 },
-  { path: "loans/education-loan", changefreq: "weekly", priority: 0.8 },
-  { path: "loans/medical-loan", changefreq: "weekly", priority: 0.8 },
-];
-
-const generateSitemap = () => {
-  const urlset = pages
-    .map(
-      (page) => `  <url>
-    <loc>${DOMAIN}/${page.path}</loc>
-    <lastmod>${CURRENT_DATE}</lastmod>
-    <changefreq>${page.changefreq}</changefreq>
-    <priority>${page.priority.toFixed(1)}</priority>
-  </url>`
-    )
-    .join("\n");
-
-  const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urlset}
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://waqtmoney.com/</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Core / Company pages -->
+  <url>
+    <loc>https://waqtmoney.com/about</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/contact</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/faqs</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/policies</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Loan product pages -->
+  <url>
+    <loc>https://waqtmoney.com/personal-loan</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/business-loan</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/payday-loan</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/short-term-loan</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/vehicle-loan</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/loan-against-property</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/medical-loan</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Tools / Services -->
+  <url>
+    <loc>https://waqtmoney.com/emi-calculator</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/services</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/repayment</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- Legal / Compliance pages -->
+  <url>
+    <loc>https://waqtmoney.com/privacy-policy</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/terms-conditions</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/refund-policy</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/disclaimer</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/grievance-redressal</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/responsible-lending</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Blog posts -->
+  <url>
+    <loc>https://waqtmoney.com/blog/instant-personal-loan-in-india-a-complete-guide-to-applying-online-in-2026</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/10-mistakes-to-avoid-before-applying-for-an-online-personal-loan</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/how-to-compare-personal-loan-offers-and-choose-the-best-one-for-your-needs</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/what-documents-are-required-for-a-personal-loan-in-india</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/how-to-check-your-personal-loan-eligibility-before-applying-online</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/can-you-get-a-personal-loan-with-a-low-cibil-score</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/personal-loan-eligibility-cibil-guide</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/how-much-personal-loan-can-you-get-based-on-your-monthly-salary</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/tips-choosing-right-personal-loan</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/personal-loan-vs-payday-loan-which-loan-is-right-for-your-financial-needs</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/salary-advance-loan-vs-payday-loan-key-differences-every-salaried-employee-should-know</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/need-money-before-payday-heres-how-a-loan-before-salary-works-in-india</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/need-money-before-payday-salary-advance-loan-guide</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/salary-advance-short-term-credit</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/blog-payday-loan-in-india</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/instant-payday-loan-salary-advance-guide</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/payday-loan-hygiene-smart-repayments</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/short-term-loan-emergency-cash-guide</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/small-business-loan-tips-beginners</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/working-capital-loan-everything-business-owners-should-know-before-applying</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/blog/working-capital-business-loan-strategies</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>`;
 
-  const outputPath = path.join(__dirname, "public", "sitemap.xml");
-  fs.writeFileSync(outputPath, sitemapXml.trim(), "utf8");
-  console.log(`Sitemap generated successfully at: ${outputPath}`);
-};
-
-generateSitemap();
+const outputPath = path.join(__dirname, "public", "sitemap.xml");
+fs.writeFileSync(outputPath, sitemapXml.trim(), "utf8");
+console.log(`Static Sitemap saved successfully at: ${outputPath}`);

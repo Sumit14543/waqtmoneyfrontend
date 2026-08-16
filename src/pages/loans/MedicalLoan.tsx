@@ -121,6 +121,7 @@ export default function MedicalLoan() {
         title="Medical Loan in India – Apply Medical Loan Online | Waqt Money"
         description="Need funds for a medical emergency? Apply Medical Loan Online with Waqt Money. Quick approval, minimal documents, and fast disbursal for all your healthcare expenses."
         keywords="Medical Loan in India, Medical Loan Online, Emergency Medical Loan, Healthcare Loan, Medical Emergency Loan, Medical Loan for Hospital Bills, Hospital Expense Loan"
+        canonicalUrl="https://waqtmoney.com/loans/medical-loan"
         schema={schema}
       />
       <Navbar />

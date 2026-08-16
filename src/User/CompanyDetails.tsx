@@ -37,6 +37,8 @@ const CompanyDetails = () => {
   const [fetching, setFetching] = useState(false);
   const [uanNumber, setUanNumber] = useState("");
   const [uanLoading, setUanLoading] = useState(false);
+  const [emailValidating, setEmailValidating] = useState(false);
+  const [emailValidSuccess, setEmailValidSuccess] = useState(false);
 
   const navigate = useNavigate();
 
@@ -112,6 +114,9 @@ const CompanyDetails = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    if (e.target.name === "email") {
+      setEmailValidSuccess(false);
+    }
     setErrors({ ...errors, [e.target.name]: undefined, submit: undefined });
   };
 
@@ -157,11 +162,66 @@ const CompanyDetails = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const validateEmailBackend = async (emailToValidate: string): Promise<boolean> => {
+    const trimmed = emailToValidate.trim();
+    if (!trimmed) {
+      setEmailValidSuccess(false);
+      return true;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setErrors((prev) => ({ ...prev, email: "Please enter a valid official/company email address." }));
+      setEmailValidSuccess(false);
+      return false;
+    }
+
+    setEmailValidating(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/email/validate-official`, {
+        method: "POST",
+        headers: getApiHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ email: trimmed }),
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.valid) {
+        setErrors((prev) => ({
+          ...prev,
+          email: result.reason || "Please enter your official/company email address.",
+        }));
+        setEmailValidSuccess(false);
+        return false;
+      }
+
+      setErrors((prev) => ({ ...prev, email: undefined }));
+      setEmailValidSuccess(true);
+      return true;
+    } catch (error) {
+      console.error("Official email validation error:", error);
+      // Allow proceeding if backend network fails, but report format check
+      return true;
+    } finally {
+      setEmailValidating(false);
+    }
+  };
+
+  const handleEmailBlur = () => {
+    if (form.email.trim()) {
+      validateEmailBackend(form.email);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (loading) return;
+    if (loading || emailValidating) return;
 
     if (!validate()) return;
+
+    if (form.email.trim()) {
+      const isEmailValid = await validateEmailBackend(form.email);
+      if (!isEmailValid) return;
+    }
 
     const applicationId =
       sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
@@ -275,8 +335,24 @@ const CompanyDetails = () => {
               <label className="text-sm font-bold text-[#071d3a]">
                 Official Email <span className="text-[#718096]">(optional)</span>
               </label>
-              <input name="email" type="email" autoComplete="email" value={form.email} onChange={handleChange} className={inputClass} />
-              {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+              <input
+                name="email"
+                type="email"
+                autoComplete="email"
+                value={form.email}
+                onChange={handleChange}
+                onBlur={handleEmailBlur}
+                className={inputClass}
+              />
+              {emailValidating && (
+                <p className="text-xs text-blue-500 mt-1">Validating email...</p>
+              )}
+              {!emailValidating && errors.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              )}
+              {!emailValidating && !errors.email && emailValidSuccess && (
+                <p className="text-emerald-600 text-xs font-semibold mt-1">Valid</p>
+              )}
             </div>
 
             {/* Salary Day */}

@@ -20,18 +20,203 @@ import Footer from "@/Components/Footer";
 import SEO from "@/Components/SEO";
 
 export default function Services() {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "FinancialService",
-    "name": "Waqt Money Loan Services",
-    "description": "Explore Waqt Money's loan services, including Personal Loans, Business Loans, Payday Loans, Short Term Loans, Loan Against Property, Vehicle Loans, and Medical Loans.",
-    "url": "https://waqtmoney.com/services",
-    "image": "https://waqtmoney.com/waqt-money-logo-img.png",
-    "provider": {
-      "@type": "Organization",
-      "name": "Waqt Finance Pvt Ltd"
+  const schema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "FinancialService",
+      "@id": "https://waqtmoney.com/#organization",
+      "name": "Waqt Money",
+      "alternateName": "Waqt Finance Pvt Ltd",
+      "url": "https://waqtmoney.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
+        "width": 180,
+        "height": 50
+      },
+      "description": "Waqt Money is an RBI-compliant digital lending platform offering Personal Loans, Business Loans, Payday Loans, Short Term Loans, Loan Against Property, Vehicle Loans, and Medical Loans through registered NBFC partners.",
+      "telephone": "+91-9217086608",
+      "email": "support@waqtmoney.in",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "H-15, Sector 63",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "addressCountry": "IN"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-9217086608",
+        "email": "support@waqtmoney.in",
+        "contactType": "Customer Service",
+        "availableLanguage": ["English", "Hindi"]
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Waqt Money Loan Products",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "LoanOrCredit",
+              "name": "Personal Loan",
+              "url": "https://waqtmoney.com/loans/personal-loan"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "LoanOrCredit",
+              "name": "Business Loan",
+              "url": "https://waqtmoney.com/loans/business-loan"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "LoanOrCredit",
+              "name": "Payday Loan",
+              "url": "https://waqtmoney.com/loans/payday-loan"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "LoanOrCredit",
+              "name": "Short Term Loan",
+              "url": "https://waqtmoney.com/loans/short-term-loan"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "LoanOrCredit",
+              "name": "Loan Against Property",
+              "url": "https://waqtmoney.com/loans/loan-against-property"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "LoanOrCredit",
+              "name": "Vehicle Loan",
+              "url": "https://waqtmoney.com/loans/vehicle-loan"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "LoanOrCredit",
+              "name": "Medical Loan",
+              "url": "https://waqtmoney.com/loans/medical-loan"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "@id": "https://waqtmoney.com/services#page",
+      "name": "Loan Services | Waqt Money",
+      "description": "Explore Waqt Money's complete range of loan services: Personal Loans, Business Loans, Payday Loans, Short Term Loans, Loan Against Property, Vehicle Loans, and Medical Loans. Apply online with minimal documentation and quick digital approval.",
+      "url": "https://waqtmoney.com/services",
+      "inLanguage": "en-IN",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://waqtmoney.com/#website",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "provider": {
+        "@type": "FinancialService",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "@id": "https://waqtmoney.com/services#list",
+      "name": "Waqt Money Loan Products",
+      "description": "Complete list of loan services offered by Waqt Money through its registered NBFC partners.",
+      "url": "https://waqtmoney.com/services",
+      "numberOfItems": 7,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Personal Loan",
+          "description": "Flexible, unsecured personal loan for any purpose — medical emergencies, education, travel, wedding, or home renovation. Apply online with minimal documentation.",
+          "url": "https://waqtmoney.com/loans/personal-loan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Business Loan",
+          "description": "Business financing for MSMEs and growing businesses. Covers working capital, inventory purchase, equipment financing, and expansion needs.",
+          "url": "https://waqtmoney.com/loans/business-loan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Payday Loan",
+          "description": "Short-term salary advance loan (15–45 days) to bridge the gap before your next payday. Quick digital process with fast approval.",
+          "url": "https://waqtmoney.com/loans/payday-loan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Short Term Loan",
+          "description": "Emergency loan for temporary financial needs where waiting isn't an option. Fast approval, short repayment tenure.",
+          "url": "https://waqtmoney.com/loans/short-term-loan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Loan Against Property",
+          "description": "Secured mortgage loan against residential, commercial, or industrial property. High LTV (60–75%), tenure up to 20 years, interest from 10.49% p.a.",
+          "url": "https://waqtmoney.com/loans/loan-against-property"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "Vehicle Loan",
+          "description": "Car Loan and Bike Loan for new and used vehicles. Up to 90–100% of on-road price for new vehicles. Interest from 10.49% p.a.",
+          "url": "https://waqtmoney.com/loans/vehicle-loan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "Medical Loan",
+          "description": "Emergency medical loan for hospitalisation, surgery, and healthcare expenses. Credit limit up to ₹6,00,000 with interest rates starting from 11.0% p.a.",
+          "url": "https://waqtmoney.com/loans/medical-loan"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Loan Services",
+          "item": "https://waqtmoney.com/services"
+        }
+      ]
     }
-  };
+  ];
 
   const loanProducts = [
     {
@@ -144,6 +329,7 @@ export default function Services() {
         title="Loan Services | Personal, Business, Payday & More | Waqt Money"
         description="Explore Waqt Money's loan services, including Personal Loans, Business Loans, Payday Loans, Short Term Loans, Loan Against Property, Vehicle Loans, and Medical Loans. Learn about eligibility, documents, and the online application process."
         keywords="Loan Services, Personal Loan Online, Business Loan, Payday Loan, Short Term Loan, Loan Against Property, Vehicle Loan, Medical Loan, Waqt Money"
+        canonicalUrl="https://waqtmoney.com/services"
         schema={schema}
       />
       <Navbar />

@@ -35,26 +35,122 @@ const loanProcessSteps = [
 ];
 
 export default function About() {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "name": "About Waqt Money",
-    "description": "Learn more about Waqt Money and our RBI-registered NBFC partner Waqt Finance Pvt Ltd, providing quick payday loans and personal credit solutions in India.",
-    "url": "https://waqtmoney.com/about",
-    "mainEntity": {
-      "@type": "Organization",
-      "name": "Waqt Finance Pvt Ltd",
-      "logo": "https://waqtmoney.com/waqt-money-logo-img.png",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
-        "addressLocality": "Noida",
-        "addressRegion": "Uttar Pradesh",
-        "postalCode": "201301",
-        "addressCountry": "IN"
+  const schema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "@id": "https://waqtmoney.com/about#page",
+      "name": "About Waqt Money — Instant Loans Facilitator | India",
+      "description": "Learn about Waqt Money, an RBI-compliant digital lending platform partnered with Waqt Finance Pvt Ltd. We facilitate personal loans, payday loans, business loans, and more for salaried professionals across India.",
+      "url": "https://waqtmoney.com/about",
+      "inLanguage": "en-IN",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://waqtmoney.com/#website",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "mainEntity": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "legalName": "Waqt Finance Pvt Ltd",
+        "url": "https://waqtmoney.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
+          "width": 180,
+          "height": 50
+        },
+        "description": "Waqt Money is an RBI-compliant digital lending platform facilitating personal loans, payday loans, business loans, short term loans, vehicle loans, medical loans, and loan against property through registered NBFC partners in India. Trusted by 50,000+ salaried professionals.",
+        "telephone": "+91-9217086608",
+        "email": "support@waqtmoney.in",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
+          "addressLocality": "Noida",
+          "addressRegion": "Uttar Pradesh",
+          "postalCode": "201301",
+          "addressCountry": "IN"
+        },
+        "areaServed": {
+          "@type": "Country",
+          "name": "India"
+        },
+        "knowsAbout": [
+          "Personal Loans",
+          "Payday Loans",
+          "Business Loans",
+          "Short Term Loans",
+          "Loan Against Property",
+          "Vehicle Loans",
+          "Medical Loans",
+          "Digital Lending",
+          "NBFC Lending"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91-9217086608",
+          "email": "support@waqtmoney.in",
+          "contactType": "Customer Service",
+          "areaServed": "IN",
+          "availableLanguage": ["English", "Hindi"]
+        }
       }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "@id": "https://waqtmoney.com/about#process",
+      "name": "How to Apply for a Payday Loan with Waqt Money",
+      "description": "Apply for a payday loan online with Waqt Money in 4 simple steps — from application to fund disbursement.",
+      "totalTime": "PT48H",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Submit Application",
+          "text": "Fill out the simple online loan application form with your basic personal, employment, and contact details along with required documents.",
+          "url": "https://waqtmoney.com/user/apply"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Document Verification",
+          "text": "The Waqt Money team verifies your submitted documents and assesses your loan eligibility based on your income and credit profile."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Loan Approval",
+          "text": "Receive approval notification with your confirmed loan amount and repayment terms once verification is complete."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Fund Disbursement",
+          "text": "After completing your e-signature on the loan agreement, funds are transferred directly to your registered bank account."
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "About Us",
+          "item": "https://waqtmoney.com/about"
+        }
+      ]
     }
-  };
+  ];
 
   return (
     <>
@@ -62,6 +158,7 @@ export default function About() {
         title="About Us - Instant Payday & Personal Loans Facilitator"
         description="Learn more about Waqt Money. We partner with RBI-registered NBFC Waqt Finance Pvt Ltd to deliver fast, secure, paperless credit advances to salaried professionals."
         keywords="about Waqt Money, instant salary loans, licensed NBFC loans, Waqt Finance Pvt Ltd details"
+        canonicalUrl="https://waqtmoney.com/about"
         schema={schema}
       />
       <Navbar />

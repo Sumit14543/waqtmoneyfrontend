@@ -76,33 +76,179 @@ export default function PaydayLoan() {
   const schema = [
     {
       "@context": "https://schema.org",
+      "@type": "FinancialService",
+      "@id": "https://waqtmoney.com/#organization",
+      "name": "Waqt Money",
+      "alternateName": "Waqt Finance Pvt Ltd",
+      "url": "https://waqtmoney.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
+        "width": 180,
+        "height": 50
+      },
+      "description": "Waqt Money is an RBI-compliant digital lending platform facilitating instant personal loans, payday loans (salary advances), and business loans through registered NBFC partners.",
+      "telephone": "+91-9217086608",
+      "email": "support@waqtmoney.in",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "H-15, Sector 63",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "addressCountry": "IN"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-9217086608",
+        "email": "support@waqtmoney.in",
+        "contactType": "Customer Service",
+        "availableLanguage": ["English", "Hindi"]
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "knowsAbout": ["Payday Loans", "Personal Loans", "Business Loans", "Digital Lending", "MSME Financing"]
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "LoanOrCredit",
+      "@id": "https://waqtmoney.com/loans/payday-loan#product",
       "name": "Waqt Money Payday Loan",
-      "description": "Urgent cash before your next salary. Get a Payday Loan of up to ₹1,00,000 with minimal documents and fast digital verification.",
+      "alternateName": "Salary Advance Loan",
+      "loanType": "Payday Loan",
+      "description": "Urgent cash before your next salary. Get a Payday Loan of up to ₹1,00,000 with minimal documents, fast digital verification, and direct bank disbursal. Designed for salaried employees.",
       "url": "https://waqtmoney.com/loans/payday-loan",
+      "currency": "INR",
       "amount": {
         "@type": "MonetaryAmount",
         "currency": "INR",
         "minValue": 5000,
         "maxValue": 100000
       },
-      "interestRate": 1.0,
+      "loanTerm": {
+        "@type": "QuantitativeValue",
+        "minValue": 15,
+        "maxValue": 45,
+        "unitCode": "DAY"
+      },
+      "annualPercentageRate": {
+        "@type": "QuantitativeValue",
+        "value": 1,
+        "unitText": "% per day (flat daily charge)"
+      },
+      "feesAndCommissionsSpecification": "Processing fee of 7%–10% plus 18% GST on the processing fee. All charges are disclosed before loan offer acceptance.",
+      "requiredCollateral": "None — Unsecured Loan",
       "provider": {
         "@type": "Organization",
-        "name": "Waqt Finance Pvt Ltd"
-      }
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Salaried employees aged 21–58 years with regular monthly salary"
+      },
+      "eligibilityToApply": "Indian resident aged 21–58 years. Regular monthly salary credited to a bank account. Requires Aadhaar Card, PAN Card, salary slips, and 3–6 months bank statements."
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": faqs.map((f) => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": f.a
+      "@id": "https://waqtmoney.com/loans/payday-loan#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a Payday Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A Payday Loan is a short-term, unsecured Salary Advance Loan meant to help salaried individuals cover urgent expenses until their next salary is credited."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much can I borrow with a Payday Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Waqt Money offers Payday Loans up to ₹1,00,000 (with ranges up to ₹2,00,000 for eligible profiles), depending on your monthly income and repayment capacity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the repayment tenure for a Payday Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tenures typically range from 15 to 45 days, aligned with your upcoming salary date."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Payday Loan interest rate and fee structure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Interest is 1% per day (flat daily charge), with a processing fee of 7% to 10% plus 18% GST on the fee. All charges are disclosed before you accept the loan offer."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What documents are required for a Payday Loan Online application?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aadhaar Card, PAN Card, recent salary slips, and 3 to 6 months of bank statements showing salary credits."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I get a Payday Loan with a low credit score?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "While credit history is evaluated, your regular salary credit and current repayment capacity play a significant role in approval."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast are Payday Loan funds disbursed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Once your application and verification are complete and you accept the loan agreement, funds are disbursed directly to your bank account."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a Payday Loan suitable for long-term borrowing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. A Payday Loan is designed strictly for short-term financial gaps before payday. For multi-year needs, consider a Personal Loan or Business Loan."
+          }
         }
-      }))
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Loans",
+          "item": "https://waqtmoney.com/services"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Payday Loan",
+          "item": "https://waqtmoney.com/loans/payday-loan"
+        }
+      ]
     }
   ];
 
@@ -112,6 +258,7 @@ export default function PaydayLoan() {
         title="Payday Loan Online – Quick Salary Advance Loan | Waqt Money"
         description="Need cash before your next salary? Apply Payday Loan Online with Waqt Money. Quick eligibility check, minimal documents, and a fast salary advance loan process."
         keywords="Payday Loan, Payday Loan Online, Payday Loan India, Salary Advance Loan, Instant Payday Loan, Payday Loan Apply Online, Payday Loan Eligibility, Payday Loan Interest Rate, Emergency Salary Loan"
+        canonicalUrl="https://waqtmoney.com/loans/payday-loan"
         schema={schema}
       />
       <Navbar />

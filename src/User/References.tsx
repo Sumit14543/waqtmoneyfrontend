@@ -97,8 +97,26 @@ const References = () => {
     if (!form.reference2Name.trim()) nextErrors.reference2Name = "Reference 2 name is required";
     if (!/^[6-9]\d{9}$/.test(form.reference2Phone)) {
       nextErrors.reference2Phone = "Enter valid 10-digit mobile number";
+    } else if (form.reference1Phone && form.reference1Phone === form.reference2Phone) {
+      nextErrors.reference2Phone = "Reference 1 and Reference 2 mobile numbers must be different";
     }
-    if (!form.reference2Relation) nextErrors.reference2Relation = "Select relation";
+    if (!form.reference2Relation) {
+      nextErrors.reference2Relation = "Select relation";
+    }
+
+    const isFamilyRelation = (rel: string) =>
+      ["family", "relative", "father", "mother", "spouse", "brother", "sister", "parent"].includes(
+        String(rel || "").trim().toLowerCase()
+      );
+
+    if (
+      form.reference1Relation &&
+      form.reference2Relation &&
+      !isFamilyRelation(form.reference1Relation) &&
+      !isFamilyRelation(form.reference2Relation)
+    ) {
+      nextErrors.reference2Relation = "At least one reference must be a family member or relative";
+    }
 
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;

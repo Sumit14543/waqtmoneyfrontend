@@ -28,7 +28,11 @@ export default function SEO({
   ogImage = DEFAULT_IMAGE,
   schema,
 }: SEOProps) {
-  const currentUrl = canonicalUrl || typeof window !== "undefined" ? window.location.origin + window.location.pathname : "";
+  const fallbackUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}${window.location.pathname.toLowerCase().replace(/\/$/, "")}`
+      : "https://waqtmoney.com";
+  const currentUrl = (canonicalUrl || fallbackUrl).toLowerCase();
   const fullTitle = title.includes("Waqt Money") ? title : `${title} | ${SITE_NAME}`;
 
   return (

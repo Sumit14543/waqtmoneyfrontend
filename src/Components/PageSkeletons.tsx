@@ -303,3 +303,208 @@ export const DashboardPageFallback = () => (
     </div>
   </div>
 );
+
+// Dedicated Fallback for Blog Grid Listing Page (/blog, /blogs)
+export const BlogGridPageFallback = () => (
+  <div className="page-loader-screen min-h-screen bg-[linear-gradient(180deg,#fcfaff_0%,#ffffff_100%)]">
+    <PageNavbarSkeleton />
+
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Featured Guide Banner Skeleton */}
+      <div className="mb-10 rounded-3xl border border-purple-100 bg-white p-6 shadow-sm">
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2 space-y-4">
+            <div className="skeleton-block aspect-[16/7] w-full rounded-2xl bg-purple-100/60" />
+            <div className="skeleton-block h-6 w-32 rounded-full" />
+            <div className="skeleton-block h-8 w-[85%] rounded-full" />
+            <div className="skeleton-block h-4 w-[95%] rounded-full" />
+          </div>
+          <div className="space-y-4 border-t lg:border-t-0 lg:border-l border-purple-100 pt-4 lg:pt-0 lg:pl-6">
+            <div className="skeleton-block h-6 w-36 rounded-full mb-4" />
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="flex gap-3">
+                <div className="skeleton-block h-6 w-6 rounded-full font-mono shrink-0" />
+                <div className="space-y-2 flex-1">
+                  <div className="skeleton-block h-4 w-full rounded-full" />
+                  <div className="skeleton-block h-3 w-24 rounded-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Category Pill Badges Skeleton */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8">
+        {[1, 2, 3, 4, 5, 6].map((item) => (
+          <div key={item} className="skeleton-block h-9 w-28 rounded-full shrink-0" />
+        ))}
+      </div>
+
+      {/* Blog Cards Grid Skeleton */}
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {[1, 2, 3, 4, 5, 6].map((item) => (
+          <div key={item} className="rounded-3xl border border-purple-100 bg-white overflow-hidden shadow-xs">
+            <div className="skeleton-block aspect-[16/7] w-full" />
+            <div className="p-6 space-y-3">
+              <div className="skeleton-block h-7 w-[90%] rounded-full" />
+              <div className="skeleton-block h-4 w-full rounded-full" />
+              <div className="skeleton-block h-4 w-[75%] rounded-full" />
+              <div className="pt-3 flex items-center justify-between border-t border-purple-50">
+                <div className="skeleton-block h-3.5 w-20 rounded-full" />
+                <div className="skeleton-block h-6 w-24 rounded-full bg-purple-100" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <PageFooterSkeleton />
+  </div>
+);
+
+// Dedicated Fallback for Blog Article Detail Page (/blog/:slug)
+export const BlogDetailPageFallback = () => (
+  <div className="page-loader-screen min-h-screen bg-white">
+    <PageNavbarSkeleton />
+
+    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+      {/* Title & Metadata Skeleton */}
+      <div className="space-y-4 mb-8 text-center sm:text-left">
+        <div className="skeleton-block h-6 w-32 rounded-full inline-block" />
+        <div className="skeleton-block h-10 w-[95%] rounded-full" />
+        <div className="skeleton-block h-10 w-[70%] rounded-full" />
+        <div className="flex items-center gap-4 pt-2">
+          <div className="skeleton-block h-10 w-10 rounded-full" />
+          <div className="space-y-1">
+            <div className="skeleton-block h-4 w-32 rounded-full" />
+            <div className="skeleton-block h-3 w-40 rounded-full" />
+          </div>
+        </div>
+      </div>
+
+      {/* Featured Cover Image Skeleton */}
+      <div className="skeleton-block aspect-[16/8] w-full rounded-3xl mb-10 shadow-sm" />
+
+      {/* Article Content Body Skeleton */}
+      <div className="space-y-4 max-w-3xl">
+        <div className="skeleton-block h-5 w-full rounded-full" />
+        <div className="skeleton-block h-5 w-[92%] rounded-full" />
+        <div className="skeleton-block h-5 w-[88%] rounded-full" />
+        <div className="skeleton-block h-5 w-[96%] rounded-full" />
+        <div className="py-4">
+          <div className="skeleton-block h-8 w-60 rounded-full mb-3" />
+          <div className="skeleton-block h-5 w-[90%] rounded-full" />
+          <div className="skeleton-block h-5 w-[85%] rounded-full" />
+        </div>
+      </div>
+    </div>
+
+    <PageFooterSkeleton />
+  </div>
+);
+
+// Dedicated Fallback for EMI Calculator Page (/emi-calculator)
+export const EmiCalculatorPageFallback = () => (
+  <div className="page-loader-screen min-h-screen bg-[linear-gradient(180deg,#fcfaff_0%,#ffffff_100%)]">
+    <PageNavbarSkeleton />
+
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl text-center mb-10 space-y-3">
+        <div className="skeleton-block h-6 w-36 rounded-full mx-auto" />
+        <div className="skeleton-block h-10 w-80 rounded-full mx-auto" />
+      </div>
+
+      {/* 2-Column Calculator Card Skeleton */}
+      <div className="rounded-3xl border border-purple-100 bg-white p-6 shadow-md md:p-8 grid gap-8 lg:grid-cols-2">
+        {/* Left Sliders */}
+        <div className="space-y-6">
+          {[1, 2, 3].map((item) => (
+            <div key={item} className="space-y-3">
+              <div className="flex justify-between">
+                <div className="skeleton-block h-4 w-32 rounded-full" />
+                <div className="skeleton-block h-6 w-24 rounded-lg bg-purple-100" />
+              </div>
+              <div className="skeleton-block h-3 w-full rounded-full" />
+            </div>
+          ))}
+        </div>
+
+        {/* Right Result & Chart Skeleton */}
+        <div className="rounded-2xl bg-purple-50/50 p-6 flex flex-col justify-between items-center text-center space-y-6">
+          <div className="space-y-2">
+            <div className="skeleton-block h-4 w-32 rounded-full mx-auto" />
+            <div className="skeleton-block h-10 w-48 rounded-full bg-purple-200 mx-auto" />
+          </div>
+          <div className="skeleton-block h-44 w-44 rounded-full" />
+          <div className="skeleton-block h-12 w-full rounded-xl bg-purple-300" />
+        </div>
+      </div>
+    </div>
+
+    <PageFooterSkeleton />
+  </div>
+);
+
+// Dedicated Fallback for Admin Tables (Leads, Contacts, Blogs)
+export const AdminTablePageFallback = () => (
+  <div className="page-loader-screen min-h-screen bg-slate-900 text-slate-100">
+    <div className="border-b border-slate-800 bg-slate-950 p-4">
+      <div className="mx-auto max-w-7xl flex items-center justify-between">
+        <div className="skeleton-block h-8 w-40 rounded-lg bg-slate-800" />
+        <div className="skeleton-block h-9 w-24 rounded-lg bg-slate-800" />
+      </div>
+    </div>
+
+    <div className="mx-auto max-w-7xl px-4 py-8 space-y-6">
+      {/* 4 Stats Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[1, 2, 3, 4].map((item) => (
+          <div key={item} className="rounded-2xl bg-slate-800/80 p-5 border border-slate-700/60 space-y-3">
+            <div className="skeleton-block h-4 w-28 rounded-full bg-slate-700" />
+            <div className="skeleton-block h-8 w-20 rounded-lg bg-slate-700" />
+          </div>
+        ))}
+      </div>
+
+      {/* Table Skeleton */}
+      <div className="rounded-2xl border border-slate-800 bg-slate-800/40 p-4 space-y-4">
+        <div className="flex justify-between items-center">
+          <div className="skeleton-block h-10 w-64 rounded-xl bg-slate-800" />
+          <div className="skeleton-block h-10 w-32 rounded-xl bg-purple-600" />
+        </div>
+        <div className="space-y-3 pt-2">
+          {[1, 2, 3, 4, 5, 6].map((row) => (
+            <div key={row} className="skeleton-block h-12 w-full rounded-xl bg-slate-800/80" />
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Dedicated Fallback for Admin Blog Form (Create / Edit)
+export const AdminBlogFormFallback = () => (
+  <div className="page-loader-screen min-h-screen bg-slate-900 text-slate-100">
+    <div className="border-b border-slate-800 bg-slate-950 p-4">
+      <div className="mx-auto max-w-7xl flex items-center justify-between">
+        <div className="skeleton-block h-8 w-40 rounded-lg bg-slate-800" />
+        <div className="skeleton-block h-9 w-28 rounded-lg bg-purple-600" />
+      </div>
+    </div>
+
+    <div className="mx-auto max-w-7xl px-4 py-8 grid gap-8 lg:grid-cols-3">
+      <div className="lg:col-span-2 space-y-6">
+        <div className="skeleton-block h-12 w-full rounded-xl bg-slate-800" />
+        <div className="skeleton-block h-10 w-full rounded-xl bg-slate-800" />
+        <div className="skeleton-block h-24 w-full rounded-xl bg-slate-800" />
+        <div className="skeleton-block h-[400px] w-full rounded-2xl bg-slate-800" />
+      </div>
+      <div className="space-y-6">
+        <div className="skeleton-block h-48 w-full rounded-2xl bg-slate-800" />
+        <div className="skeleton-block h-64 w-full rounded-2xl bg-slate-800" />
+      </div>
+    </div>
+  </div>
+);

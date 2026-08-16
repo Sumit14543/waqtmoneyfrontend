@@ -308,13 +308,104 @@ const Repayment = () => {
     setError("");
   };
 
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Waqt Money Loan Repayment Assistance",
-    "description": "Repay your Waqt Money payday and personal loans securely online. Find bank details, UPI options, and repayment verification instructions.",
-    "url": "https://waqtmoney.com/repayment"
-  };
+  const schema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": "https://waqtmoney.com/repayment#page",
+      "name": "Repay Your Waqt Money Loan Online — Secure Repayment Portal",
+      "description": "Repay your Waqt Money payday and personal loans securely online via UPI, NEFT/IMPS bank transfer, or debit card. Enter your PAN, verify OTP, and view your outstanding amount.",
+      "url": "https://waqtmoney.com/repayment",
+      "inLanguage": "en-IN",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://waqtmoney.com/#website",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "legalName": "Waqt Finance Pvt Ltd"
+      },
+      "potentialAction": {
+        "@type": "ViewAction",
+        "target": "https://waqtmoney.com/repayment",
+        "name": "Verify PAN and Access Loan Repayment Portal"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "@id": "https://waqtmoney.com/repayment#how-to",
+      "name": "How to Repay Your Waqt Money Loan Online",
+      "description": "Follow these 4 simple steps to repay your Waqt Money payday or personal loan securely using UPI, bank transfer, or debit card.",
+      "totalTime": "PT10M",
+      "tool": [
+        {
+          "@type": "HowToTool",
+          "name": "UPI App (PhonePe, GPay, Paytm, etc.)"
+        },
+        {
+          "@type": "HowToTool",
+          "name": "Internet/Mobile Banking for NEFT, IMPS, RTGS"
+        },
+        {
+          "@type": "HowToTool",
+          "name": "Debit Card"
+        }
+      ],
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Check Outstanding Amount and Due Date",
+          "text": "Log in to the Waqt Money repayment portal using your PAN number and OTP. Check your current outstanding loan amount and the payment due date.",
+          "url": "https://waqtmoney.com/repayment"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Choose Your Repayment Method",
+          "text": "Select a secure repayment method: UPI transfer using any UPI app, bank transfer via NEFT, IMPS, or RTGS, or a secure card payment link provided by the Waqt Money team.",
+          "url": "https://waqtmoney.com/repayment"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Complete Payment and Save Reference",
+          "text": "Complete your payment transfer and immediately save your transaction reference number — UTR number for bank transfers, UPI reference for UPI payments, or payment screenshot for card payments.",
+          "url": "https://waqtmoney.com/repayment"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Share Confirmation with Support",
+          "text": "If requested by the Waqt Money support team, share your transaction reference or payment screenshot via email at support@waqtmoney.in to confirm your loan repayment.",
+          "url": "https://waqtmoney.com/contact"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Loan Repayment",
+          "item": "https://waqtmoney.com/repayment"
+        }
+      ]
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-[#f7f5ff] text-slate-950">
@@ -322,6 +413,7 @@ const Repayment = () => {
         title="Repay Your Loan Online - Secure Repayment Options"
         description="Repay your Waqt Money loan securely online. View step-by-step instructions for UPI transfer, NEFT/IMPS bank transfer, and card payment clearance."
         keywords="repay loan online, loan payment UPI, NEFT loan repayment, credit payback portal"
+        canonicalUrl="https://waqtmoney.com/repayment"
         schema={schema}
       />
       <Navbar />

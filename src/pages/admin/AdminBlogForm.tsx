@@ -372,14 +372,22 @@ export default function AdminBlogForm() {
       }
 
       const token = localStorage.getItem("admin_token") || localStorage.getItem("adminToken");
+      if (!token) {
+        setError("Admin session expired. Please log in to admin panel again.");
+        setLoading(false);
+        return;
+      }
+
       const url = isEdit ? `${API_BASE_URL}/blogs/${id}` : `${API_BASE_URL}/blogs`;
       const method = isEdit ? "PUT" : "POST";
 
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${token}`
+      };
+
       const response = await fetch(url, {
         method,
-        headers: {
-          Authorization: token ? `Bearer ${token}` : ""
-        },
+        headers,
         body: formData
       });
 
@@ -393,7 +401,12 @@ export default function AdminBlogForm() {
         setError(msg);
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Network error while saving blog.");
+      console.error("Blog upload error:", err);
+      setError(
+        err instanceof Error
+          ? `${err.message} (Please check image size or network connection)`
+          : "Network error while saving blog."
+      );
     } finally {
       setLoading(false);
     }

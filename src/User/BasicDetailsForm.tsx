@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowRight, BadgeCheck, Loader2 } from "lucide-react";
+import { ArrowRight, BadgeCheck, ChevronDown, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
@@ -23,7 +23,7 @@ const BasicDetailsForm = () => {
   const [employment, setEmployment] = useState("salaried");
   const [pincode, setPincode] = useState("");
   const [city, setCity] = useState("");
-  const [income, setIncome] = useState("20,000");
+  const [income, setIncome] = useState("25,000");
   const [incomeType, setIncomeType] = useState("Account");
   const [errors, setErrors] = useState<BasicErrors>({});
   const [loading, setLoading] = useState(false);
@@ -89,12 +89,6 @@ const BasicDetailsForm = () => {
       nextErrors.city = "City is required";
     }
 
-    if (!income) {
-      nextErrors.income = "Monthly income is required";
-    } else if (Number(parseAmount(income)) < MIN_MONTHLY_INCOME) {
-      nextErrors.income = "Salary less than Rs 20,000 is not accepted";
-    }
-
     if (!incomeType) {
       nextErrors.incomeType = "Select income type";
     }
@@ -122,6 +116,11 @@ const BasicDetailsForm = () => {
     setErrors({});
 
     try {
+      const savedEmployment =
+        sessionStorage.getItem("employment") || localStorage.getItem("employment") || employment || "salaried";
+      const savedSalary =
+        Number(parseAmount(sessionStorage.getItem("salary") || localStorage.getItem("salary") || income || "0")) || 25000;
+
       const response = await fetch(`${API_BASE_URL}/application/update`, {
         method: "PUT",
         credentials: "include",
@@ -130,8 +129,8 @@ const BasicDetailsForm = () => {
         }),
         body: JSON.stringify({
           id: applicationId,
-          employment,
-          salary: Number(parseAmount(income)),
+          employment: savedEmployment,
+          salary: savedSalary,
           income_received_in: incomeType.toLowerCase(),
           pincode,
           city: city.trim(),
@@ -215,65 +214,17 @@ const BasicDetailsForm = () => {
                 {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
               </div>
 
-              <div>
-                <label className="text-sm font-bold text-[#071d3a]">Employment Type</label>
-                <div className="mt-2 grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setEmployment("salaried")}
-                    className={`h-[45px] rounded-lg border text-sm font-bold transition ${
-                      employment === "salaried"
-                        ? "border-[#8048e2] bg-[#8048e2] text-white shadow-[0_9px_18px_rgba(128,72,226,0.22)]"
-                        : "border-[#d8c5ff] bg-white text-[#52657d]"
-                    }`}
-                  >
-                    Salaried
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEmployment("self")}
-                    className={`h-[45px] rounded-lg border text-sm font-bold transition ${
-                      employment === "self"
-                        ? "border-[#8048e2] bg-[#8048e2] text-white shadow-[0_9px_18px_rgba(128,72,226,0.22)]"
-                        : "border-[#d8c5ff] bg-white text-[#52657d]"
-                    }`}
-                  >
-                    Self-Employed
-                  </button>
-                </div>
-              </div>
 
-              <div>
-                <label className="text-sm font-bold text-[#071d3a]">Monthly Income</label>
-                <div className="mt-2 flex h-[54px] overflow-hidden rounded-lg border border-[#d8c5ff] bg-white focus-within:border-[#8048e2]">
-                  <span className="flex w-[42px] items-center justify-center border-r border-[#d8c5ff] bg-[#f8fafc] text-lg font-semibold text-[#52657d]">
-                    {"\u20b9"}
-                  </span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="off"
-                    value={income}
-                    onChange={(event) => setIncome(formatAmount(event.target.value))}
-                    className="min-w-0 flex-1 px-4 text-base font-semibold text-[#071d3a] outline-none"
-                  />
-                </div>
-                {errors.income && <p className="mt-1 text-sm text-red-500">{errors.income}</p>}
-              </div>
 
               <div>
                 <label className="text-sm font-bold text-[#071d3a]">Income Received In</label>
-                <div className="mt-2 grid grid-cols-2 gap-2 sm:gap-3">
-                  {["Account", "Cheque"].map((type) => (
+                <div className="mt-2 grid grid-cols-1 gap-2 sm:gap-3">
+                  {["Account"].map((type) => (
                     <button
                       key={type}
                       type="button"
                       onClick={() => setIncomeType(type)}
-                      className={`h-[44px] rounded-lg border text-sm font-bold transition ${
-                        incomeType === type
-                          ? "border-[#8048e2] bg-[#8048e2] text-white"
-                          : "border-[#d8c5ff] bg-white text-[#52657d]"
-                      }`}
+                      className="h-[44px] w-full rounded-lg border border-[#8048e2] bg-[#8048e2] text-sm font-bold text-white transition"
                     >
                       {type}
                     </button>

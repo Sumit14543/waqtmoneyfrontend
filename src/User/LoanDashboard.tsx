@@ -740,12 +740,16 @@ const LoanDashboard = () => {
                   ))}
                 </div>
 
-                {crmStatus?.statusDescription && (
-                  <div className="mt-5 rounded-2xl border border-green-100 bg-green-50 px-4 py-4">
-                    <p className="text-sm font-extrabold text-green-800">
+                {(crmStatus?.dashboardStatusDescription || crmStatus?.statusDescription) && (
+                  <div className={`mt-5 rounded-2xl border px-4 py-4 ${
+                    ["loan_disbursed", "repayment_received"].includes(String(crmStatus?.dashboardCurrentStageKey || "").toLowerCase())
+                      ? "border-green-100 bg-green-50 text-green-800"
+                      : "border-purple-100 bg-purple-50/60 text-purple-900"
+                  }`}>
+                    <p className="text-sm font-extrabold">
                       {crmStatus.dashboardStatusTitle || crmStatus.statusTitle || crmStatus.publicStatus || "Application status"}
                     </p>
-                    <p className="mt-1 text-sm font-semibold leading-5 text-green-700">
+                    <p className="mt-1 text-sm font-semibold leading-5 opacity-90">
                       {crmStatus.dashboardStatusDescription || crmStatus.statusDescription}
                     </p>
                   </div>

@@ -73,36 +73,182 @@ export default function BusinessLoan() {
   const schema = [
     {
       "@context": "https://schema.org",
-      "@type": "FinancialService",
-      "name": "Waqt Money Business Loan",
-      "description": "Apply Business Loan Online with Waqt Money. A Working Capital Loan for MSMEs, startups, and small businesses — minimal documentation, transparent charges, and quick processing.",
-      "url": "https://waqtmoney.com/business-loan",
-      "image": "https://waqtmoney.com/waqt-money-logo-img.png",
+      "@type": "LoanOrCredit",
+      "@id": "https://waqtmoney.com/loans/business-loan#product",
+      "name": "Business Loan by Waqt Money",
+      "alternateName": "MSME Business Loan",
+      "description": "Get an unsecured business loan up to ₹25 Lakhs with Waqt Money. Designed for MSMEs, startups, traders, and self-employed professionals. 100% digital process, minimal documentation, and fast disbursal.",
+      "url": "https://waqtmoney.com/loans/business-loan",
+      "loanType": "Business Loan",
+      "currency": "INR",
+      "amount": {
+        "@type": "MonetaryAmount",
+        "minValue": 10000,
+        "maxValue": 2500000,
+        "currency": "INR"
+      },
+      "loanTerm": {
+        "@type": "QuantitativeValue",
+        "minValue": 12,
+        "maxValue": 60,
+        "unitCode": "MON"
+      },
+      "annualPercentageRate": {
+        "@type": "QuantitativeValue",
+        "minValue": 10.49,
+        "maxValue": 24,
+        "unitCode": "P1"
+      },
+      "feesAndCommissionsSpecification": "Processing fee and other charges will be disclosed before loan offer acceptance.",
+      "requiredCollateral": "None — Unsecured Loan",
       "provider": {
         "@type": "Organization",
-        "name": "Waqt Finance Pvt Ltd"
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com",
+        "logo": "https://waqtmoney.com/waqt-money-logo-imgg.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91-9217086608",
+          "email": "support@waqtmoney.in",
+          "contactType": "Customer Support",
+          "availableLanguage": ["English", "Hindi"]
+        }
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "MSMEs, Startups, Self-Employed Professionals, Traders"
       }
     },
     {
       "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": faqs.map((f) => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": f.a
+      "@type": "FinancialService",
+      "@id": "https://waqtmoney.com/#organization",
+      "name": "Waqt Money",
+      "alternateName": "Waqt Finance Pvt Ltd",
+      "url": "https://waqtmoney.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
+        "width": 200,
+        "height": 60
+      },
+      "description": "Waqt Money is an RBI-compliant digital lending platform facilitating instant personal loans, business loans, and payday loans through NBFC partners.",
+      "sameAs": [],
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "IN"
+      },
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+91-9217086608",
+          "contactType": "Customer Service",
+          "email": "support@waqtmoney.in",
+          "availableLanguage": ["English", "Hindi"]
         }
-      }))
+      ],
+      "knowsAbout": ["Business Loans", "Personal Loans", "MSME Financing", "Digital Lending"]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the maximum loan amount I can get for a business loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "With Waqt Money, you can get a business loan of up to ₹25 Lakhs (₹25,00,000), subject to eligibility criteria set by our NBFC lending partners."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the interest rate on Waqt Money Business Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The interest rate on Waqt Money Business Loans ranges from 10.49% to 24% per annum. The final rate is determined by the lending NBFC based on your credit profile and business financials."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the repayment tenure for a business loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can repay your business loan over a flexible tenure ranging from 12 months to 60 months (1 to 5 years), based on your repayment capacity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is collateral required for a business loan from Waqt Money?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Waqt Money offers unsecured business loans, which means no collateral or asset pledge is required to apply."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who is eligible to apply for a business loan on Waqt Money?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "MSMEs, startups, traders, and self-employed professionals are eligible to apply for a business loan. Eligibility is assessed on the basis of credit score, business vintage, and financial turnover by our lending partners."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take to get a business loan disbursed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Waqt Money follows a 100% digital application process with minimal documentation. Once approved by the lending NBFC, disbursal typically happens within minutes to a few hours."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What documents are required to apply for a business loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Waqt Money's business loan process is paperless and minimal. Typically, basic KYC documents, business proof, and bank statements may be required. The exact documents will be specified during the application process."
+          }
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Loans",
+          "item": "https://waqtmoney.com/loans"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Business Loan",
+          "item": "https://waqtmoney.com/loans/business-loan"
+        }
+      ]
     }
   ];
 
   return (
     <>
       <SEO
-        title="Business Loan in India | Apply Online | Waqt Money"
-        description="Apply Business Loan Online with Waqt Money. A Working Capital Loan for MSMEs, startups, and small businesses — minimal documentation, transparent charges, and quick processing."
+        title="Business Loan up to ₹25 Lakhs | 10.49% p.a. | Waqt Money"
+        description="Apply for an unsecured business loan up to ₹25 Lakhs at 10.49%–24% p.a. with Waqt Money. 100% digital process, flexible 12–60 month tenure, no collateral required. Instant approval for MSMEs & startups."
         keywords="Business Loan in India, Apply Business Loan Online, Working Capital Loan, MSME loan, startup business loan, small business loan, unsecured business loan"
+        canonicalUrl="https://waqtmoney.com/loans/business-loan"
         schema={schema}
       />
       <Navbar />

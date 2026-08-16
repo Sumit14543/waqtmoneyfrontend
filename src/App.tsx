@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useParams } from "react-router-dom";
 import { Toaster as Sonner } from "./Components/ui/sonner";
 import {
   HomeFallback,
@@ -8,6 +8,11 @@ import {
   AuthPageFallback,
   KycPageFallback,
   DashboardPageFallback,
+  BlogGridPageFallback,
+  BlogDetailPageFallback,
+  EmiCalculatorPageFallback,
+  AdminTablePageFallback,
+  AdminBlogFormFallback,
 } from "./Components/PageSkeletons";
 import { Toaster } from "./Components/ui/toaster";
 import { TooltipProvider } from "@/Components/ui/tooltip";
@@ -83,6 +88,11 @@ const withSuspense = (
   </Suspense>
 );
 
+const BlogSlugRedirect = () => {
+  const { slug } = useParams();
+  return <Navigate to={`/blog/${slug}`} replace />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -96,44 +106,66 @@ const App = () => (
           <Route path="/services" element={withSuspense(Services, <ContentPageFallback />)} />
           <Route path="/about" element={withSuspense(About, <ContentPageFallback />)} />
           <Route path="/faqs" element={withSuspense(Faqs, <ContentPageFallback />)} />
-          <Route path="/emi-calculator" element={withSuspense(EmiCalculator, <ContentPageFallback />)} />
+          <Route path="/Faqs" element={<Navigate to="/faqs" replace />} />
+
+          <Route path="/emi-calculator" element={withSuspense(EmiCalculator, <EmiCalculatorPageFallback />)} />
+          <Route path="/Emi-Calculator" element={<Navigate to="/emi-calculator" replace />} />
+
           <Route path="/contact" element={withSuspense(Contact, <ContentPageFallback />)} />
+          <Route path="/Contact" element={<Navigate to="/contact" replace />} />
+
           <Route path="/policies" element={withSuspense(Policies, <ContentPageFallback />)} />
+          <Route path="/Policies" element={<Navigate to="/policies" replace />} />
+
           <Route path="/repayment" element={withSuspense(Repayment, <ContentPageFallback />)} />
+          <Route path="/Repayment" element={<Navigate to="/repayment" replace />} />
           <Route path="/repayment/make-payment" element={withSuspense(MakePayment, <ContentPageFallback />)} />
           <Route path="/repayment/reloan-offer" element={withSuspense(ReloanOffer, <ContentPageFallback />)} />
           
           {/* Privacy & Legal Policies */}
           <Route path="/privacy-policy" element={withSuspense(PrivacyPolicy, <ContentPageFallback />)} />
           <Route path="/privacy-policies" element={<Navigate to="/privacy-policy" replace />} />
+          <Route path="/Privacy-Policies" element={<Navigate to="/privacy-policy" replace />} />
+
           <Route path="/terms-conditions" element={withSuspense(TermsConditions, <ContentPageFallback />)} />
           <Route path="/terms-and-conditions" element={<Navigate to="/terms-conditions" replace />} />
           <Route path="/terms" element={<Navigate to="/terms-conditions" replace />} />
           <Route path="/terms-condition" element={<Navigate to="/terms-conditions" replace />} />
+
           <Route path="/grievance-redressal" element={withSuspense(GrievanceRedressal, <ContentPageFallback />)} />
           <Route path="/fair-practices-code" element={withSuspense(FairPracticesCode, <ContentPageFallback />)} />
           <Route path="/refund-policy" element={withSuspense(RefundPolicy, <ContentPageFallback />)} />
           <Route path="/disclaimer" element={withSuspense(Disclaimer, <ContentPageFallback />)} />
           <Route path="/responsible-lending" element={withSuspense(ResponsibleLending, <ContentPageFallback />)} />
 
-          {/* Loan Landing Pages */}
+          {/* Loan Landing Pages (Canonical URLs are under /loans/*) */}
           <Route path="/loans/personal-loan" element={withSuspense(PersonalLoan, <ContentPageFallback />)} />
-          <Route path="/personal-loan" element={withSuspense(PersonalLoan, <ContentPageFallback />)} />
+          <Route path="/personal-loan" element={<Navigate to="/loans/personal-loan" replace />} />
+
           <Route path="/loans/business-loan" element={withSuspense(BusinessLoan, <ContentPageFallback />)} />
-          <Route path="/business-loan" element={withSuspense(BusinessLoan, <ContentPageFallback />)} />
+          <Route path="/business-loan" element={<Navigate to="/loans/business-loan" replace />} />
+
           <Route path="/loans/payday-loan" element={withSuspense(PaydayLoan, <ContentPageFallback />)} />
-          <Route path="/pay-day-loan" element={withSuspense(PaydayLoan, <ContentPageFallback />)} />
-          <Route path="/payday-loan" element={withSuspense(PaydayLoan, <ContentPageFallback />)} />
+          <Route path="/pay-day-loan" element={<Navigate to="/loans/payday-loan" replace />} />
+          <Route path="/payday-loan" element={<Navigate to="/loans/payday-loan" replace />} />
+
           <Route path="/loans/loan-against-property" element={withSuspense(LoanAgainstProperty, <ContentPageFallback />)} />
-          <Route path="/loan-against-property" element={withSuspense(LoanAgainstProperty, <ContentPageFallback />)} />
+          <Route path="/loan-against-property" element={<Navigate to="/loans/loan-against-property" replace />} />
+
           <Route path="/loans/vehicle-loan" element={withSuspense(VehicleLoan, <ContentPageFallback />)} />
-          <Route path="/vehicle-loan" element={withSuspense(VehicleLoan, <ContentPageFallback />)} />
+          <Route path="/vehicle-loan" element={<Navigate to="/loans/vehicle-loan" replace />} />
+
           <Route path="/loans/short-term-loan" element={withSuspense(ShortTermLoan, <ContentPageFallback />)} />
-          <Route path="/short-term-loan" element={withSuspense(ShortTermLoan, <ContentPageFallback />)} />
-          <Route path="/loans/credit-services" element={withSuspense(ShortTermLoan, <ContentPageFallback />)} />
+          <Route path="/short-term-loan" element={<Navigate to="/loans/short-term-loan" replace />} />
+          <Route path="/short-term-loans" element={<Navigate to="/loans/short-term-loan" replace />} />
+
+          <Route path="/loans/credit-services" element={<Navigate to="/loans/short-term-loan" replace />} />
+
           <Route path="/loans/education-loan" element={withSuspense(EducationLoan, <ContentPageFallback />)} />
+          <Route path="/education-loan" element={<Navigate to="/loans/education-loan" replace />} />
+
           <Route path="/loans/medical-loan" element={withSuspense(MedicalLoan, <ContentPageFallback />)} />
-          <Route path="/medical-loan" element={withSuspense(MedicalLoan, <ContentPageFallback />)} />
+          <Route path="/medical-loan" element={<Navigate to="/loans/medical-loan" replace />} />
 
           <Route path="/login" element={withSuspense(Login, <AuthPageFallback />)} />
           <Route path="/user/dashboard" element={withSuspense(LoanDashboard, <DashboardPageFallback />)} />
@@ -158,21 +190,21 @@ const App = () => (
           <Route path="/user/loan-status" element={withSuspense(LoanStatus, <KycPageFallback />)} />
 
           {/* PUBLIC BLOGS */}
-          <Route path="/blog" element={withSuspense(Blog, <ContentPageFallback />)} />
-          <Route path="/blogs" element={withSuspense(Blog, <ContentPageFallback />)} />
-          <Route path="/blog/:slug" element={withSuspense(BlogDetail, <ContentPageFallback />)} />
-          <Route path="/blogs/:slug" element={withSuspense(BlogDetail, <ContentPageFallback />)} />
+          <Route path="/blog" element={withSuspense(Blog, <BlogGridPageFallback />)} />
+          <Route path="/blogs" element={<Navigate to="/blog" replace />} />
+          <Route path="/blog/:slug" element={withSuspense(BlogDetail, <BlogDetailPageFallback />)} />
+          <Route path="/blogs/:slug" element={<BlogSlugRedirect />} />
 
           {/* ADMIN PORTALS */}
           <Route path="/admin" element={withSuspense(AdminLogin, <AuthPageFallback />)} />
           <Route path="/admin/login" element={<Navigate to="/admin" replace />} />
-          <Route path="/admin/dashboard" element={withSuspense(AdminDashboard, <DashboardPageFallback />)} />
-          <Route path="/admin/leads" element={withSuspense(AdminLeads, <DashboardPageFallback />)} />
-          <Route path="/admin/leads/:id" element={withSuspense(AdminLeadDetail, <DashboardPageFallback />)} />
-          <Route path="/admin/contacts" element={withSuspense(AdminContacts, <DashboardPageFallback />)} />
-          <Route path="/admin/blogs" element={withSuspense(AdminBlogs, <DashboardPageFallback />)} />
-          <Route path="/admin/blogs/new" element={withSuspense(AdminBlogForm, <DashboardPageFallback />)} />
-          <Route path="/admin/blogs/edit/:id" element={withSuspense(AdminBlogForm, <DashboardPageFallback />)} />
+          <Route path="/admin/dashboard" element={withSuspense(AdminDashboard, <AdminTablePageFallback />)} />
+          <Route path="/admin/leads" element={withSuspense(AdminLeads, <AdminTablePageFallback />)} />
+          <Route path="/admin/leads/:id" element={withSuspense(AdminLeadDetail, <AdminTablePageFallback />)} />
+          <Route path="/admin/contacts" element={withSuspense(AdminContacts, <AdminTablePageFallback />)} />
+          <Route path="/admin/blogs" element={withSuspense(AdminBlogs, <AdminTablePageFallback />)} />
+          <Route path="/admin/blogs/new" element={withSuspense(AdminBlogForm, <AdminBlogFormFallback />)} />
+          <Route path="/admin/blogs/edit/:id" element={withSuspense(AdminBlogForm, <AdminBlogFormFallback />)} />
 
           <Route path="*" element={withSuspense(NotFound, <ContentPageFallback />)} />
         </Routes>

@@ -75,6 +75,29 @@ DirectoryIndex index.html
   RewriteCond %{HTTPS} !=on
   RewriteRule ^ https://waqtmoney.com%{REQUEST_URI} [R=301,L]
 
+  # 3. Canonical 301 Redirects for Duplicate Loan URLs
+  RewriteRule ^personal-loan/?$ https://waqtmoney.com/loans/personal-loan [R=301,L]
+  RewriteRule ^business-loan/?$ https://waqtmoney.com/loans/business-loan [R=301,L]
+  RewriteRule ^payday-loan/?$ https://waqtmoney.com/loans/payday-loan [R=301,L]
+  RewriteRule ^pay-day-loan/?$ https://waqtmoney.com/loans/payday-loan [R=301,L]
+  RewriteRule ^loan-against-property/?$ https://waqtmoney.com/loans/loan-against-property [R=301,L]
+  RewriteRule ^vehicle-loan/?$ https://waqtmoney.com/loans/vehicle-loan [R=301,L]
+  RewriteRule ^short-term-loan/?$ https://waqtmoney.com/loans/short-term-loan [R=301,L]
+  RewriteRule ^short-term-loans/?$ https://waqtmoney.com/loans/short-term-loan [R=301,L]
+  RewriteRule ^medical-loan/?$ https://waqtmoney.com/loans/medical-loan [R=301,L]
+  RewriteRule ^education-loan/?$ https://waqtmoney.com/loans/education-loan [R=301,L]
+
+  # 4. Canonical 301 Redirects for Case Variations & Legal Pages
+  RewriteRule ^Faqs/?$ https://waqtmoney.com/faqs [R=301,L]
+  RewriteRule ^Emi-Calculator/?$ https://waqtmoney.com/emi-calculator [R=301,L]
+  RewriteRule ^Repayment/?$ https://waqtmoney.com/repayment [R=301,L]
+  RewriteRule ^Policies/?$ https://waqtmoney.com/policies [R=301,L]
+  RewriteRule ^Contact/?$ https://waqtmoney.com/contact [R=301,L]
+  RewriteRule ^Privacy-Policies/?$ https://waqtmoney.com/privacy-policy [R=301,L]
+  RewriteRule ^privacy-policies/?$ https://waqtmoney.com/privacy-policy [R=301,L]
+  RewriteRule ^blogs/?$ https://waqtmoney.com/blog [R=301,L]
+  RewriteRule ^blogs/(.*)$ https://waqtmoney.com/blog/$1 [R=301,L]
+
   # Serve existing physical static files directly
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]

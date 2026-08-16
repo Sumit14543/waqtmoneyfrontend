@@ -62,26 +62,172 @@ export default function LoanAgainstProperty() {
     {
       "@context": "https://schema.org",
       "@type": "FinancialService",
-      "name": "Waqt Money Loan Against Property",
-      "description": "Apply Loan Against Property Online with Waqt Money — a secured Mortgage Loan and Property Loan with high loan-to-value, transparent charges, and flexible tenure.",
-      "url": "https://waqtmoney.com/loans/loan-against-property",
-      "image": "https://waqtmoney.com/waqt-money-logo-img.png",
-      "provider": {
-        "@type": "Organization",
-        "name": "Waqt Finance Pvt Ltd"
+      "@id": "https://waqtmoney.com/#organization",
+      "name": "Waqt Money",
+      "alternateName": "Waqt Finance Pvt Ltd",
+      "url": "https://waqtmoney.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
+        "width": 180,
+        "height": 50
+      },
+      "description": "Waqt Money is an RBI-compliant digital lending platform facilitating personal loans, payday loans, short term loans, business loans, and loan against property through registered NBFC partners.",
+      "telephone": "+91-9217086608",
+      "email": "support@waqtmoney.in",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "H-15, Sector 63",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "addressCountry": "IN"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-9217086608",
+        "email": "support@waqtmoney.in",
+        "contactType": "Customer Service",
+        "availableLanguage": ["English", "Hindi"]
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
       }
     },
     {
       "@context": "https://schema.org",
+      "@type": "LoanOrCredit",
+      "@id": "https://waqtmoney.com/loans/loan-against-property#product",
+      "name": "Waqt Money Loan Against Property",
+      "alternateName": ["Mortgage Loan", "Property Loan", "Secured Loan Against Property"],
+      "loanType": "Loan Against Property",
+      "description": "A secured Loan Against Property (LAP) in India that lets you unlock funds against your residential, commercial, or industrial property without selling it. Apply online with Waqt Money for high loan-to-value, transparent charges, and flexible tenure of up to 20 years.",
+      "url": "https://waqtmoney.com/loans/loan-against-property",
+      "currency": "INR",
+      "loanTerm": {
+        "@type": "QuantitativeValue",
+        "minValue": 60,
+        "maxValue": 240,
+        "unitCode": "MON",
+        "description": "5 to 20 years repayment tenure"
+      },
+      "annualPercentageRate": {
+        "@type": "QuantitativeValue",
+        "minValue": 10.49,
+        "maxValue": 24,
+        "unitCode": "P1",
+        "unitText": "% per annum"
+      },
+      "loanToValue": {
+        "@type": "QuantitativeValue",
+        "minValue": 60,
+        "maxValue": 75,
+        "unitText": "% of property's current market value"
+      },
+      "feesAndCommissionsSpecification": "Processing fee of 1%–2% of loan amount plus applicable taxes. All charges are disclosed before acceptance of the loan offer.",
+      "requiredCollateral": "Residential, commercial, or industrial property pledged as collateral. Borrower retains ownership and use of the property throughout repayment.",
+      "provider": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Salaried individuals (age 21–58, income ₹25,000+/month, credit score 700+) and self-employed/business owners (age 25–65, 3+ years vintage, ₹10L+ annual turnover)"
+      },
+      "eligibilityToApply": "Salaried: Age 21–58 years, minimum ₹25,000/month income, credit score 700+, 2–3 years work experience. Self-employed: Age 25–65 years, minimum 3 years business vintage, ₹10 Lakhs+ annual turnover, credit score 700+. Property documents required: Title Deed, Sale Deed, Approved Building Plan, Property Tax Receipts, Encumbrance Certificate."
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": faqs.map((f) => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": f.a
+      "@id": "https://waqtmoney.com/loans/loan-against-property#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a Loan Against Property?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A Loan Against Property (LAP) is a secured loan where you pledge a residential, commercial, or industrial property as collateral to a financial institution. You retain full ownership and use of the property throughout the repayment period. It is also known as a Mortgage Loan or Property Loan."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Loan Against Property eligibility criteria?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For salaried applicants: Age 21–58 years, minimum monthly income of ₹25,000, credit score of 700+, and 2–3 years of work experience. For self-employed applicants: Age 25–65 years, minimum 3 years of continuous business operations, annual turnover of ₹10 Lakhs or more, and a credit score of 700+."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What documents are required for a Loan Against Property?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Personal KYC: Aadhaar Card, PAN Card, Passport or Voter ID, and address proof. Income documents: Salaried applicants need 3 months salary slips, 6 months bank statement, and Form 16. Self-employed applicants need 2–3 years ITR with computation and audited financials. Property documents: Title Deed or Sale Deed, Approved Building Plan, latest Property Tax Receipts, and Encumbrance Certificate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Loan Against Property interest rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Loan Against Property interest rate generally ranges from 10.49% to 24% per annum, depending on your credit profile, loan amount, tenure, and the lending NBFC partner's assessment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Loan Against Property EMI, and how is it calculated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your EMI (Equated Monthly Instalment) depends on three factors: loan amount, interest rate, and repayment tenure. Use the Waqt Money EMI Calculator at https://waqtmoney.com/emi-calculator for an instant, accurate breakdown of your monthly repayment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the maximum Loan Against Property tenure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The repayment tenure for a Loan Against Property ranges from 5 years to 20 years, offering flexibility to manage EMIs according to your repayment capacity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much can I borrow against my property?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can typically borrow between 60% and 75% of your property's current market value, based on the Loan-to-Value (LTV) ratio. The final amount also depends on your financial profile, income, credit score, and the lending partner's assessment."
+          }
         }
-      }))
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Loans",
+          "item": "https://waqtmoney.com/services"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Loan Against Property",
+          "item": "https://waqtmoney.com/loans/loan-against-property"
+        }
+      ]
     }
   ];
 
@@ -91,6 +237,7 @@ export default function LoanAgainstProperty() {
         title="Loan Against Property in India | Waqt Money"
         description="Apply Loan Against Property Online with Waqt Money — a secured Mortgage Loan and Property Loan with high loan-to-value, transparent charges, and flexible tenure."
         keywords="Loan Against Property in India, Loan Against Property Online, Mortgage Loan, Property Loan, Secured Loan Against Property, Business Loan Against Property, Residential Property Loan, Commercial Property Loan"
+        canonicalUrl="https://waqtmoney.com/loans/loan-against-property"
         schema={schema}
       />
       <Navbar />

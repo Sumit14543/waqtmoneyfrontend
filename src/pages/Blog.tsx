@@ -160,12 +160,138 @@ export default function Blog() {
     }
   };
 
+  const schema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "@id": "https://waqtmoney.com/blog#blog",
+      "name": "Waqt Money Financial Knowledge Hub",
+      "description": "Expert guides and articles on Personal Loans, Business Credit, Payday Advances, CIBIL Score improvement, and Short Term Loans for salaried professionals in India.",
+      "url": "https://waqtmoney.com/blog",
+      "inLanguage": "en-IN",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://waqtmoney.com/#website",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://waqtmoney.com/waqt-money-logo-imgg.png"
+        }
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "@id": "https://waqtmoney.com/blog#articles",
+      "name": "Waqt Money Blog Articles — Page 1",
+      "url": "https://waqtmoney.com/blog",
+      "numberOfItems": 6,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "url": "https://waqtmoney.com/blog/10-mistakes-to-avoid-before-applying-for-an-online-personal-loan",
+          "name": "10 Mistakes to Avoid Before Applying for an Online Personal Loan",
+          "description": "Avoid the top 10 mistakes before applying for an online personal loan. Learn expert tips to improve approval chances and apply with confidence today!",
+          "image": "https://api.waqtmoney.com/uploads/1785934449625-2a5908fd-9c14-41a6-9d2b-ccb2730cbc74.webp"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "url": "https://waqtmoney.com/blog/how-to-compare-personal-loan-offers-and-choose-the-best-one-for-your-needs",
+          "name": "How to Compare Personal Loan Offers and Choose the Best One for Your Needs",
+          "description": "Learn how to compare personal loan offers based on interest rates, EMIs, fees, and eligibility. Choose the best loan and apply online today!",
+          "image": "https://api.waqtmoney.com/uploads/1785993156602-09d03f97-775d-4b0f-923f-5b329010361a.webp"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "url": "https://waqtmoney.com/blog/what-documents-are-required-for-a-personal-loan-in-india",
+          "name": "What Documents Are Required for a Personal Loan in India?",
+          "description": "Learn which documents are required for a personal loan in India. Check the complete list, eligibility, verification process, and apply online today!",
+          "image": "https://api.waqtmoney.com/uploads/1785993480686-4a14cceb-4f96-4b53-857f-eb6a9071c4a3.webp"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "url": "https://waqtmoney.com/blog/how-to-check-your-personal-loan-eligibility-before-applying-online",
+          "name": "How to Check Your Personal Loan Eligibility Before Applying Online",
+          "description": "Learn how to check your personal loan eligibility before applying online. Understand income, CIBIL score, documents, and apply with confidence today!",
+          "image": "https://api.waqtmoney.com/uploads/1785994167108-f539a14b-a519-449b-b66d-b776cdbf845a.webp"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "url": "https://waqtmoney.com/blog/can-you-get-a-personal-loan-with-a-low-cibil-score",
+          "name": "Can You Get a Personal Loan with a Low CIBIL Score?",
+          "description": "Learn how to get a personal loan with a low CIBIL score. Explore eligibility, lender requirements, approval tips, and apply online today!",
+          "image": "https://api.waqtmoney.com/uploads/1785994476562-c8ca83e3-1981-4613-8720-fd9157029977.webp"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "url": "https://waqtmoney.com/blog/salary-advance-loan-vs-payday-loan-key-differences-every-salaried-employee-should-know",
+          "name": "Salary Advance Loan vs Payday Loan: Key Differences Every Salaried Employee Should Know",
+          "description": "Compare salary advance loans vs payday loans to understand eligibility, interest rates, repayment, and choose the right option. Apply online today!",
+          "image": "https://api.waqtmoney.com/uploads/1785910515584-dc41d4d2-7ab6-4cc3-8892-5f0e503a608d.png"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://waqtmoney.com/#website",
+      "name": "Waqt Money",
+      "url": "https://waqtmoney.com",
+      "description": "Waqt Money — Instant Personal Loans, Payday Loans, Business Loans & Financial Guides for Salaried Professionals in India.",
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://waqtmoney.com/blog?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Financial Knowledge Hub",
+          "item": "https://waqtmoney.com/blog"
+        }
+      ]
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-[#faf9ff] font-sans text-slate-900">
       <SEO
         title="Financial Knowledge Hub - Waqt Money"
         description="Expert financial guides on Personal Loans, Business Credit, Payday Advances, and Short Term Loans."
         keywords="financial blog, personal loan tips, business credit, payday loan, short term loan"
+        canonicalUrl="https://waqtmoney.com/blog"
+        schema={schema}
       />
       <Navbar />
 

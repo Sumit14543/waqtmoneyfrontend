@@ -376,6 +376,7 @@ export default function BlogDetail() {
               <SEO
                 title={blog.title}
                 description={blog.excerpt}
+                canonicalUrl={`https://waqtmoney.com/blog/${blog.slug}`}
                 ogType="article"
                 ogImage={getImageUrl(blog.image)}
                 schema={{

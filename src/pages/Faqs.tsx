@@ -12,79 +12,134 @@ const Faqs = () => {
 
   const faqs = [
     {
-      question: "What is a Payday Loan at Waqt Money?",
-      answer:
-        "Waqt Money provides short-term payday loans that help you access a portion of your upcoming salary before your payday. It is designed for salaried individuals who need quick funds for urgent expenses without lengthy paperwork or delays.",
-    },
-    {
-      question: "Who can apply for a Waqt Money loan?",
-      answer:
-        "Any salaried employee aged between 21 to 60 years with a stable monthly income can apply. Applicants must have a valid bank account, PAN card, Aadhaar card, and a steady employment record.",
-    },
-    {
       question: "How much loan amount can I get?",
       answer:
-        "You can avail loans ranging from Rs. 5,000 to Rs. 2,00,000 depending on your salary, repayment capacity, and credit profile. Waqt Money ensures flexible limits to suit your financial needs.",
+        "Loan amounts depend on the product: Personal Loans go up to ₹5,00,000, Business Loans up to ₹10,00,000, Payday Loans up to ₹2,00,000, and Medical Loans up to ₹5,00,000. Your exact eligible amount depends on your income, credit profile, and repayment capacity, confirmed instantly during the application process.",
     },
     {
-      question: "How quickly will I receive the loan?",
+      question: "Who is eligible to apply for a personal loan?",
       answer:
-        "Once your application is approved, the loan amount is usually disbursed within a few hours directly to your bank account. In some cases, it may take up to 24 hours.",
+        "You're eligible if you're an Indian citizen aged 21-58 years, salaried or self-employed, earning a minimum monthly income of ₹15,000, with a valid PAN and Aadhaar card and an active bank account with at least 3 months of transaction history.",
     },
     {
-      question: "What documents are required?",
+      question: "What is the loan tenure?",
       answer:
-        "Basic documents include Aadhaar Card, PAN Card, recent salary slips, and bank statements. In most cases, the process is completely digital with minimal paperwork.",
+        "Tenure varies by product. Personal and Medical Loans run from 3 to 36 months, Business Loans from 6 to 48 months, and Payday Loans from 15 to 90 days (short-term advances can be as short as 7 days). You can choose the tenure that best fits your repayment plan during application.",
     },
     {
-      question: "Is Waqt Money safe and secure?",
+      question: "What interest rate will be charged?",
       answer:
-        "Yes, Waqt Money uses advanced encryption and secure systems to protect your personal and financial data. Your information is never shared without consent.",
-    },
-    {
-      question: "What is the repayment tenure?",
-      answer:
-        "Repayment tenure typically ranges from a few days to one month, aligned with your next salary cycle. Some flexible repayment options may also be available.",
+        "Interest rates start from 11% p.a. on Medical Loans, 12% p.a. on Personal Loans, and 14% p.a. on Business Loans. Payday Loans carry a flat rate starting from 1% per month (or 1% per day for short-term advances under 45 days). Your final rate depends on your credit profile and loan tenure.",
     },
     {
       question: "Are there any hidden charges?",
       answer:
-        "No, Waqt Money maintains full transparency. All fees, interest rates, and charges are clearly communicated before loan approval.",
+        "No. Waqt Money follows a fully transparent pricing model with no hidden charges. There are no pre-closure or foreclosure penalties if you repay early, and all applicable fees are disclosed upfront before you accept the loan offer.",
     },
     {
-      question: "What happens if I miss a repayment?",
+      question: "How long does loan approval take?",
       answer:
-        "Missing a repayment may attract late fees and impact your credit score. We recommend repaying on time or contacting our support team for assistance in case of financial difficulty.",
+        "Approval is typically instant once your details are verified. Funds are disbursed directly to your account within minutes to a few hours after approval, and always within 24 hours.",
     },
     {
-      question: "Can I apply multiple times?",
+      question: "Is the entire process online, or do I need to visit a branch?",
       answer:
-        "Yes, you can apply again after successfully repaying your previous loan. Waqt Money also rewards responsible borrowers with higher limits and better offers.",
+        "The entire process is 100% digital — from application to document upload to disbursement. No branch visit or physical paperwork is required.",
     },
     {
-      question: "Is there any credit score requirement?",
+      question: "What documents are required to apply?",
       answer:
-        "While a good credit score improves approval chances, Waqt Money also considers other factors like income stability and repayment capacity.",
+        "You'll need your PAN card, Aadhaar card (front and back), your last 3 months' salary slips, bank statements for the last 6 months, and a passport-size photograph.",
     },
     {
-      question: "How do I apply for a loan?",
+      question: "Is Waqt Money RBI registered?",
       answer:
-        "You can apply directly through the Waqt Money website by filling out a simple online form. The process takes only a few minutes to complete.",
+        "Yes. Waqt Money facilitates loans in partnership with Waqt Finance Pvt Ltd, an RBI-registered NBFC (RBI Licence No. B.10.00143).",
+    },
+    {
+      question: "Can self-employed individuals apply?",
+      answer:
+        "Yes. Both salaried and self-employed individuals aged 21-58 with a minimum monthly income of ₹15,000 can apply.",
+    },
+    {
+      question: "What is the difference between a personal loan and a payday loan?",
+      answer:
+        "A Personal Loan is meant for larger, planned expenses — up to ₹5,00,000 over 3-36 months. A Payday Loan is a short-term cash advance for urgent needs — up to ₹2,00,000 with tenures as short as 7-90 days, designed to bridge you until your next salary.",
+    },
+    {
+      question: "Can I prepay or foreclose my loan early?",
+      answer:
+        "Yes. There are no pre-closure or foreclosure charges — you can repay your loan early at no extra cost.",
     },
   ];
 
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqs.map((f) => ({
-      "@type": "Question",
-      "name": f.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": f.answer
+  const schema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "FinancialService",
+      "name": "Waqt Money",
+      "description": "Waqt Money provides quick, paperless personal loans, payday cash advances, MSME business credit, and secured loans in partnership with licensed NBFC Waqt Finance Pvt Ltd.",
+      "url": "https://waqtmoney.com",
+      "telephone": "+91-9217086608",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "postalCode": "201301",
+        "addressCountry": "IN"
+      },
+      "priceRange": "₹5,000 - ₹50,000,000"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Waqt Finance Pvt Ltd",
+      "alternateName": "Waqt Money",
+      "url": "https://waqtmoney.com",
+      "logo": "https://waqtmoney.com/waqt-money-logo-img.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-9217086608",
+        "contactType": "customer service",
+        "email": "support@waqtmoney.in",
+        "availableLanguage": [
+          "English",
+          "Hindi"
+        ]
       }
-    }))
-  };
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": f.answer
+        }
+      }))
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "FAQs",
+          "item": "https://waqtmoney.com/faqs"
+        }
+      ]
+    }
+  ];
 
   return (
     <>
@@ -92,6 +147,7 @@ const Faqs = () => {
         title="Frequently Asked Questions (FAQs) - Instant Loan Help"
         description="Have questions about instant payday loans, eligibility criteria, required documents, or payback tenures? Find answers in our comprehensive FAQs guide."
         keywords="loan FAQs, payday loan questions, credit help, Waqt Money FAQ"
+        canonicalUrl="https://waqtmoney.com/faqs"
         schema={schema}
       />
       <Navbar />

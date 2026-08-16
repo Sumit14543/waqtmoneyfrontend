@@ -99,21 +99,178 @@ export default function EmiCalculator() {
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "Waqt Money EMI Calculator",
-      "description": "Calculate loan EMIs, interest details, and APR values using our interactive online calculator.",
-      "url": "https://waqtmoney.com/emi-calculator"
+      "@id": "https://waqtmoney.com/emi-calculator#page",
+      "name": "EMI Calculator — Instant Loan Cost Estimator | Waqt Money",
+      "description": "Estimate monthly EMIs, total interest payouts, and Annual Percentage Rate (APR) instantly for payday and personal loans with the Waqt Money Loan EMI Calculator.",
+      "url": "https://waqtmoney.com/emi-calculator",
+      "inLanguage": "en-IN",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://waqtmoney.com/#website",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money"
+      },
+      "mainEntity": {
+        "@id": "https://waqtmoney.com/emi-calculator#faq"
+      }
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": faqs.map((f) => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": f.a
+      "@id": "https://waqtmoney.com/emi-calculator#faq",
+      "isPartOf": {
+        "@id": "https://waqtmoney.com/emi-calculator#page"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an EMI, and how is it calculated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "EMI stands for Equated Monthly Installment. It is a fixed payment amount made by a borrower to a lender at a specified date each calendar month. EMIs consist of both interest and principal components. The standard formula used to calculate EMIs is: E = P * r * (1 + r)^n / ((1 + r)^n - 1), where E is the EMI, P is the principal loan amount, r is the monthly interest rate, and n is the loan tenure in months."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between simple interest and reducing balance EMI calculations?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Under flat simple interest, the interest is calculated on the initial principal throughout the tenure. In reducing balance calculations, the interest is calculated only on the remaining outstanding principal at the end of each payment cycle, making it more cost-effective as the principal is repaid."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Annual Percentage Rate (APR)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Annual Percentage Rate (APR) represents the true annual cost of borrowing, including both the interest rate and any upfront fees (such as processing and documentation fees). It is expressed as a percentage to help you compare the real costs of different loan products."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does pre-paying my loan affect the EMI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pre-paying a part of your outstanding loan reduces the remaining principal balance. You can choose to either lower your monthly EMI amount (keeping the tenure same) or reduce your loan tenure (keeping the EMI amount same), saving on overall interest costs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do floating interest rates impact EMIs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Floating interest rates are linked to market benchmarks (like Repo rates). If the benchmark rate increases, the interest rate on your loan increases. Lenders typically adjust this by extending the loan tenure while keeping the monthly EMI constant, or by increasing the EMI amount."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I choose my own EMI payment due date?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Due dates are typically set by the lending partner and aligned with your monthly salary credit date (usually between the 1st and 7th of the month) to ensure prompt repayments and prevent bounce incidents."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What charges are applied if an EMI payment bounces?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An EMI bounce triggers both bank ECS/NACH bounce charges (charged by your bank) and late payment penalties (charged by the lender), and negatively impacts your credit score."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does using an EMI calculator guarantee loan approval?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, the EMI calculator is an illustrative tool to help you estimate costs. Loan approvals are subject to credit evaluations, KYC verification, and risk assessments conducted by the lending partners."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is an amortization schedule?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An amortization schedule is a detailed table showing each periodic payment on a loan. It breaks down each payment into the amount going toward interest and the amount going toward the principal balance."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the loan tenure affect the total interest payout?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A longer tenure reduces your monthly EMI amount, but increases the total interest paid over the life of the loan. A shorter tenure increases the monthly EMI but minimizes overall interest costs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are processing fees included in the EMI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, processing fees are typically one-time charges deducted upfront from the disbursed loan amount. They are not added to your monthly EMIs but are factored into the loan's APR."
+          }
         }
-      }))
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "@id": "https://waqtmoney.com/emi-calculator#app",
+      "name": "Waqt Money EMI Calculator",
+      "description": "Free online loan EMI calculator for payday and personal loans. Instantly compute monthly EMIs, total interest payable, and Annual Percentage Rate (APR) for loan amounts from ₹5,000 to ₹2,00,000 with tenures of 7 to 45 days.",
+      "url": "https://waqtmoney.com/emi-calculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "en-IN",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://waqtmoney.com/#website",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "author": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "legalName": "Waqt Finance Pvt Ltd"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "description": "Free online tool — no registration required"
+      },
+      "featureList": [
+        "Calculate monthly EMI for loan amounts ₹5,000 to ₹2,00,000",
+        "Tenure range: 7 to 45 days",
+        "Interest rate range: 1% to 3% per day",
+        "Real-time total interest and APR computation",
+        "Interactive sliders and visual donut chart breakdown"
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "EMI Calculator",
+          "item": "https://waqtmoney.com/emi-calculator"
+        }
+      ]
     }
   ];
 
@@ -123,6 +280,7 @@ export default function EmiCalculator() {
         title="EMI Calculator - Instant Loan Cost Estimator"
         description="Estimate your monthly EMIs, total interest payouts, and Annual Percentage Rate (APR) instantly with our easy-to-use Waqt Money Loan Calculator."
         keywords="loan EMI calculator, salary loan interest, calculate loan APR, credit cost calculator"
+        canonicalUrl="https://waqtmoney.com/emi-calculator"
         schema={schema}
       />
       <Navbar />

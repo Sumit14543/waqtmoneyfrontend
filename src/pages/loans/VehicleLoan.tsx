@@ -72,26 +72,176 @@ export default function VehicleLoan() {
     {
       "@context": "https://schema.org",
       "@type": "FinancialService",
+      "@id": "https://waqtmoney.com/#organization",
+      "name": "Waqt Money",
+      "alternateName": "Waqt Finance Pvt Ltd",
+      "url": "https://waqtmoney.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
+        "width": 180,
+        "height": 50
+      },
+      "description": "Waqt Money is an RBI-compliant digital lending platform facilitating personal loans, payday loans, short term loans, business loans, vehicle loans, and loan against property through registered NBFC partners.",
+      "telephone": "+91-9217086608",
+      "email": "support@waqtmoney.in",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "H-15, Sector 63",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "addressCountry": "IN"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-9217086608",
+        "email": "support@waqtmoney.in",
+        "contactType": "Customer Service",
+        "availableLanguage": ["English", "Hindi"]
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "LoanOrCredit",
+      "@id": "https://waqtmoney.com/loans/vehicle-loan#product",
       "name": "Waqt Money Vehicle Loan",
-      "description": "Apply Vehicle Loan Online with Waqt Money. Get a Car Loan or Bike Loan with competitive rates, minimal documentation, and quick approval for new or used vehicles.",
+      "alternateName": ["Car Loan", "Bike Loan", "Two Wheeler Loan", "Auto Loan", "Used Car Loan"],
+      "loanType": "Vehicle Loan",
+      "description": "Apply Vehicle Loan Online with Waqt Money. Get a Car Loan, Bike Loan, or Used Car Loan with competitive interest rates starting from 10.49% p.a., up to 90%–100% of on-road funding for new vehicles, minimal documentation, and quick digital approval.",
       "url": "https://waqtmoney.com/loans/vehicle-loan",
-      "image": "https://waqtmoney.com/waqt-money-logo-img.png",
+      "currency": "INR",
+      "annualPercentageRate": {
+        "@type": "QuantitativeValue",
+        "minValue": 10.49,
+        "maxValue": 24,
+        "unitCode": "P1",
+        "unitText": "% per annum (applicants with credit score 750+ typically qualify for lower rates)"
+      },
+      "loanToValue": {
+        "@type": "QuantitativeValue",
+        "maxValue": 100,
+        "unitText": "% of vehicle on-road price. New vehicles: up to 90–100%. Used vehicles: lower percentage based on vehicle age and value."
+      },
+      "feesAndCommissionsSpecification": "Processing fee: 6%–10% of the loan amount. Late payment charges: 36% per annum on outstanding amount. EMI bounce charges: ₹500 + 18% GST. Penal interest: additional 3% per annum. Documentation charges: ₹500–₹5,000. All fees and charges attract GST at 18%. Part-prepayment available from ₹10,000 or one EMI (whichever is higher). Foreclosure requests require 15 days advance notice.",
+      "requiredCollateral": "The financed vehicle serves as collateral/security for the loan until full repayment. Applicable to new and used cars, bikes, two-wheelers, and commercial vehicles.",
       "provider": {
         "@type": "Organization",
-        "name": "Waqt Finance Pvt Ltd"
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Salaried (age 21–58, income ₹25,000+/month, credit score 700+, 1+ year experience) and self-employed (age 25–65, 3+ years business vintage, ₹10L+ annual turnover, 2 years ITR) individuals in India purchasing new or used vehicles."
+      },
+      "eligibilityToApply": "Salaried: Age 21–58 years, minimum ₹25,000/month income, credit score 700+, 1+ year total experience (minimum 6 months in current role). Self-employed: Age 25–65 years, 3+ years business vintage, minimum ₹10 Lakhs annual turnover, ITR filed for last 2 years. Documents: Aadhaar Card, PAN Card, address proof, salary slips or ITR, bank statements (6 months), and vehicle invoice or dealer quotation.",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://waqtmoney.com/waqt-money-logo-img.png"
       }
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": faqs.map((f) => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": f.a
+      "@id": "https://waqtmoney.com/loans/vehicle-loan#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a Vehicle Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A Vehicle Loan is financing that helps you purchase a car, bike, or commercial vehicle without paying the full amount upfront. You pay a portion as a down payment and borrow the rest, repaying through monthly EMIs over a chosen tenure. The vehicle serves as collateral until the loan is fully repaid."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Vehicle Loan eligibility criteria?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For salaried applicants: Age 21–58 years, minimum monthly income of ₹25,000, credit score of 700+, and at least 1 year of work experience (6 months in current role). For self-employed applicants: Age 25–65 years, minimum 3 years of business operations, annual turnover of ₹10 Lakhs or more, and ITR filed for the last 2 years."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What documents are required for a Vehicle Loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You'll need: Identity proof (Aadhaar Card, PAN Card, Voter ID), address proof (utility bills or passport), income proof (3 months salary slips + 6 months bank statement + Form 16/ITR), and vehicle-related documents (dealer invoice or quotation and driving licence)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Vehicle Loan interest rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vehicle Loan interest rates generally range from 10.49% to 24% per annum, depending on your credit score, employment type, income, and existing debt. Applicants with a credit score of 750 or above typically qualify for rates closer to the lower end of this range."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Vehicle Loan EMI, and how is it calculated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your EMI depends on three factors: the loan amount, interest rate, and repayment tenure. Use the Waqt Money EMI Calculator at https://waqtmoney.com/emi-calculator for an instant breakdown of your monthly installment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Vehicle Loan tenure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vehicle Loan tenure is flexible and chosen based on your repayment capacity. A shorter tenure reduces total interest paid over the loan period, while a longer tenure keeps your monthly EMI lighter. The exact tenure available is confirmed at the time of loan approval."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I get a Car Loan for a used vehicle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — Waqt Money offers financing for both new and used vehicles. For used vehicles, the loan amount, interest rate, and tenure are adjusted based on the vehicle's age and current market value. New vehicles typically qualify for a higher loan-to-value ratio (up to 90–100% of on-road price)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I prepay my Bike Loan or Car Loan early?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Part-prepayment is available from ₹10,000 or one EMI (whichever is higher). Foreclosure requests should be submitted at least 15 days in advance. Applicable charges, if any, are outlined in your loan agreement. Contact support at support@waqtmoney.in or +91-9217086608 for details."
+          }
         }
-      }))
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Loans",
+          "item": "https://waqtmoney.com/services"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Vehicle Loan",
+          "item": "https://waqtmoney.com/loans/vehicle-loan"
+        }
+      ]
     }
   ];
 
@@ -101,6 +251,7 @@ export default function VehicleLoan() {
         title="Vehicle Loan in India | Car & Bike Loan Online | Waqt Money"
         description="Apply Vehicle Loan Online with Waqt Money. Get a Car Loan or Bike Loan with competitive rates, minimal documentation, and quick approval for new or used vehicles."
         keywords="Vehicle Loan Online, Car Loan, Bike Loan, Vehicle Finance, Used Car Loan, Two Wheeler Loan, Auto Loan India"
+        canonicalUrl="https://waqtmoney.com/loans/vehicle-loan"
         schema={schema}
       />
       <Navbar />

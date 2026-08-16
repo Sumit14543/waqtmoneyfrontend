@@ -98,20 +98,127 @@ const Contact = () => {
     }
   };
 
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    "name": "Contact Waqt Money",
-    "description": "Get in touch with Waqt Money customer support for quick payday and personal loan assistance.",
-    "url": "https://waqtmoney.com/contact",
-    "contactPoint": {
-      "@type": "ContactPoint",
+  const schema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "FinancialService",
+      "@id": "https://waqtmoney.com/#organization",
+      "name": "Waqt Money",
+      "alternateName": "Waqt Finance Pvt Ltd",
+      "url": "https://waqtmoney.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
+        "width": 180,
+        "height": 50
+      },
+      "description": "Waqt Money is an RBI-compliant digital lending platform offering Personal Loans, Business Loans, Payday Loans, Short Term Loans, Loan Against Property, Vehicle Loans, and Medical Loans through registered NBFC partners.",
       "telephone": "+91-9217086608",
-      "contactType": "customer service",
       "email": "support@waqtmoney.in",
-      "availableLanguage": ["English", "Hindi"]
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
+        "addressLocality": "Noida",
+        "addressRegion": "Uttar Pradesh",
+        "addressCountry": "IN"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday", "Tuesday", "Wednesday",
+            "Thursday", "Friday", "Saturday"
+          ],
+          "opens": "09:00",
+          "closes": "19:00"
+        }
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-9217086608",
+        "email": "support@waqtmoney.in",
+        "contactType": "Customer Service",
+        "areaServed": "IN",
+        "availableLanguage": ["English", "Hindi"]
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      "@id": "https://waqtmoney.com/contact#page",
+      "name": "Contact Waqt Money — Customer Support & Office Location",
+      "description": "Contact Waqt Money customer support at +91-9217086608 or support@waqtmoney.in. Our office is located at H-15 BSI Business Park, Sector 63, Noida, Uttar Pradesh. Available Monday to Saturday, 9 AM – 7 PM.",
+      "url": "https://waqtmoney.com/contact",
+      "inLanguage": "en-IN",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://waqtmoney.com/#website",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com"
+      },
+      "mainEntity": {
+        "@type": "Organization",
+        "@id": "https://waqtmoney.com/#organization",
+        "name": "Waqt Money",
+        "url": "https://waqtmoney.com",
+        "telephone": "+91-9217086608",
+        "email": "support@waqtmoney.in",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
+          "addressLocality": "Noida",
+          "addressRegion": "Uttar Pradesh",
+          "addressCountry": "IN"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday", "Tuesday", "Wednesday",
+              "Thursday", "Friday", "Saturday"
+            ],
+            "opens": "09:00",
+            "closes": "19:00"
+          }
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91-9217086608",
+          "email": "support@waqtmoney.in",
+          "contactType": "Customer Service",
+          "areaServed": "IN",
+          "availableLanguage": ["English", "Hindi"]
+        }
+      },
+      "potentialAction": {
+        "@type": "CommunicateAction",
+        "target": "https://waqtmoney.com/contact",
+        "name": "Send a message to Waqt Money support"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://waqtmoney.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Contact Us",
+          "item": "https://waqtmoney.com/contact"
+        }
+      ]
     }
-  };
+  ];
 
   return (
     <>
@@ -119,6 +226,7 @@ const Contact = () => {
         title="Contact Us - Customer Support & Office Location"
         description="Contact Waqt Money support. Call +91 9217086608, email support@waqtmoney.in, or visit our registered corporate office in Sector 63, Noida (UP) for assistance."
         keywords="contact Waqt Money, customer support number, office location, loan helpdesk"
+        canonicalUrl="https://waqtmoney.com/contact"
         schema={schema}
       />
       <Navbar />
@@ -144,43 +252,54 @@ const Contact = () => {
               <div className="space-y-5">
 
                 {/* Address */}
-                <div className="flex items-start gap-4 p-5 rounded-xl bg-white dark:bg-slate-900 shadow-md hover:shadow-lg transition">
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                    <MapPin className="text-blue-700 dark:text-blue-300" />
+                <a
+                  href="https://maps.google.com/?q=H-15+BSI+Business+Park+Sector+63+Noida+UP"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-start gap-4 p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-md hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition cursor-pointer"
+                >
+                  <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <MapPin className="text-blue-700 dark:text-blue-300 group-hover:text-white transition-colors" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">Office Location</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Office Location</h3>
                     <p className="text-gray-600 dark:text-slate-400 text-sm">
                      H-15 BSI Business Park, H Block, Sector 63, Noida <br /> Uttar Pradesh, India
                     </p>
                   </div>
-                </div>
+                </a>
 
                 {/* Contact */}
-                <div className="flex items-start gap-4 p-5 rounded-xl bg-white dark:bg-slate-900 shadow-md hover:shadow-lg transition">
-                  <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-                    <Phone className="text-green-700 dark:text-green-300" />
+                <a
+                  href="tel:+919217086608"
+                  className="group flex items-start gap-4 p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-md hover:shadow-lg hover:border-green-300 dark:hover:border-green-700 transition cursor-pointer"
+                >
+                  <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg group-hover:bg-green-600 group-hover:text-white transition-colors">
+                    <Phone className="text-green-700 dark:text-green-300 group-hover:text-white transition-colors" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">Call Us</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">Call Us</h3>
                     <p className="text-gray-600 dark:text-slate-400 text-sm">
                       +91 9217086608
                     </p>
                   </div>
-                </div>
+                </a>
 
                 {/* Email */}
-                <div className="flex items-start gap-4 p-5 rounded-xl bg-white dark:bg-slate-900 shadow-md hover:shadow-lg transition">
-                  <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <Mail className="text-purple-700 dark:text-purple-300" />
+                <a
+                  href="mailto:support@waqtmoney.in"
+                  className="group flex items-start gap-4 p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-md hover:shadow-lg hover:border-purple-300 dark:hover:border-purple-700 transition cursor-pointer"
+                >
+                  <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                    <Mail className="text-purple-700 dark:text-purple-300 group-hover:text-white transition-colors" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">Email Support</h3>
-                    <p className="text-gray-600 dark:text-slate-400 text-sm">
+                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Email Support</h3>
+                    <p className="text-gray-600 dark:text-slate-400 text-sm truncate">
                       support@waqtmoney.in
                     </p>
                   </div>
-                </div>
+                </a>
 
                 {/* Hours */}
                 <div className="flex items-start gap-4 p-5 rounded-xl bg-white dark:bg-slate-900 shadow-md hover:shadow-lg transition">

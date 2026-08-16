@@ -4,6 +4,7 @@ import { ArrowRightCircle, CalendarDays, ChevronDown, FileText, Lock, Zap } from
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import BrandLogo from "@/Components/BrandLogo";
+import SEO from "@/Components/SEO";
 
 import { API_BASE_URL, getApiHeaders, normalizeApiMessage } from "@/config/api";
 import { captureBackgroundLocation, initiateBackgroundLocationCapture, BackgroundLocationResult } from "@/utils/backgroundLocation";
@@ -122,7 +123,6 @@ const Apply = () => {
 
     if (field === "salary") {
       if (!salary) return "Please enter your monthly salary.";
-      if (salaryAmount < MIN_SALARY) return `Salary less than ${formatCurrency(MIN_SALARY)} is not accepted.`;
     }
 
     if (field === "loanAmount") {
@@ -187,13 +187,6 @@ const Apply = () => {
 
     if (!salary) {
       return { message: "Please enter your monthly salary.", field: "salary" };
-    }
-
-    if (salaryAmount < MIN_SALARY) {
-      return {
-        message: `Salary less than ${formatCurrency(MIN_SALARY)} is not accepted.`,
-        field: "salary",
-      };
     }
 
     if (!loanAmount) {
@@ -871,6 +864,12 @@ const Apply = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f3f6fa]">
+      <SEO
+        title="Apply Online for Instant Loan - Waqt Money"
+        description="Apply for fast instant personal and payday loans online with Waqt Money."
+        canonicalUrl="https://waqtmoney.com/user/apply"
+        robots="noindex, nofollow"
+      />
       <Navbar />
 
       <div className="flex-1 px-3 pb-16 pt-24 sm:px-4 md:pt-28">
@@ -943,10 +942,11 @@ const Apply = () => {
                       data-next-field="salary"
                       aria-pressed={employment === "salaried"}
                       onClick={() => setEmployment("salaried")}
-                      className={`h-[47px] rounded-lg border text-sm font-bold transition ${employment === "salaried"
+                      className={`h-[47px] rounded-lg border text-sm font-bold transition ${
+                        employment === "salaried"
                           ? "border-[#8048e2] bg-[#8048e2] text-white shadow-[0_9px_18px_rgba(128,72,226,0.22)]"
                           : "border-[#d8c5ff] bg-white text-[#62718a]"
-                        }`}
+                      }`}
                     >
                       Salaried
                     </button>
@@ -957,10 +957,11 @@ const Apply = () => {
                       data-next-field="salary"
                       aria-pressed={employment === "self"}
                       onClick={() => setEmployment("self")}
-                      className={`h-[47px] rounded-lg border text-sm font-bold transition ${employment === "self"
+                      className={`h-[47px] rounded-lg border text-sm font-bold transition ${
+                        employment === "self"
                           ? "border-[#8048e2] bg-[#8048e2] text-white shadow-[0_9px_18px_rgba(128,72,226,0.22)]"
                           : "border-[#d8c5ff] bg-white text-[#62718a]"
-                        }`}
+                      }`}
                     >
                       Self Employed
                     </button>
@@ -988,15 +989,11 @@ const Apply = () => {
                         clearFieldError("salary");
                       }}
                       onBlur={() => handleFieldBlur("salary")}
-                      placeholder="10,000"
+                      placeholder="25,000"
                       className="min-w-0 flex-1 px-4 text-base font-semibold text-[#071d3a] outline-none"
                     />
                   </div>
-                  {renderFieldError("salary") || (
-                    <p className="mt-2 text-xs font-medium text-[#718096]">
-                      Minimum monthly salary: {formatCurrency(MIN_SALARY)}
-                    </p>
-                  )}
+                  {renderFieldError("salary")}
                 </div>
 
                 <div>
