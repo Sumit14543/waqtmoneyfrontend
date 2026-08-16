@@ -213,25 +213,6 @@ const BasicDetailsForm = () => {
                 />
                 {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
               </div>
-
-
-
-              <div>
-                <label className="text-sm font-bold text-[#071d3a]">Income Received In</label>
-                <div className="mt-2 grid grid-cols-1 gap-2 sm:gap-3">
-                  {["Account"].map((type) => (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => setIncomeType(type)}
-                      className="h-[44px] w-full rounded-lg border border-[#8048e2] bg-[#8048e2] text-sm font-bold text-white transition"
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-                {errors.incomeType && <p className="mt-1 text-sm text-red-500">{errors.incomeType}</p>}
-              </div>
             </div>
 
             <button
