@@ -100,100 +100,12 @@ const Contact = () => {
 
   const schema = [
     {
-      "@context": "https://schema.org",
-      "@type": "FinancialService",
-      "@id": "https://waqtmoney.com/#organization",
-      "name": "Waqt Money",
-      "alternateName": "Waqt Finance Pvt Ltd",
-      "url": "https://waqtmoney.com",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
-        "width": 180,
-        "height": 50
-      },
-      "description": "Waqt Money is an RBI-compliant digital lending platform offering Personal Loans, Business Loans, Payday Loans, Short Term Loans, Loan Against Property, Vehicle Loans, and Medical Loans through registered NBFC partners.",
-      "telephone": "+91-9217086608",
-      "email": "support@waqtmoney.in",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
-        "addressLocality": "Noida",
-        "addressRegion": "Uttar Pradesh",
-        "addressCountry": "IN"
-      },
-      "openingHoursSpecification": [
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": [
-            "Monday", "Tuesday", "Wednesday",
-            "Thursday", "Friday", "Saturday"
-          ],
-          "opens": "09:00",
-          "closes": "19:00"
-        }
-      ],
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+91-9217086608",
-        "email": "support@waqtmoney.in",
-        "contactType": "Customer Service",
-        "areaServed": "IN",
-        "availableLanguage": ["English", "Hindi"]
-      },
-      "areaServed": {
-        "@type": "Country",
-        "name": "India"
-      }
-    },
-    {
-      "@context": "https://schema.org",
       "@type": "ContactPage",
       "@id": "https://waqtmoney.com/contact#page",
       "name": "Contact Waqt Money — Customer Support & Office Location",
       "description": "Contact Waqt Money customer support at +91-9217086608 or support@waqtmoney.in. Our office is located at H-15 BSI Business Park, Sector 63, Noida, Uttar Pradesh. Available Monday to Saturday, 9 AM – 7 PM.",
       "url": "https://waqtmoney.com/contact",
       "inLanguage": "en-IN",
-      "isPartOf": {
-        "@type": "WebSite",
-        "@id": "https://waqtmoney.com/#website",
-        "name": "Waqt Money",
-        "url": "https://waqtmoney.com"
-      },
-      "mainEntity": {
-        "@type": "Organization",
-        "@id": "https://waqtmoney.com/#organization",
-        "name": "Waqt Money",
-        "url": "https://waqtmoney.com",
-        "telephone": "+91-9217086608",
-        "email": "support@waqtmoney.in",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
-          "addressLocality": "Noida",
-          "addressRegion": "Uttar Pradesh",
-          "addressCountry": "IN"
-        },
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": [
-              "Monday", "Tuesday", "Wednesday",
-              "Thursday", "Friday", "Saturday"
-            ],
-            "opens": "09:00",
-            "closes": "19:00"
-          }
-        ],
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "telephone": "+91-9217086608",
-          "email": "support@waqtmoney.in",
-          "contactType": "Customer Service",
-          "areaServed": "IN",
-          "availableLanguage": ["English", "Hindi"]
-        }
-      },
       "potentialAction": {
         "@type": "CommunicateAction",
         "target": "https://waqtmoney.com/contact",
@@ -201,7 +113,6 @@ const Contact = () => {
       }
     },
     {
-      "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
         {

@@ -35,6 +35,48 @@ export default function SEO({
   const currentUrl = (canonicalUrl || fallbackUrl).toLowerCase();
   const fullTitle = title.includes("Waqt Money") ? title : `${title} | ${SITE_NAME}`;
 
+  // Format schema cleanly into valid JSON-LD graph structure without duplicates
+  const formatSchema = (input: SchemaType) => {
+    if (!input) return null;
+    const list: Record<string, unknown>[] = Array.isArray(input) ? input : [input];
+
+    // Remove duplicates based on @type and @id or name
+    const seenTypes = new Set<string>();
+    const deduplicatedList: Record<string, unknown>[] = [];
+
+    list.forEach((item) => {
+      if (!item || typeof item !== "object") return;
+      const typeStr = String(item["@type"] || "");
+      const key = item["@id"] ? String(item["@id"]) : typeStr;
+      
+      // Deduplicate identical FinancialService or Organization schemas across subpages
+      if (typeStr === "FinancialService" || typeStr === "Organization") {
+        if (seenTypes.has(typeStr)) return;
+        seenTypes.add(typeStr);
+      } else if (key) {
+        if (seenTypes.has(key)) return;
+        seenTypes.add(key);
+      }
+
+      // Clean redundant inner @context
+      const cleanItem = { ...item };
+      delete cleanItem["@context"];
+      deduplicatedList.push(cleanItem);
+    });
+
+    if (deduplicatedList.length === 0) return null;
+    if (deduplicatedList.length === 1 && !Array.isArray(input)) {
+      return { "@context": "https://schema.org", ...deduplicatedList[0] };
+    }
+
+    return {
+      "@context": "https://schema.org",
+      "@graph": deduplicatedList
+    };
+  };
+
+  const formattedSchema = schema ? formatSchema(schema) : null;
+
   return (
     <Helmet>
       {/* Basic Metadata */}
@@ -61,9 +103,9 @@ export default function SEO({
       <meta name="twitter:image" content={ogImage} />
 
       {/* JSON-LD Schema Markup */}
-      {schema && (
+      {formattedSchema && (
         <script type="application/ld+json">
-          {JSON.stringify(schema)}
+          {JSON.stringify(formattedSchema)}
         </script>
       )}
     </Helmet>
