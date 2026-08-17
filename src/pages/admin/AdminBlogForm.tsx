@@ -62,12 +62,8 @@ export default function AdminBlogForm() {
   const [activeTab, setActiveTab] = useState<"SETTINGS" | "EEAT" | "SEO">("SETTINGS");
   const [editorMode, setEditorMode] = useState<"VISUAL" | "CODE">("VISUAL");
 
-  // Link Dialog Modal State
-  const [showLinkModal, setShowLinkModal] = useState(false);
-  const [linkUrl, setLinkUrl] = useState("");
-  const [linkText, setLinkText] = useState("");
-
-  // Uncontrolled Editor Ref
+  // Selection Range Ref to preserve selection across button clicks
+  const savedRangeRef = useRef<Range | null>(null);
   const editorDivRef = useRef<HTMLDivElement>(null);
   const initialContentLoadedRef = useRef(false);
 
@@ -89,7 +85,7 @@ export default function AdminBlogForm() {
     return clean;
   };
 
-  // Synchronize editor innerHTML safely without resetting React DOM caret
+  // Synchronize editor innerHTML safely
   const syncContentFromEditor = () => {
     if (editorDivRef.current) {
       const html = editorDivRef.current.innerHTML;
@@ -108,6 +104,27 @@ export default function AdminBlogForm() {
       }, 0);
     }
     setEditorMode(mode);
+  };
+
+  // Selection saving & restoring helpers
+  const saveSelection = () => {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      savedRangeRef.current = sel.getRangeAt(0).cloneRange();
+    }
+  };
+
+  const restoreSelection = () => {
+    if (editorDivRef.current) {
+      editorDivRef.current.focus();
+    }
+    if (savedRangeRef.current) {
+      const sel = window.getSelection();
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(savedRangeRef.current);
+      }
+    }
   };
 
   // Live Clock
@@ -261,61 +278,69 @@ export default function AdminBlogForm() {
 
   // Formatting commands for Rich Text Editor
   const execCmd = (command: string, value: string | undefined = undefined) => {
+    saveSelection();
+    restoreSelection();
     document.execCommand(command, false, value);
     syncContentFromEditor();
   };
 
-  // Open Link Dialog Modal
-  const openLinkDialog = () => {
-    const selection = window.getSelection();
-    let selectedTxt = "";
-    let existingUrl = "";
+  // ADD LINK Handler (Robust selection preservation)
+  const handleAddLink = () => {
+    saveSelection();
 
-    if (selection && selection.rangeCount > 0) {
-      selectedTxt = selection.toString();
-      let node: Node | null = selection.getRangeAt(0).startContainer;
+    const sel = window.getSelection();
+    let existingUrl = "";
+    if (sel && sel.rangeCount > 0) {
+      let node: Node | null = sel.getRangeAt(0).startContainer;
       while (node && node !== editorDivRef.current) {
         if (node.nodeName === "A") {
           existingUrl = (node as HTMLAnchorElement).getAttribute("href") || "";
-          if (!selectedTxt) selectedTxt = node.textContent || "";
           break;
         }
         node = node.parentNode;
       }
     }
 
-    setLinkText(selectedTxt);
-    setLinkUrl(existingUrl || "https://");
-    setShowLinkModal(true);
-  };
+    const inputUrl = window.prompt("Enter website link URL (e.g. https://waqtmoney.com):", existingUrl || "https://");
+    if (inputUrl === null) return;
 
-  // Apply Link from Modal
-  const applyLink = () => {
-    if (!linkUrl.trim()) return;
+    let cleanUrl = inputUrl.trim();
+    if (!cleanUrl) return;
 
-    let formattedUrl = linkUrl.trim();
-    if (!/^https?:\/\//i.test(formattedUrl) && !formattedUrl.startsWith("/") && !formattedUrl.startsWith("#")) {
-      formattedUrl = `https://${formattedUrl}`;
+    if (!/^https?:\/\//i.test(cleanUrl) && !cleanUrl.startsWith("/") && !cleanUrl.startsWith("#")) {
+      cleanUrl = `https://${cleanUrl}`;
     }
 
-    if (linkText.trim()) {
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount > 0 && selection.toString()) {
-        execCmd("createLink", formattedUrl);
-      } else {
-        const linkHtml = `<a href="${formattedUrl}" target="_blank" rel="noopener noreferrer" class="text-purple-600 underline font-semibold hover:text-purple-800">${linkText.trim()}</a>`;
-        execCmd("insertHTML", linkHtml);
-      }
+    restoreSelection();
+
+    // If selection is empty, insert default link text
+    const currentSel = window.getSelection();
+    if (!currentSel || currentSel.isCollapsed || !currentSel.toString()) {
+      const linkHtml = `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="text-purple-600 underline font-semibold hover:text-purple-800">${cleanUrl}</a>`;
+      document.execCommand("insertHTML", false, linkHtml);
     } else {
-      execCmd("createLink", formattedUrl);
+      document.execCommand("createLink", false, cleanUrl);
     }
 
-    setShowLinkModal(false);
+    if (editorDivRef.current) {
+      const links = editorDivRef.current.querySelectorAll("a");
+      links.forEach((a) => {
+        if (a.getAttribute("href") === cleanUrl) {
+          a.setAttribute("target", "_blank");
+          a.setAttribute("rel", "noopener noreferrer");
+          a.className = "text-purple-600 underline font-semibold hover:text-purple-800";
+        }
+      });
+    }
+
     syncContentFromEditor();
   };
 
   // REMOVE LINK Handler (Fix for User Issue #1)
   const handleRemoveLink = () => {
+    saveSelection();
+    restoreSelection();
+
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
       let node: Node | null = selection.getRangeAt(0).startContainer;
@@ -327,15 +352,13 @@ export default function AdminBlogForm() {
           }
           parent?.removeChild(node);
           syncContentFromEditor();
-          setShowLinkModal(false);
           return;
         }
         node = node.parentNode;
       }
     }
 
-    execCmd("unlink");
-    setShowLinkModal(false);
+    document.execCommand("unlink", false);
     syncContentFromEditor();
   };
 
@@ -349,7 +372,7 @@ export default function AdminBlogForm() {
     });
   };
 
-  // Submit Handler (Fix for User Issue #2 - Failed to fetch resilient fallback)
+  // Submit Handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -637,6 +660,7 @@ export default function AdminBlogForm() {
                           {/* Headings */}
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("formatBlock", "<h2>")}
                             className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 font-extrabold text-slate-800 transition flex items-center gap-1"
                             title="Heading 2"
@@ -645,6 +669,7 @@ export default function AdminBlogForm() {
                           </button>
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("formatBlock", "<h3>")}
                             className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 font-bold text-slate-800 transition flex items-center gap-1"
                             title="Heading 3"
@@ -653,6 +678,7 @@ export default function AdminBlogForm() {
                           </button>
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("formatBlock", "<p>")}
                             className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 font-medium text-slate-700 transition"
                             title="Paragraph"
@@ -665,6 +691,7 @@ export default function AdminBlogForm() {
                           {/* Text Styles */}
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("bold")}
                             className="p-1.5 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-900 transition"
                             title="Bold"
@@ -673,6 +700,7 @@ export default function AdminBlogForm() {
                           </button>
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("italic")}
                             className="p-1.5 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-800 transition"
                             title="Italic"
@@ -681,6 +709,7 @@ export default function AdminBlogForm() {
                           </button>
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("underline")}
                             className="p-1.5 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-800 transition"
                             title="Underline"
@@ -693,6 +722,7 @@ export default function AdminBlogForm() {
                           {/* Alignment */}
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("justifyLeft")}
                             className="p-1.5 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-700 transition"
                             title="Align Left"
@@ -701,6 +731,7 @@ export default function AdminBlogForm() {
                           </button>
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("justifyCenter")}
                             className="p-1.5 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-700 transition"
                             title="Align Center"
@@ -709,6 +740,7 @@ export default function AdminBlogForm() {
                           </button>
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("justifyRight")}
                             className="p-1.5 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-700 transition"
                             title="Align Right"
@@ -721,6 +753,7 @@ export default function AdminBlogForm() {
                           {/* Lists & Quote */}
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("insertUnorderedList")}
                             className="p-1.5 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-700 transition flex items-center gap-1"
                             title="Bullet List"
@@ -729,6 +762,7 @@ export default function AdminBlogForm() {
                           </button>
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("insertOrderedList")}
                             className="p-1.5 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-700 transition flex items-center gap-1"
                             title="Numbered List"
@@ -737,6 +771,7 @@ export default function AdminBlogForm() {
                           </button>
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("formatBlock", "blockquote")}
                             className="p-1.5 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-700 transition"
                             title="Blockquote"
@@ -746,11 +781,15 @@ export default function AdminBlogForm() {
 
                           <div className="h-4 w-px bg-slate-200 mx-1" />
 
-                          {/* LINK MANAGEMENT (Fix for User Issue #1) */}
+                          {/* LINK MANAGEMENT */}
                           <button
                             type="button"
-                            onClick={openLinkDialog}
-                            className="px-2.5 py-1 rounded bg-white border border-purple-200 text-purple-700 hover:bg-purple-600 hover:text-white font-bold transition flex items-center gap-1"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              saveSelection();
+                            }}
+                            onClick={handleAddLink}
+                            className="px-2.5 py-1 rounded bg-purple-50 border border-purple-200 text-purple-700 hover:bg-purple-600 hover:text-white font-bold transition flex items-center gap-1 shadow-2xs"
                             title="Insert or Edit Link"
                           >
                             <Link2 size={13} /> Add Link
@@ -758,8 +797,12 @@ export default function AdminBlogForm() {
 
                           <button
                             type="button"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              saveSelection();
+                            }}
                             onClick={handleRemoveLink}
-                            className="px-2.5 py-1 rounded bg-white border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white font-bold transition flex items-center gap-1"
+                            className="px-2.5 py-1 rounded bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white font-bold transition flex items-center gap-1 shadow-2xs"
                             title="Remove Link from selection"
                           >
                             <Unlink size={13} /> Remove Link
@@ -769,6 +812,7 @@ export default function AdminBlogForm() {
 
                           <button
                             type="button"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => execCmd("removeFormat")}
                             className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-purple-50 hover:text-purple-700 text-slate-500 transition"
                             title="Clear Formatting"
@@ -777,7 +821,7 @@ export default function AdminBlogForm() {
                           </button>
                         </div>
 
-                        {/* ContentEditable Document Area (Ref-managed to prevent Enter key jumping to top) */}
+                        {/* ContentEditable Document Area */}
                         <div className="max-h-[550px] overflow-y-auto">
                           <div
                             ref={editorDivRef}
@@ -785,6 +829,8 @@ export default function AdminBlogForm() {
                             suppressContentEditableWarning={true}
                             onInput={syncContentFromEditor}
                             onBlur={syncContentFromEditor}
+                            onKeyUp={saveSelection}
+                            onMouseUp={saveSelection}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
                                 document.execCommand("defaultParagraphSeparator", false, "p");
@@ -807,7 +853,7 @@ export default function AdminBlogForm() {
                 </div>
               </div>
 
-              {/* Right Column (Spans 1 col): Sticky Settings Tabs, Upload, & Readiness */}
+              {/* Right Column: Sticky Settings Tabs, Upload, & Readiness */}
               <div className="space-y-6 lg:sticky lg:top-20 lg:self-start">
                 {/* Settings Tab Selector Bar */}
                 <div className="bg-slate-50 p-1 rounded-2xl border border-slate-200 flex items-center gap-1 text-xs font-bold">
@@ -1090,83 +1136,6 @@ export default function AdminBlogForm() {
             </div>
           </div>
         </form>
-      )}
-
-      {/* LINK MANAGEMENT MODAL (Fix for Issue #1) */}
-      {showLinkModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <Link2 size={18} className="text-purple-600" />
-                Link Manager
-              </h3>
-              <button
-                type="button"
-                onClick={() => setShowLinkModal(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">
-                  Website / URL Address
-                </label>
-                <input
-                  type="text"
-                  placeholder="https://example.com"
-                  value={linkUrl}
-                  onChange={(e) => setLinkUrl(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs text-slate-900 outline-none focus:bg-white focus:ring-2 focus:ring-purple-600"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">
-                  Link Anchor Text (Optional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Click here to read more"
-                  value={linkText}
-                  onChange={(e) => setLinkText(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 outline-none focus:bg-white focus:ring-2 focus:ring-purple-600"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2">
-              <button
-                type="button"
-                onClick={handleRemoveLink}
-                className="px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 text-xs font-bold transition flex items-center gap-1.5"
-              >
-                <Unlink size={14} />
-                Remove Link
-              </button>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowLinkModal(false)}
-                  className="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 text-xs font-bold transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={applyLink}
-                  className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-extrabold transition shadow-sm"
-                >
-                  Apply Link
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       )}
     </AdminLayout>
   );
