@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { API_BASE_URL, getBlogImageUrl } from "@/config/api";
 import { fallbackBlogs } from "@/data/mockBlogs";
+import { getLocalBlogs } from "@/utils/blogStorage";
 
 interface Blog {
   id: number;
@@ -34,15 +35,20 @@ interface Blog {
 // Synchronous helper to resolve blog instantly from local storage or fallback list
 const findInitialBlog = (cleanSlug: string): Blog => {
   if (!cleanSlug) return fallbackBlogs[0] as unknown as Blog;
-  const localCustom = getLocalBlogs();
 
-  // 1. Exact match in local storage custom blogs
-  const foundLocal = localCustom.find(
-    (b) =>
-      (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
-      String(b.id) === cleanSlug
-  );
-  if (foundLocal) return foundLocal as unknown as Blog;
+  try {
+    const localCustom = getLocalBlogs() || [];
+
+    // 1. Exact match in local storage custom blogs
+    const foundLocal = localCustom.find(
+      (b) =>
+        (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
+        String(b.id) === cleanSlug
+    );
+    if (foundLocal) return foundLocal as unknown as Blog;
+  } catch (e) {
+    console.warn("Error reading local custom blogs:", e);
+  }
 
   // 2. Exact match in fallback mock blogs
   const foundFallback = fallbackBlogs.find(
@@ -60,7 +66,7 @@ const findInitialBlog = (cleanSlug: string): Blog => {
       cleanSlug
         .split("-")
         .filter((w) => w.length > 3)
-        .some((word) => b.title.toLowerCase().includes(word) || b.slug.toLowerCase().includes(word))
+        .some((word) => (b.title || "").toLowerCase().includes(word) || (b.slug || "").toLowerCase().includes(word))
   );
   if (partialMatch) return partialMatch as unknown as Blog;
 
