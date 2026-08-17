@@ -34,9 +34,45 @@ interface Blog {
 export default function BlogDetail() {
   const { slug } = useParams<{ slug: string }>();
   const [blog, setBlog] = useState<Blog | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sidebarSearch, setSidebarSearch] = useState("");
+
+  // Synchronous helper to resolve blog instantly from local storage or fallback list
+  const findInitialBlog = (cleanSlug: string): Blog => {
+    const localCustom = getLocalBlogs();
+
+    // 1. Exact match in local storage custom blogs
+    const foundLocal = localCustom.find(
+      (b) =>
+        (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
+        String(b.id) === cleanSlug
+    );
+    if (foundLocal) return foundLocal as unknown as Blog;
+
+    // 2. Exact match in fallback mock blogs
+    const foundFallback = fallbackBlogs.find(
+      (b) =>
+        (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
+        String(b.id) === cleanSlug
+    );
+    if (foundFallback) return foundFallback as unknown as Blog;
+
+    // 3. Partial keyword / slug match in fallback mock blogs
+    const partialMatch = fallbackBlogs.find(
+      (b) =>
+        cleanSlug.includes((b.slug || "").trim().toLowerCase()) ||
+        (b.slug || "").trim().toLowerCase().includes(cleanSlug) ||
+        cleanSlug
+          .split("-")
+          .filter((w) => w.length > 3)
+          .some((word) => b.title.toLowerCase().includes(word) || b.slug.toLowerCase().includes(word))
+    );
+    if (partialMatch) return partialMatch as unknown as Blog;
+
+    // 4. Default fallback to first blog so page NEVER hangs on loading
+    return fallbackBlogs[0] as unknown as Blog;
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -46,33 +82,16 @@ export default function BlogDetail() {
       const decodedSlug = decodeURIComponent(rawSlug);
       const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
 
-      // 1. Instant Synchronous Lookup in Local Storage Custom Blogs & Fallback Blogs
-      const localCustom = getLocalBlogs();
-      let initialFound = (localCustom.find(
-        (b) =>
-          (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
-          String(b.id) === cleanSlug
-      ) as unknown as Blog) || null;
-
-      if (!initialFound) {
-        initialFound = (fallbackBlogs.find(
-          (b) =>
-            (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
-            String(b.id) === cleanSlug
-        ) as unknown as Blog) || null;
-      }
-
-      // If found in local/fallback, display IMMEDIATELY (0ms delay)
-      if (initialFound && isMounted) {
+      // 1. INSTANT SYNCHRONOUS RESOLUTION (0ms delay - NO SPINNER)
+      const initialFound = findInitialBlog(cleanSlug);
+      if (isMounted) {
         setBlog(initialFound);
         setLoading(false);
-      } else {
-        setLoading(true);
       }
 
-      // 2. Fetch latest version from API with 3-second timeout safety guard
+      // 2. Background API Sync with 2.5s Abort Timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
 
       try {
         const response = await fetch(`${API_BASE_URL}/blogs/${cleanSlug}`, {
@@ -81,20 +100,11 @@ export default function BlogDetail() {
         clearTimeout(timeoutId);
         const data = await response.json().catch(() => null);
 
-        if (isMounted) {
-          if (response.ok && data?.success && data?.blog) {
-            setBlog(data.blog);
-          } else if (!initialFound) {
-            const defaultFallback = fallbackBlogs[0] as unknown as Blog;
-            setBlog(defaultFallback);
-          }
+        if (isMounted && response.ok && data?.success && data?.blog) {
+          setBlog(data.blog);
         }
       } catch {
         clearTimeout(timeoutId);
-        if (isMounted && !initialFound) {
-          const defaultFallback = fallbackBlogs[0] as unknown as Blog;
-          setBlog(defaultFallback);
-        }
       } finally {
         if (isMounted) {
           setLoading(false);
