@@ -6,9 +6,10 @@ import SEO from "@/Components/SEO";
 import { Search, Eye, Clock, Flame, X, ArrowRight, Sparkles, BookOpen } from "lucide-react";
 import { API_BASE_URL, getBlogImageUrl } from "@/config/api";
 import { fallbackBlogs } from "@/data/mockBlogs";
+import { getLocalBlogs } from "@/utils/blogStorage";
 
 interface Blog {
-  id: number;
+  id: number | string;
   slug: string;
   title: string;
   excerpt: string;
@@ -19,6 +20,7 @@ interface Blog {
   readTime?: string;
   viewsCount?: string;
   popularRank?: number | null;
+  status?: string;
 }
 
 export default function Blog() {
@@ -45,23 +47,45 @@ export default function Blog() {
       try {
         const response = await fetch(`${API_BASE_URL}/blogs`);
         const data = await response.json().catch(() => null);
+        let loaded: Blog[] = [];
+
         if (response.ok && data?.success && Array.isArray(data?.blogs) && data.blogs.length > 0) {
-          const activeOnly = data.blogs.filter(
-            (b: Record<string, unknown>) => String(b.status || "ACTIVE").toUpperCase() !== "INACTIVE"
-          );
-          setBlogs(activeOnly);
-          setFilteredBlogs(activeOnly);
+          loaded = data.blogs;
         } else {
-          const activeOnly = fallbackBlogs.filter(
-            (b) => String(b.status || "ACTIVE").toUpperCase() !== "INACTIVE"
-          );
-          setBlogs(activeOnly as unknown as Blog[]);
-          setFilteredBlogs(activeOnly as unknown as Blog[]);
+          loaded = fallbackBlogs as unknown as Blog[];
         }
+
+        const localCustom = getLocalBlogs() as unknown as Blog[];
+        const combined = [...localCustom, ...loaded];
+        const uniqueMap = new Map<string, Blog>();
+        combined.forEach((b) => {
+          const key = String(b.id) || b.slug;
+          if (!uniqueMap.has(key)) {
+            uniqueMap.set(key, b);
+          }
+        });
+
+        const activeOnly = Array.from(uniqueMap.values()).filter(
+          (b) => String(b.status || "ACTIVE").toUpperCase() !== "INACTIVE"
+        );
+        setBlogs(activeOnly);
+        setFilteredBlogs(activeOnly);
       } catch (err) {
-        console.error("Failed to load blog posts:", err);
-        setBlogs(fallbackBlogs as unknown as Blog[]);
-        setFilteredBlogs(fallbackBlogs as unknown as Blog[]);
+        const localCustom = getLocalBlogs() as unknown as Blog[];
+        const combined = [...localCustom, ...(fallbackBlogs as unknown as Blog[])];
+        const uniqueMap = new Map<string, Blog>();
+        combined.forEach((b) => {
+          const key = String(b.id) || b.slug;
+          if (!uniqueMap.has(key)) {
+            uniqueMap.set(key, b);
+          }
+        });
+
+        const activeOnly = Array.from(uniqueMap.values()).filter(
+          (b) => String(b.status || "ACTIVE").toUpperCase() !== "INACTIVE"
+        );
+        setBlogs(activeOnly);
+        setFilteredBlogs(activeOnly);
       } finally {
         setLoading(false);
       }

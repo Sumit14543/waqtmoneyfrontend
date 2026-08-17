@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { API_BASE_URL, getBlogImageUrl } from "@/config/api";
 import { fallbackBlogs } from "@/data/mockBlogs";
+import { getLocalBlogs, saveLocalBlog, deleteLocalBlog } from "@/utils/blogStorage";
 
 interface Blog {
   id: number;
@@ -47,26 +48,53 @@ export default function AdminBlogs() {
 
   const fetchBlogs = async () => {
     setLoading(true);
+    const localCustom = getLocalBlogs();
     try {
       const response = await fetch(`${API_BASE_URL}/blogs`);
-      const data = await response.json();
-      if (data.success && Array.isArray(data.blogs) && data.blogs.length > 0) {
-        setBlogs(data.blogs.map((b: AdminBlog) => ({ ...b, status: b.status || "ACTIVE" })));
+      const data = await response.json().catch(() => null);
+      let loadedBlogs: Blog[] = [];
+
+      if (data?.success && Array.isArray(data.blogs) && data.blogs.length > 0) {
+        loadedBlogs = data.blogs.map((b: Record<string, unknown>) => ({
+          id: b.id as number,
+          slug: String(b.slug || ""),
+          title: String(b.title || ""),
+          excerpt: String(b.excerpt || ""),
+          category: String(b.category || "Personal Loan"),
+          author: String(b.author || "Waqt Money Team"),
+          created_at: String(b.created_at || new Date().toISOString()),
+          image: String(b.image || ""),
+          readTime: String(b.readTime || b.read_time || "5 Min Read"),
+          status: String(b.status || "ACTIVE").toUpperCase() === "INACTIVE" ? "INACTIVE" : "ACTIVE"
+        }));
       } else {
-        setBlogs(
-          fallbackBlogs.map((b) => ({
-            ...b,
-            status: "ACTIVE" as const
-          }))
-        );
-      }
-    } catch (err) {
-      setBlogs(
-        fallbackBlogs.map((b) => ({
+        loadedBlogs = fallbackBlogs.map((b) => ({
           ...b,
           status: "ACTIVE" as const
-        }))
-      );
+        }));
+      }
+
+      // Merge custom locally created/edited blogs
+      const combined = [...localCustom, ...loadedBlogs];
+      const uniqueMap = new Map<string, Blog>();
+      combined.forEach((b) => {
+        const key = String(b.id) || b.slug;
+        if (!uniqueMap.has(key)) {
+          uniqueMap.set(key, b as Blog);
+        }
+      });
+
+      setBlogs(Array.from(uniqueMap.values()));
+    } catch (err) {
+      const combined = [...localCustom, ...fallbackBlogs.map((b) => ({ ...b, status: "ACTIVE" as const }))];
+      const uniqueMap = new Map<string, Blog>();
+      combined.forEach((b) => {
+        const key = String(b.id) || b.slug;
+        if (!uniqueMap.has(key)) {
+          uniqueMap.set(key, b as Blog);
+        }
+      });
+      setBlogs(Array.from(uniqueMap.values()));
     } finally {
       setLoading(false);
     }
@@ -76,10 +104,11 @@ export default function AdminBlogs() {
     fetchBlogs();
   }, []);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number | string) => {
     if (!window.confirm("Are you sure you want to delete this blog post?")) return;
 
     setActionLoading(true);
+    deleteLocalBlog(id);
     try {
       const token = localStorage.getItem("admin_token");
       await fetch(`${API_BASE_URL}/blogs/${id}`, {
@@ -88,9 +117,9 @@ export default function AdminBlogs() {
           Authorization: `Bearer ${token}`
         }
       });
-      setBlogs((prev) => prev.filter((b) => b.id !== id));
+      setBlogs((prev) => prev.filter((b) => String(b.id) !== String(id)));
     } catch (err) {
-      setBlogs((prev) => prev.filter((b) => b.id !== id));
+      setBlogs((prev) => prev.filter((b) => String(b.id) !== String(id)));
     } finally {
       setActionLoading(false);
     }
@@ -99,6 +128,8 @@ export default function AdminBlogs() {
   const handleToggleStatus = async (blog: Blog) => {
     const newStatus = blog.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
     setActionLoading(true);
+    saveLocalBlog({ ...blog, status: newStatus });
+
     try {
       const token = localStorage.getItem("admin_token");
       const formData = new FormData();

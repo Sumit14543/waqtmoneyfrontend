@@ -47,6 +47,21 @@ export default function BlogDetail() {
       const decodedSlug = decodeURIComponent(rawSlug);
       const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
 
+      // 1. Check local storage blogs first
+      const localCustom = getLocalBlogs();
+      const foundLocal = localCustom.find(
+        (b) =>
+          (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
+          String(b.id) === cleanSlug
+      );
+
+      if (foundLocal) {
+        setBlog(foundLocal as unknown as Blog);
+        setLoading(false);
+        return;
+      }
+
+      // 2. Fetch from API
       try {
         const response = await fetch(`${API_BASE_URL}/blogs/${cleanSlug}`);
         const data = await response.json().catch(() => null);
