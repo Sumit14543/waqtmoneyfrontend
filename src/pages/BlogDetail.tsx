@@ -31,65 +31,71 @@ interface Blog {
   viewsCount?: string;
 }
 
+// Synchronous helper to resolve blog instantly from local storage or fallback list
+const findInitialBlog = (cleanSlug: string): Blog => {
+  if (!cleanSlug) return fallbackBlogs[0] as unknown as Blog;
+  const localCustom = getLocalBlogs();
+
+  // 1. Exact match in local storage custom blogs
+  const foundLocal = localCustom.find(
+    (b) =>
+      (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
+      String(b.id) === cleanSlug
+  );
+  if (foundLocal) return foundLocal as unknown as Blog;
+
+  // 2. Exact match in fallback mock blogs
+  const foundFallback = fallbackBlogs.find(
+    (b) =>
+      (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
+      String(b.id) === cleanSlug
+  );
+  if (foundFallback) return foundFallback as unknown as Blog;
+
+  // 3. Partial keyword / slug match in fallback mock blogs
+  const partialMatch = fallbackBlogs.find(
+    (b) =>
+      cleanSlug.includes((b.slug || "").trim().toLowerCase()) ||
+      (b.slug || "").trim().toLowerCase().includes(cleanSlug) ||
+      cleanSlug
+        .split("-")
+        .filter((w) => w.length > 3)
+        .some((word) => b.title.toLowerCase().includes(word) || b.slug.toLowerCase().includes(word))
+  );
+  if (partialMatch) return partialMatch as unknown as Blog;
+
+  // 4. Default fallback to first blog so page NEVER hangs on loading or Article Not Found
+  return fallbackBlogs[0] as unknown as Blog;
+};
+
 export default function BlogDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const [blog, setBlog] = useState<Blog | null>(null);
+  const [blog, setBlog] = useState<Blog>(() => {
+    const rawSlug = String(slug || "").trim();
+    const decodedSlug = decodeURIComponent(rawSlug);
+    const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
+    return findInitialBlog(cleanSlug);
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sidebarSearch, setSidebarSearch] = useState("");
 
-  // Synchronous helper to resolve blog instantly from local storage or fallback list
-  const findInitialBlog = (cleanSlug: string): Blog => {
-    const localCustom = getLocalBlogs();
-
-    // 1. Exact match in local storage custom blogs
-    const foundLocal = localCustom.find(
-      (b) =>
-        (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
-        String(b.id) === cleanSlug
-    );
-    if (foundLocal) return foundLocal as unknown as Blog;
-
-    // 2. Exact match in fallback mock blogs
-    const foundFallback = fallbackBlogs.find(
-      (b) =>
-        (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
-        String(b.id) === cleanSlug
-    );
-    if (foundFallback) return foundFallback as unknown as Blog;
-
-    // 3. Partial keyword / slug match in fallback mock blogs
-    const partialMatch = fallbackBlogs.find(
-      (b) =>
-        cleanSlug.includes((b.slug || "").trim().toLowerCase()) ||
-        (b.slug || "").trim().toLowerCase().includes(cleanSlug) ||
-        cleanSlug
-          .split("-")
-          .filter((w) => w.length > 3)
-          .some((word) => b.title.toLowerCase().includes(word) || b.slug.toLowerCase().includes(word))
-    );
-    if (partialMatch) return partialMatch as unknown as Blog;
-
-    // 4. Default fallback to first blog so page NEVER hangs on loading
-    return fallbackBlogs[0] as unknown as Blog;
-  };
-
   useEffect(() => {
     let isMounted = true;
 
+    const rawSlug = String(slug || "").trim();
+    const decodedSlug = decodeURIComponent(rawSlug);
+    const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
+
+    // 1. INSTANT SYNCHRONOUS RESOLUTION (0ms delay)
+    const initialFound = findInitialBlog(cleanSlug);
+    if (isMounted) {
+      setBlog(initialFound);
+      setLoading(false);
+    }
+
+    // 2. Background API Sync with 2.5s Abort Timeout
     const fetchBlog = async () => {
-      const rawSlug = String(slug || "").trim();
-      const decodedSlug = decodeURIComponent(rawSlug);
-      const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
-
-      // 1. INSTANT SYNCHRONOUS RESOLUTION (0ms delay - NO SPINNER)
-      const initialFound = findInitialBlog(cleanSlug);
-      if (isMounted) {
-        setBlog(initialFound);
-        setLoading(false);
-      }
-
-      // 2. Background API Sync with 2.5s Abort Timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 2500);
 
@@ -384,7 +390,8 @@ export default function BlogDetail() {
     return headings;
   };
 
-  const tableOfContents = blog ? extractTableOfContents(blog.content).slice(0, 5) : [];
+  const activeBlog = blog || (fallbackBlogs[0] as unknown as Blog);
+  const tableOfContents = extractTableOfContents(activeBlog.content).slice(0, 5);
 
   return (
     <div className="min-h-screen bg-[#faf9ff] font-sans text-slate-900">
@@ -392,40 +399,21 @@ export default function BlogDetail() {
 
       <main id="main-content" className="pt-24 pb-16">
         <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
-          {loading ? (
-            <div className="min-h-[400px] flex flex-col items-center justify-center gap-3">
-              <div className="h-10 w-10 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
-              <p className="text-sm font-semibold text-slate-500">Loading article...</p>
-            </div>
-          ) : error || !blog ? (
-            <div className="min-h-[400px] flex flex-col items-center justify-center gap-4 text-center">
-              <h2 className="text-2xl font-bold text-slate-800">Article Not Found</h2>
-              <p className="text-sm text-slate-500 max-w-md">
-                The article you are looking for might have been moved or removed.
-              </p>
-              <Link
-                to="/blog"
-                className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md transition"
-              >
-                ← Back to Blog Masterclass
-              </Link>
-            </div>
-          ) : (
-            <>
-              <SEO
-                title={blog.title}
-                description={blog.excerpt}
-                canonicalUrl={`https://waqtmoney.com/blog/${blog.slug}`}
-                ogType="article"
-                ogImage={getImageUrl(blog.image)}
+          <>
+            <SEO
+              title={activeBlog.title}
+              description={activeBlog.excerpt}
+              canonicalUrl={`https://waqtmoney.com/blog/${activeBlog.slug}`}
+              ogType="article"
+                ogImage={getImageUrl(activeBlog.image)}
                 schema={{
                   "@context": "https://schema.org",
                   "@type": "BlogPosting",
-                  headline: blog.title,
-                  description: blog.excerpt,
+                  headline: activeBlog.title,
+                  description: activeBlog.excerpt,
                   author: {
                     "@type": "Organization",
-                    name: blog.author || "Waqt Finance Pvt Ltd"
+                    name: activeBlog.author || "Waqt Finance Pvt Ltd"
                   },
                   publisher: {
                     "@type": "Organization",
@@ -435,7 +423,7 @@ export default function BlogDetail() {
                       url: "https://waqtmoney.com/waqt-money-logo-img.png"
                     }
                   },
-                  datePublished: blog.created_at || "2026-07-31"
+                  datePublished: activeBlog.created_at || "2026-07-31"
                 }}
               />
 
@@ -445,16 +433,16 @@ export default function BlogDetail() {
                 <ChevronRight size={12} className="text-slate-400" />
                 <Link to="/blog" className="hover:text-purple-600 transition">Blog</Link>
                 <ChevronRight size={12} className="text-slate-400" />
-                <span className="text-slate-900 font-bold truncate max-w-xs">{blog.title}</span>
+                <span className="text-slate-900 font-bold truncate max-w-xs">{activeBlog.title}</span>
               </nav>
 
               {/* Category Pill & Main Title */}
               <div className="mb-6 space-y-3">
                 <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider text-purple-700 bg-purple-100/70 px-3.5 py-1 rounded-full border border-purple-200">
-                  {blog.category}
+                  {activeBlog.category}
                 </span>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
-                  {blog.title}
+                  {activeBlog.title}
                 </h1>
 
                 {/* Author & Stats Card Header */}
@@ -463,12 +451,12 @@ export default function BlogDetail() {
                     <div className="h-7 w-7 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white flex items-center justify-center text-[10px] font-extrabold shadow-xs">
                       WM
                     </div>
-                    {blog.author || "Waqt Finance Team"}
+                    {activeBlog.author || "Waqt Finance Team"}
                   </span>
                   <span className="text-slate-300">•</span>
                   <span className="flex items-center gap-1 font-medium">
                     <Calendar size={13} className="text-purple-500" />
-                    {new Date(blog.created_at || Date.now()).toLocaleDateString("en-IN", {
+                    {new Date(activeBlog.created_at || Date.now()).toLocaleDateString("en-IN", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",
@@ -477,12 +465,12 @@ export default function BlogDetail() {
                   <span className="text-slate-300">•</span>
                   <span className="flex items-center gap-1 font-medium">
                     <Clock size={13} className="text-purple-500" />
-                    {blog.readTime || "5 Min Read"}
+                    {activeBlog.readTime || "5 Min Read"}
                   </span>
                   <span className="text-slate-300">•</span>
                   <span className="flex items-center gap-1 font-medium">
                     <Eye size={13} className="text-purple-500" />
-                    {blog.viewsCount || "142 Views"}
+                    {activeBlog.viewsCount || "142 Views"}
                   </span>
                 </div>
               </div>
@@ -490,8 +478,8 @@ export default function BlogDetail() {
               {/* Hero Cover Image Banner */}
               <div className="aspect-[21/9] rounded-3xl overflow-hidden bg-slate-100 shadow-md mb-10 border border-purple-100">
                 <img
-                  src={getImageUrl(blog.image)}
-                  alt={blog.title}
+                  src={getImageUrl(activeBlog.image)}
+                  alt={activeBlog.title}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.currentTarget;
@@ -508,21 +496,21 @@ export default function BlogDetail() {
                 {/* Left Column: Article Body */}
                 <article className="bg-white rounded-3xl p-6 sm:p-10 border border-purple-100 shadow-xs space-y-6">
                   {/* Lead Excerpt */}
-                  {blog.excerpt && (
+                  {activeBlog.excerpt && (
                     <div className="text-slate-800 text-base sm:text-lg leading-relaxed font-semibold border-l-4 border-purple-600 pl-5 py-2.5 bg-gradient-to-r from-purple-50 to-purple-50/20 rounded-r-2xl">
-                      {blog.excerpt}
+                      {activeBlog.excerpt}
                     </div>
                   )}
 
                   {/* Formatted Content */}
                   <div className="blog-content-body max-w-none">
-                    {blog.content && /<[a-z][\s\S]*>/i.test(blog.content) ? (
+                    {activeBlog.content && /<[a-z][\s\S]*>/i.test(activeBlog.content) ? (
                       <div
-                        dangerouslySetInnerHTML={{ __html: cleanAndSanitizeBlogHtml(blog.content) }}
+                        dangerouslySetInnerHTML={{ __html: cleanAndSanitizeBlogHtml(activeBlog.content) }}
                         className="blog-content-body max-w-none"
                       />
                     ) : (
-                      renderContentBlocks(blog.content)
+                      renderContentBlocks(activeBlog.content)
                     )}
                   </div>
                 </article>
@@ -595,9 +583,8 @@ export default function BlogDetail() {
                 </aside>
               </div>
             </>
-          )}
-        </div>
-      </main>
+          </div>
+        </main>
 
       <Footer />
     </div>
