@@ -49,8 +49,12 @@ export default function SEO({
       const typeStr = String(item["@type"] || "");
       const key = item["@id"] ? String(item["@id"]) : typeStr;
       
-      // Deduplicate identical FinancialService or Organization schemas across subpages
-      if (typeStr === "FinancialService" || typeStr === "Organization") {
+      // Skip top-level FinancialService from page-level schemas since index.html already has the master FinancialService schema
+      if (typeStr === "FinancialService") {
+        return;
+      }
+
+      if (typeStr === "Organization") {
         if (seenTypes.has(typeStr)) return;
         seenTypes.add(typeStr);
       } else if (key) {

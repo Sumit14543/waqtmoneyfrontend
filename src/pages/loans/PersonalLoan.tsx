@@ -71,21 +71,11 @@ export default function PersonalLoan() {
 
   const schema = [
     {
-      "@context": "https://schema.org",
-      "@type": "FinancialService",
+      "@type": "LoanOrCredit",
       "name": "Waqt Money Personal Loan",
       "description": "Apply Personal Loan Online with Waqt Money. Access an Unsecured Personal Loan for medical emergency, wedding, home renovation, or debt consolidation.",
       "url": "https://waqtmoney.com/loans/personal-loan",
       "image": "https://waqtmoney.com/waqt-money-logo-img.png",
-      "telephone": "+91-9217086608",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
-        "addressLocality": "Noida",
-        "addressRegion": "Uttar Pradesh",
-        "postalCode": "201301",
-        "addressCountry": "IN"
-      },
       "provider": {
         "@type": "Organization",
         "name": "Waqt Finance Pvt Ltd"

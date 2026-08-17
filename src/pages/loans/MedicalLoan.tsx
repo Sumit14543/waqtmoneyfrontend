@@ -73,12 +73,14 @@ export default function MedicalLoan() {
 
   const schema = [
     {
-      "@context": "https://schema.org",
       "@type": "LoanOrCredit",
-      "name": "Medical Loan",
+      "name": "Medical Loan by Waqt Money",
+      "description": "Need funds for a medical emergency? Apply Medical Loan Online with Waqt Money. Quick approval, minimal documents, and fast disbursal for all your healthcare expenses.",
+      "url": "https://waqtmoney.com/medical-loan",
+      "image": "https://waqtmoney.com/waqt-money-logo-img.png",
       "provider": {
-        "@type": "FinancialService",
-        "name": "Waqt Money"
+        "@type": "Organization",
+        "name": "Waqt Finance Pvt Ltd"
       },
       "amount": {
         "@type": "MonetaryAmount",
@@ -88,18 +90,6 @@ export default function MedicalLoan() {
       "annualPercentageRate": "11.0",
       "loanType": "Medical Loan",
       "areaServed": "IN"
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FinancialService",
-      "name": "Waqt Money Medical Loan",
-      "description": "Need funds for a medical emergency? Apply Medical Loan Online with Waqt Money. Quick approval, minimal documents, and fast disbursal for all your healthcare expenses.",
-      "url": "https://waqtmoney.com/medical-loan",
-      "image": "https://waqtmoney.com/waqt-money-logo-img.png",
-      "provider": {
-        "@type": "Organization",
-        "name": "Waqt Finance Pvt Ltd"
-      }
     },
     {
       "@context": "https://schema.org",

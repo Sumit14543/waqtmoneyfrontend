@@ -126,36 +126,6 @@ export default function BusinessLoan() {
     },
     {
       "@context": "https://schema.org",
-      "@type": "FinancialService",
-      "@id": "https://waqtmoney.com/#organization",
-      "name": "Waqt Money",
-      "alternateName": "Waqt Finance Pvt Ltd",
-      "url": "https://waqtmoney.com",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
-        "width": 200,
-        "height": 60
-      },
-      "description": "Waqt Money is an RBI-compliant digital lending platform facilitating instant personal loans, business loans, and payday loans through NBFC partners.",
-      "sameAs": [],
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "IN"
-      },
-      "contactPoint": [
-        {
-          "@type": "ContactPoint",
-          "telephone": "+91-9217086608",
-          "contactType": "Customer Service",
-          "email": "support@waqtmoney.in",
-          "availableLanguage": ["English", "Hindi"]
-        }
-      ],
-      "knowsAbout": ["Business Loans", "Personal Loans", "MSME Financing", "Digital Lending"]
-    },
-    {
-      "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
         {

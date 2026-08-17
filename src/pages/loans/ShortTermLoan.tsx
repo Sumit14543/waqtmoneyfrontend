@@ -69,43 +69,6 @@ export default function ShortTermLoan() {
 
   const schema = [
     {
-      "@context": "https://schema.org",
-      "@type": "FinancialService",
-      "@id": "https://waqtmoney.com/#organization",
-      "name": "Waqt Money",
-      "alternateName": "Waqt Finance Pvt Ltd",
-      "url": "https://waqtmoney.com",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://waqtmoney.com/waqt-money-logo-imgg.png",
-        "width": 180,
-        "height": 50
-      },
-      "description": "Waqt Money is an RBI-compliant digital lending platform facilitating instant personal loans, payday loans, short term loans, and business loans through registered NBFC partners.",
-      "telephone": "+91-9217086608",
-      "email": "support@waqtmoney.in",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "H-15, Sector 63",
-        "addressLocality": "Noida",
-        "addressRegion": "Uttar Pradesh",
-        "addressCountry": "IN"
-      },
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+91-9217086608",
-        "email": "support@waqtmoney.in",
-        "contactType": "Customer Service",
-        "availableLanguage": ["English", "Hindi"]
-      },
-      "areaServed": {
-        "@type": "Country",
-        "name": "India"
-      },
-      "knowsAbout": ["Short Term Loans", "Payday Loans", "Personal Loans", "Business Loans", "Digital Lending"]
-    },
-    {
-      "@context": "https://schema.org",
       "@type": "LoanOrCredit",
       "@id": "https://waqtmoney.com/loans/short-term-loan#product",
       "name": "Waqt Money Short Term Loan",

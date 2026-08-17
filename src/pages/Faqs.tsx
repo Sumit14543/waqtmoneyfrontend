@@ -75,42 +75,6 @@ const Faqs = () => {
 
   const schema = [
     {
-      "@context": "https://schema.org",
-      "@type": "FinancialService",
-      "name": "Waqt Money",
-      "description": "Waqt Money provides quick, paperless personal loans, payday cash advances, MSME business credit, and secured loans in partnership with licensed NBFC Waqt Finance Pvt Ltd.",
-      "url": "https://waqtmoney.com",
-      "telephone": "+91-9217086608",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
-        "addressLocality": "Noida",
-        "addressRegion": "Uttar Pradesh",
-        "postalCode": "201301",
-        "addressCountry": "IN"
-      },
-      "priceRange": "₹5,000 - ₹50,000,000"
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Waqt Finance Pvt Ltd",
-      "alternateName": "Waqt Money",
-      "url": "https://waqtmoney.com",
-      "logo": "https://waqtmoney.com/waqt-money-logo-img.png",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+91-9217086608",
-        "contactType": "customer service",
-        "email": "support@waqtmoney.in",
-        "availableLanguage": [
-          "English",
-          "Hindi"
-        ]
-      }
-    },
-    {
-      "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": faqs.map((f) => ({
         "@type": "Question",
