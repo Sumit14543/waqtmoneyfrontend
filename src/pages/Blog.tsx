@@ -43,9 +43,16 @@ export default function Blog() {
   ];
 
   useEffect(() => {
+    let isMounted = true;
     const fetchBlogs = async () => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+
       try {
-        const response = await fetch(`${API_BASE_URL}/blogs`);
+        const response = await fetch(`${API_BASE_URL}/blogs`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
         const data = await response.json().catch(() => null);
         let loaded: Blog[] = [];
 
@@ -68,9 +75,12 @@ export default function Blog() {
         const activeOnly = Array.from(uniqueMap.values()).filter(
           (b) => String(b.status || "ACTIVE").toUpperCase() !== "INACTIVE"
         );
-        setBlogs(activeOnly);
-        setFilteredBlogs(activeOnly);
+        if (isMounted) {
+          setBlogs(activeOnly);
+          setFilteredBlogs(activeOnly);
+        }
       } catch (err) {
+        clearTimeout(timeoutId);
         const localCustom = getLocalBlogs() as unknown as Blog[];
         const combined = [...localCustom, ...(fallbackBlogs as unknown as Blog[])];
         const uniqueMap = new Map<string, Blog>();
@@ -84,13 +94,20 @@ export default function Blog() {
         const activeOnly = Array.from(uniqueMap.values()).filter(
           (b) => String(b.status || "ACTIVE").toUpperCase() !== "INACTIVE"
         );
-        setBlogs(activeOnly);
-        setFilteredBlogs(activeOnly);
+        if (isMounted) {
+          setBlogs(activeOnly);
+          setFilteredBlogs(activeOnly);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
     fetchBlogs();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Filter logic

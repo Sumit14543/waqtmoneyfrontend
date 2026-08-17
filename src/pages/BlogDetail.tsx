@@ -39,61 +39,75 @@ export default function BlogDetail() {
   const [sidebarSearch, setSidebarSearch] = useState("");
 
   useEffect(() => {
-    const fetchBlog = async () => {
-      setLoading(true);
-      setError("");
+    let isMounted = true;
 
+    const fetchBlog = async () => {
       const rawSlug = String(slug || "").trim();
       const decodedSlug = decodeURIComponent(rawSlug);
       const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
 
-      // 1. Check local storage blogs first
+      // 1. Instant Synchronous Lookup in Local Storage Custom Blogs & Fallback Blogs
       const localCustom = getLocalBlogs();
-      const foundLocal = localCustom.find(
+      let initialFound = (localCustom.find(
         (b) =>
           (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
           String(b.id) === cleanSlug
-      );
+      ) as unknown as Blog) || null;
 
-      if (foundLocal) {
-        setBlog(foundLocal as unknown as Blog);
-        setLoading(false);
-        return;
+      if (!initialFound) {
+        initialFound = (fallbackBlogs.find(
+          (b) =>
+            (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
+            String(b.id) === cleanSlug
+        ) as unknown as Blog) || null;
       }
 
-      // 2. Fetch from API
+      // If found in local/fallback, display IMMEDIATELY (0ms delay)
+      if (initialFound && isMounted) {
+        setBlog(initialFound);
+        setLoading(false);
+      } else {
+        setLoading(true);
+      }
+
+      // 2. Fetch latest version from API with 3-second timeout safety guard
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+
       try {
-        const response = await fetch(`${API_BASE_URL}/blogs/${cleanSlug}`);
+        const response = await fetch(`${API_BASE_URL}/blogs/${cleanSlug}`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
         const data = await response.json().catch(() => null);
 
-        if (response.ok && data?.success && data?.blog) {
-          setBlog(data.blog);
-        } else {
-          const found =
-            fallbackBlogs.find(
-              (b) =>
-                (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
-                String(b.id) === cleanSlug
-            ) || fallbackBlogs[0];
-
-          setBlog(found as unknown as Blog);
+        if (isMounted) {
+          if (response.ok && data?.success && data?.blog) {
+            setBlog(data.blog);
+          } else if (!initialFound) {
+            const defaultFallback = fallbackBlogs[0] as unknown as Blog;
+            setBlog(defaultFallback);
+          }
         }
       } catch {
-        const found =
-          fallbackBlogs.find(
-            (b) =>
-              (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
-              String(b.id) === cleanSlug
-          ) || fallbackBlogs[0];
-
-        setBlog(found as unknown as Blog);
+        clearTimeout(timeoutId);
+        if (isMounted && !initialFound) {
+          const defaultFallback = fallbackBlogs[0] as unknown as Blog;
+          setBlog(defaultFallback);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchBlog();
     window.scrollTo(0, 0);
+
+    return () => {
+      isMounted = false;
+    };
   }, [slug]);
 
   const getImageUrl = (imgPath?: string) => {
