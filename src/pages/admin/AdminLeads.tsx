@@ -4,6 +4,7 @@ import AdminLayout from "@/Components/admin/AdminLayout";
 import SEO from "@/Components/SEO";
 import { Search, Eye, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { API_BASE_URL } from "@/config/api";
+import { getStepMeta } from "@/utils/stepHelper";
 
 interface Lead {
   id: number;
@@ -194,9 +195,24 @@ export default function AdminLeads() {
                       {lead.loan_amount ? `₹${parseFloat(lead.loan_amount).toLocaleString("en-IN")}` : "N/A"}
                     </td>
                     <td className="py-4 px-6">
-                      <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold capitalize ${getStepBadgeColor(lead.current_step)}`}>
-                        {(lead.current_step || "pan").replace(/-/g, " ")}
-                      </span>
+                      {(() => {
+                        const stepMeta = getStepMeta(lead.current_step);
+                        return (
+                          <div className="flex flex-col gap-1.5 max-w-[180px]">
+                            <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-bold tracking-tight ${stepMeta.badgeColor}`}>
+                              {stepMeta.badgeText}
+                            </span>
+                            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-500 ${
+                                  stepMeta.isComplete ? "bg-emerald-500" : "bg-purple-600"
+                                }`}
+                                style={{ width: `${stepMeta.percent}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td className="py-4 px-6 text-slate-500">
                       {new Date(lead.created_at).toLocaleDateString("en-IN", {
