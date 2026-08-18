@@ -123,6 +123,9 @@ const Apply = () => {
 
     if (field === "salary") {
       if (!salary) return "Please enter your monthly salary.";
+      if (salaryAmount < MIN_SALARY) {
+        return `Monthly salary less than ${formatCurrency(MIN_SALARY)} is not accepted.`;
+      }
     }
 
     if (field === "loanAmount") {
@@ -187,6 +190,13 @@ const Apply = () => {
 
     if (!salary) {
       return { message: "Please enter your monthly salary.", field: "salary" };
+    }
+
+    if (salaryAmount < MIN_SALARY) {
+      return {
+        message: `Monthly salary less than ${formatCurrency(MIN_SALARY)} is not accepted.`,
+        field: "salary",
+      };
     }
 
     if (!loanAmount) {
