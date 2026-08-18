@@ -8,10 +8,60 @@ export type StepMeta = {
   isComplete: boolean;
 };
 
-export const getStepMeta = (stepRaw: string): StepMeta => {
-  const s = String(stepRaw || "").toLowerCase().trim();
+export const computeActualStepKey = (lead: any): string => {
+  if (!lead) return "basic_details";
 
-  if (["video_kyc_completed", "completed", "loan_disbursed", "repayment_received"].includes(s)) {
+  if (typeof lead === "string") {
+    const raw = lead.toLowerCase().trim();
+    if (["video_kyc_completed", "completed", "loan_disbursed", "repayment_received"].includes(raw)) return "video_kyc_completed";
+    if (["documents_uploaded", "upload_docs", "salary_slip"].includes(raw)) return "documents_uploaded";
+    if (["references", "references_completed"].includes(raw)) return "references";
+    if (["bank_details", "bank"].includes(raw)) return "bank_details";
+    if (["work_details", "company_details", "employment"].includes(raw)) return "work_details";
+    if (["aadhaar_verify", "aadhaar_verified", "aadhaar"].includes(raw)) return "aadhaar_verify";
+    if (["pan_verify", "pan_verified", "pan"].includes(raw)) return "pan_verify";
+    if (["rejected", "cancelled"].includes(raw)) return "rejected";
+    return raw || "basic_details";
+  }
+
+  const rawStep = String(lead.current_step || "").toLowerCase().trim();
+  if (rawStep === "rejected" || rawStep === "cancelled") return "rejected";
+
+  if (lead.video_kyc || lead.completed_at || rawStep === "video_kyc_completed" || rawStep === "completed") {
+    return "video_kyc_completed";
+  }
+
+  if (lead.salary_slip_current || lead.selfie_photo || rawStep === "documents_uploaded" || rawStep === "upload_docs" || rawStep === "salary_slip") {
+    return "documents_uploaded";
+  }
+
+  if (lead.reference1_name || lead.reference2_name || rawStep === "references" || rawStep === "references_completed") {
+    return "references";
+  }
+
+  if (lead.bank_name || lead.account_number || rawStep === "bank_details" || rawStep === "bank") {
+    return "bank_details";
+  }
+
+  if (lead.company_name || lead.office_address || rawStep === "work_details" || rawStep === "company_details") {
+    return "work_details";
+  }
+
+  if (lead.aadhaar_number || lead.aadhaar_verified || rawStep === "aadhaar_verify" || rawStep === "aadhaar_verified") {
+    return "aadhaar_verify";
+  }
+
+  if (lead.pan_number || rawStep === "pan_verify" || rawStep === "pan_verified") {
+    return "pan_verify";
+  }
+
+  return rawStep || "basic_details";
+};
+
+export const getStepMeta = (input: any): StepMeta => {
+  const s = computeActualStepKey(input);
+
+  if (s === "video_kyc_completed") {
     return {
       stepNumber: 8,
       totalSteps: 8,
@@ -22,7 +72,7 @@ export const getStepMeta = (stepRaw: string): StepMeta => {
       isComplete: true,
     };
   }
-  if (["documents_uploaded", "upload_docs", "salary_slip"].includes(s)) {
+  if (s === "documents_uploaded") {
     return {
       stepNumber: 7,
       totalSteps: 8,
@@ -33,7 +83,7 @@ export const getStepMeta = (stepRaw: string): StepMeta => {
       isComplete: false,
     };
   }
-  if (["references", "references_completed"].includes(s)) {
+  if (s === "references") {
     return {
       stepNumber: 6,
       totalSteps: 8,
@@ -44,7 +94,7 @@ export const getStepMeta = (stepRaw: string): StepMeta => {
       isComplete: false,
     };
   }
-  if (["bank_details", "bank"].includes(s)) {
+  if (s === "bank_details") {
     return {
       stepNumber: 5,
       totalSteps: 8,
@@ -55,7 +105,7 @@ export const getStepMeta = (stepRaw: string): StepMeta => {
       isComplete: false,
     };
   }
-  if (["work_details", "company_details", "employment"].includes(s)) {
+  if (s === "work_details") {
     return {
       stepNumber: 4,
       totalSteps: 8,
@@ -66,7 +116,7 @@ export const getStepMeta = (stepRaw: string): StepMeta => {
       isComplete: false,
     };
   }
-  if (["aadhaar_verify", "aadhaar_verified", "aadhaar"].includes(s)) {
+  if (s === "aadhaar_verify") {
     return {
       stepNumber: 3,
       totalSteps: 8,
@@ -77,7 +127,7 @@ export const getStepMeta = (stepRaw: string): StepMeta => {
       isComplete: false,
     };
   }
-  if (["pan_verify", "pan_verified", "pan"].includes(s)) {
+  if (s === "pan_verify") {
     return {
       stepNumber: 2,
       totalSteps: 8,
@@ -88,7 +138,7 @@ export const getStepMeta = (stepRaw: string): StepMeta => {
       isComplete: false,
     };
   }
-  if (s === "rejected" || s === "cancelled") {
+  if (s === "rejected") {
     return {
       stepNumber: 0,
       totalSteps: 8,
