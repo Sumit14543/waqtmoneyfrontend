@@ -398,10 +398,17 @@ export default function AdminBlogForm() {
     setSuccess("");
 
     // Prepare image representation
-    let finalImageUrl = imagePreview || existingImage || "/blog-assets/blog-1-personal-loan-guide.webp";
+    let finalImageUrl = imagePreview || existingImage;
     if (imageFile) {
       const dataUrl = await fileToDataUrl(imageFile);
       if (dataUrl) finalImageUrl = dataUrl;
+    }
+
+    if (!finalImageUrl) {
+      if (category === "Business Loan") finalImageUrl = "/blog-assets/blog-3-small-business-owner.webp";
+      else if (category === "Payday Loan") finalImageUrl = "/blog-assets/blog-5-payday-cash-advance.webp";
+      else if (category === "Short Term Loan") finalImageUrl = "/blog-assets/blog-7-short-term-emergency.webp";
+      else finalImageUrl = "/blog-assets/blog-1-personal-loan-guide.webp";
     }
 
     const blogPayload = {
@@ -902,13 +909,23 @@ export default function AdminBlogForm() {
                   {activeTab === "SETTINGS" && (
                     <>
                       {/* CATEGORY */}
+                      {/* CATEGORY */}
                       <div>
                         <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
                           CATEGORY
                         </label>
                         <select
                           value={category}
-                          onChange={(e) => setCategory(e.target.value)}
+                          onChange={(e) => {
+                            const newCat = e.target.value;
+                            setCategory(newCat);
+                            if (!imageFile && (!existingImage || existingImage.includes("/blog-assets/"))) {
+                              if (newCat === "Business Loan") setExistingImage("/blog-assets/blog-3-small-business-owner.webp");
+                              else if (newCat === "Payday Loan") setExistingImage("/blog-assets/blog-5-payday-cash-advance.webp");
+                              else if (newCat === "Short Term Loan") setExistingImage("/blog-assets/blog-7-short-term-emergency.webp");
+                              else setExistingImage("/blog-assets/blog-1-personal-loan-guide.webp");
+                            }
+                          }}
                           className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-600"
                         >
                           <option value="Personal Loan">Personal Loan</option>
@@ -951,12 +968,13 @@ export default function AdminBlogForm() {
                         </select>
                       </div>
 
-                      {/* FEATURED COVER IMAGE DROPZONE */}
-                      <div>
+                      {/* FEATURED COVER IMAGE DROPZONE & PRESETS */}
+                      <div className="space-y-3">
                         <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-600 mb-1.5">
                           FEATURED COVER IMAGE
                         </label>
 
+                        {/* File Drag and Drop Uploader */}
                         <div
                           onDragOver={(e) => e.preventDefault()}
                           onDrop={handleDrop}
@@ -971,11 +989,11 @@ export default function AdminBlogForm() {
 
                           {imagePreview || existingImage ? (
                             <div className="space-y-2">
-                              <div className="relative h-56 w-full bg-slate-100 rounded-xl border border-slate-200 overflow-hidden">
+                              <div className="relative h-44 w-full bg-slate-100 rounded-xl border border-slate-200 overflow-hidden">
                                 <img
                                   src={imagePreview || getBlogImageUrl(existingImage)}
                                   alt="Cover Preview"
-                                  className="w-full h-full object-contain object-center"
+                                  className="w-full h-full object-cover object-center"
                                 />
                               </div>
                               <p className="text-[10px] font-bold text-purple-600">Click or drag new image to replace</p>
@@ -989,10 +1007,76 @@ export default function AdminBlogForm() {
                                 Drag and drop cover image here or click to select
                               </p>
                               <p className="text-[10px] text-slate-400 font-medium">
-                                Supports JPG, PNG, WEBP up to 15MB
+                                Supports JPG, PNG, WEBP, or Select Presets below
                               </p>
                             </div>
                           )}
+                        </div>
+
+                        {/* Custom Image URL / Path Input */}
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 mb-1">
+                            Or Enter Image URL / Path directly:
+                          </label>
+                          <input
+                            type="text"
+                            value={existingImage}
+                            onChange={(e) => {
+                              setExistingImage(e.target.value);
+                              setImageFile(null);
+                              setImagePreview("");
+                            }}
+                            placeholder="/blog-assets/blog-3-small-business-owner.webp"
+                            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-700 outline-none focus:ring-2 focus:ring-purple-600"
+                          />
+                        </div>
+
+                        {/* Select Preset Cover Image Grid */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[10px] font-bold text-slate-500">
+                            Quick Select Preset Covers:
+                          </label>
+                          <div className="grid grid-cols-4 gap-2">
+                            {[
+                              { label: "Personal Loan", path: "/blog-assets/blog-1-personal-loan-guide.webp" },
+                              { label: "CIBIL Score", path: "/blog-assets/blog-2-cibil-score-approval.webp" },
+                              { label: "Business Loan", path: "/blog-assets/blog-3-small-business-owner.webp" },
+                              { label: "Working Capital", path: "/blog-assets/blog-4-working-capital-factory.webp" },
+                              { label: "Payday Advance", path: "/blog-assets/blog-5-payday-cash-advance.webp" },
+                              { label: "Salary Advance", path: "/blog-assets/blog-6-emergency-salary-loan.webp" },
+                              { label: "Short Term", path: "/blog-assets/blog-7-short-term-emergency.webp" },
+                              { label: "Credit Line", path: "/blog-assets/blog-8-salary-advance-credit.webp" },
+                            ].map((preset, idx) => {
+                              const isSelected = existingImage === preset.path && !imagePreview;
+                              return (
+                                <button
+                                  key={idx}
+                                  type="button"
+                                  onClick={() => {
+                                    setExistingImage(preset.path);
+                                    setImageFile(null);
+                                    setImagePreview("");
+                                  }}
+                                  className={`p-1 rounded-xl border transition relative overflow-hidden flex flex-col items-center text-center ${
+                                    isSelected
+                                      ? "border-purple-600 ring-2 ring-purple-600 bg-purple-50"
+                                      : "border-slate-200 hover:border-purple-300 bg-white"
+                                  }`}
+                                >
+                                  <div className="h-12 w-full rounded-lg bg-slate-100 overflow-hidden mb-1">
+                                    <img
+                                      src={preset.path}
+                                      alt={preset.label}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                  <span className="text-[9px] font-bold text-slate-700 truncate w-full px-0.5">
+                                    {preset.label}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     </>

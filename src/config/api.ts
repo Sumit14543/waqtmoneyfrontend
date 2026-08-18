@@ -76,6 +76,11 @@ export const getBlogImageUrl = (
   if (!imgPath || !imgPath.trim()) return fallback;
   const path = imgPath.trim();
 
+  // Direct support for Base64 Data URLs and Blob URLs
+  if (path.startsWith("data:") || path.startsWith("blob:")) {
+    return path;
+  }
+
   if (path.startsWith("http://") || path.startsWith("https://")) {
     return path;
   }

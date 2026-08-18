@@ -40,18 +40,24 @@ export const saveLocalBlog = (blogData: Partial<LocalBlog> & { title: string; sl
     targetId = Date.now();
   }
 
+  const cat = blogData.category || "Personal Loan";
+  let defaultCover = "/blog-assets/blog-1-personal-loan-guide.webp";
+  if (cat === "Business Loan") defaultCover = "/blog-assets/blog-3-small-business-owner.webp";
+  else if (cat === "Payday Loan") defaultCover = "/blog-assets/blog-5-payday-cash-advance.webp";
+  else if (cat === "Short Term Loan") defaultCover = "/blog-assets/blog-7-short-term-emergency.webp";
+
   const newBlog: LocalBlog = {
     id: targetId,
     slug: blogData.slug.toLowerCase().trim().replace(/[^a-z0-9-]/g, "-"),
     title: blogData.title.trim(),
     excerpt: blogData.excerpt || blogData.title.trim(),
     content: blogData.content,
-    category: blogData.category || "Personal Loan",
+    category: cat,
     author: blogData.author || "Waqt Money Team",
     authorRole: blogData.authorRole || "Financial Analyst & Credit Expert",
     readTime: blogData.readTime || "5 Min Read",
     status: blogData.status || "ACTIVE",
-    image: blogData.image || "/blog-assets/blog-1-personal-loan-guide.webp",
+    image: blogData.image || defaultCover,
     created_at: blogData.created_at || nowStr,
     metaTitle: blogData.metaTitle || blogData.title,
     metaDescription: blogData.metaDescription || blogData.excerpt,
