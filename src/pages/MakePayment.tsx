@@ -191,6 +191,21 @@ const loadCashfreeSdk = () =>
 
 const mockApplicationFromCrmStatus = (data?: CrmStatus | null): Application => {
   if (!data) return {};
+
+  const stage = String(data.statusCode || data.currentStage || data.crmStatus || "").toLowerCase().trim();
+  const disbursementStatus = String(data.disbursement?.status || "").toLowerCase().trim();
+  const disbursedAmount = Number(data.disbursement?.disbursedAmount || data.sanction?.disbursedAmount || 0);
+
+  const isDisbursed =
+    disbursementStatus === "completed" ||
+    disbursementStatus === "disbursed" ||
+    disbursedAmount > 0 ||
+    ["loan_disbursed", "repayment_received", "disbursed"].includes(stage);
+
+  if (!isDisbursed) {
+    return {};
+  }
+
   const repayment = { ...(data.repayment || {}), ...data };
   const crmOutstanding = data.disbursement?.outstanding ?? data.disbursement?.outstandingAmount ?? data.disbursement?.outstanding_amount ?? repayment.outstanding ?? repayment.balanceAmount;
   const baseRepayable = repayment.dueAmount ?? data.sanction?.repaymentAmount;
