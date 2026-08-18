@@ -703,7 +703,10 @@ const LoanDashboard = () => {
                   {
                     icon: ShieldCheck,
                     label: "Disbursement",
-                    value: loan.disbursementStatus || crmStatus.disbursement?.status || "-",
+                    value:
+                      loan.disbursementStatus && String(loan.disbursementStatus).toLowerCase() !== "pending"
+                        ? loan.disbursementStatus
+                        : "-",
                   },
                 ]
               : []),
