@@ -557,6 +557,8 @@ const Apply = () => {
       localStorage.setItem("applyEmail", email.trim());
       sessionStorage.setItem("employment", employment);
       localStorage.setItem("employment", employment);
+      sessionStorage.setItem("salary", parseAmount(salary));
+      localStorage.setItem("salary", parseAmount(salary));
       if (applicationUploadToken) {
         sessionStorage.setItem("applicationUploadToken", String(applicationUploadToken));
         localStorage.setItem("applicationUploadToken", String(applicationUploadToken));

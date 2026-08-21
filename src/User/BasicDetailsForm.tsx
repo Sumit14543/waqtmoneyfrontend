@@ -17,13 +17,30 @@ type BasicErrors = {
 
 const MIN_MONTHLY_INCOME = 20000;
 
+function digitsOnly(value: string): string {
+  return String(value || "").replace(/\D/g, "");
+}
+
+function parseAmount(value: string): string {
+  return String(value || "").replace(/,/g, "").replace(/\D/g, "");
+}
+
+function formatAmount(value: string): string {
+  const raw = digitsOnly(value);
+  if (!raw) return "";
+  return new Intl.NumberFormat("en-IN").format(Number(raw));
+}
+
 const BasicDetailsForm = () => {
   const navigate = useNavigate();
 
   const [employment, setEmployment] = useState("salaried");
   const [pincode, setPincode] = useState("");
   const [city, setCity] = useState("");
-  const [income, setIncome] = useState("25,000");
+  const [income, setIncome] = useState(() => {
+    const stored = sessionStorage.getItem("salary") || localStorage.getItem("salary") || "";
+    return stored ? formatAmount(stored) : "";
+  });
   const [incomeType, setIncomeType] = useState("Account");
   const [errors, setErrors] = useState<BasicErrors>({});
   const [loading, setLoading] = useState(false);
@@ -65,16 +82,6 @@ const BasicDetailsForm = () => {
         });
     }
   }, [pincode]);
-
-  const digitsOnly = (value: string) => value.replace(/\D/g, "");
-
-  const formatAmount = (value: string) => {
-    const raw = digitsOnly(value);
-    if (!raw) return "";
-    return new Intl.NumberFormat("en-IN").format(Number(raw));
-  };
-
-  const parseAmount = (value: string) => value.replace(/,/g, "");
 
   const validate = () => {
     const nextErrors: BasicErrors = {};
@@ -118,8 +125,21 @@ const BasicDetailsForm = () => {
     try {
       const savedEmployment =
         sessionStorage.getItem("employment") || localStorage.getItem("employment") || employment || "salaried";
-      const savedSalary =
-        Number(parseAmount(sessionStorage.getItem("salary") || localStorage.getItem("salary") || income || "0")) || 25000;
+      const storedSalaryVal = sessionStorage.getItem("salary") || localStorage.getItem("salary") || income || "";
+      const parsedSalaryNum = Number(parseAmount(storedSalaryVal)) || 0;
+
+      const updateBody: Record<string, unknown> = {
+        id: applicationId,
+        employment: savedEmployment,
+        income_received_in: incomeType.toLowerCase(),
+        pincode,
+        city: city.trim(),
+        current_step: "basic_details",
+      };
+
+      if (parsedSalaryNum > 0) {
+        updateBody.salary = parsedSalaryNum;
+      }
 
       const response = await fetch(`${API_BASE_URL}/application/update`, {
         method: "PUT",
@@ -127,15 +147,7 @@ const BasicDetailsForm = () => {
         headers: getApiHeaders({
           "Content-Type": "application/json",
         }),
-        body: JSON.stringify({
-          id: applicationId,
-          employment: savedEmployment,
-          salary: savedSalary,
-          income_received_in: incomeType.toLowerCase(),
-          pincode,
-          city: city.trim(),
-          current_step: "basic_details",
-        }),
+        body: JSON.stringify(updateBody),
       });
 
       const result = await response.json().catch(() => ({}));
