@@ -4,7 +4,7 @@ import { Check, X } from "lucide-react";
 const eligible = [
   "Indian citizen aged 21–58 years",
   "Salaried individual with regular monthly income",
-  "Minimum monthly income of ₹20,000",
+  "Minimum monthly income of ₹25,000",
   "Valid PAN & Aadhaar card",
   "Active bank account with 3+ months history",
 ];

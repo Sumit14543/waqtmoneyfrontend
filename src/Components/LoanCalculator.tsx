@@ -36,7 +36,7 @@ const LoanCalculator = () => {
     "No Pre-closure Charges",
     "No Foreclosure Charges",
     "No Hidden Charges",
-    "Min Monthly Salary > ₹15,000",
+    "Min Monthly Salary > ₹25,000",
   ];
 
   return (

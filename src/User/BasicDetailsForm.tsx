@@ -15,7 +15,7 @@ type BasicErrors = {
   submit?: string;
 };
 
-const MIN_MONTHLY_INCOME = 20000;
+const MIN_MONTHLY_INCOME = 25000;
 
 function digitsOnly(value: string): string {
   return String(value || "").replace(/\D/g, "");

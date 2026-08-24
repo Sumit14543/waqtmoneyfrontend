@@ -38,7 +38,7 @@ type ApplicationResponseShape = {
   };
 };
 
-const MIN_SALARY = 20000;
+const MIN_SALARY = 25000;
 const MIN_LOAN_AMOUNT = 5000;
 
 const Apply = () => {
@@ -688,7 +688,7 @@ const Apply = () => {
         title: "Personal Loan Eligibility Criteria",
         items: [
           "Age: Between 21 and 55 years",
-          "Minimum Monthly Income: Rs 18,000 in metro cities and Rs 15,000 in non-metro cities",
+          "Minimum Monthly Income: Rs 25,000",
           "Residency: Must be a resident of India",
         ],
       },
