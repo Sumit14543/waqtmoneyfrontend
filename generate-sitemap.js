@@ -86,6 +86,39 @@ const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
     <priority>0.8</priority>
   </url>
 
+  <!-- Location-based landing pages -->
+  <url>
+    <loc>https://waqtmoney.com/loans/delhi</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/loans/delhi-ncr</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/loans/gurugram</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/loans/noida-greater-noida</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://waqtmoney.com/loans/ghaziabad</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+
   <!-- Tools / Services -->
   <url>
     <loc>https://waqtmoney.com/emi-calculator</loc>

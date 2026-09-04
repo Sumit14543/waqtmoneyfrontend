@@ -47,10 +47,19 @@ const policies = [
   { name: "Disclaimer", link: "/disclaimer", icon: AlertTriangle },
 ];
 
+const locationsServed = [
+  { name: "Loan in Delhi", link: "/loans/delhi", icon: MapPin },
+  { name: "Loan in Delhi NCR", link: "/loans/delhi-ncr", icon: MapPin },
+  { name: "Loan in Gurugram", link: "/loans/gurugram", icon: MapPin },
+  { name: "Loan in Noida", link: "/loans/noida-greater-noida", icon: MapPin },
+  { name: "Loan in Ghaziabad", link: "/loans/ghaziabad", icon: MapPin },
+];
+
+
 const contactItems = [
-  { label: "Call Us", value: "+91 9217086608", icon: PhoneCall },
-  { label: "Email", value: "support@waqtmoney.in", icon: Mail },
-  { label: "Address", value: "H-15, Sector 63, Noida (UP)", icon: MapPin },
+  { label: "Call Us", value: "+91 9217086608", icon: PhoneCall, href: "tel:+919217086608" },
+  { label: "Email", value: "support@waqtmoney.in", icon: Mail, href: "mailto:support@waqtmoney.in" },
+  { label: "Address", value: "H-15, Sector 63, Noida (UP)", icon: MapPin, href: "https://maps.google.com/?q=H-15+Sector+63+Noida+UP", target: "_blank" },
 ];
 
 const Footer = () => {
@@ -189,7 +198,7 @@ const Footer = () => {
                       <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
                         {item.label}
                       </p>
-                      <p className="mt-0.5 truncate text-xs sm:text-sm font-semibold leading-5 text-slate-900 transition-colors group-hover:text-purple-700">
+                      <p className="mt-0.5 break-words whitespace-normal text-xs sm:text-sm font-semibold leading-5 text-slate-900 transition-colors group-hover:text-purple-700">
                         {item.value}
                       </p>
                     </div>
@@ -200,7 +209,29 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 rounded-xl border border-purple-100 bg-white/85 p-4 text-center shadow-sm sm:p-5 sm:text-left">
+        {/* Popular Locations */}
+        <div className="mt-8 border-t border-purple-100 pt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-purple-700 shrink-0">
+              <MapPin className="h-4 w-4 text-purple-600" />
+              Locations Served:
+            </span>
+            <div className="flex flex-wrap gap-2 text-xs">
+              {locationsServed.map((loc) => (
+                <Link
+                  key={loc.name}
+                  to={loc.link}
+                  className="rounded-full border border-purple-200 bg-white px-3 py-1 font-medium text-slate-700 shadow-2xs transition hover:border-purple-500 hover:bg-purple-50 hover:text-purple-700"
+                >
+                  {loc.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-xl border border-purple-100 bg-white/85 p-4 text-center shadow-sm sm:p-5 sm:text-left">
+
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-start sm:gap-4">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-500">
               <AlertTriangle className="h-5 w-5" />

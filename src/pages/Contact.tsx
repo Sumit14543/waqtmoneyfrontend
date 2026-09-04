@@ -206,7 +206,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Email Support</h3>
-                    <p className="text-gray-600 dark:text-slate-400 text-sm truncate">
+                    <p className="text-gray-600 dark:text-slate-400 text-sm break-words">
                       support@waqtmoney.in
                     </p>
                   </div>

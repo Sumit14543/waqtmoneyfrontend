@@ -79,6 +79,14 @@ const ShortTermLoan = lazy(() => import("./pages/loans/ShortTermLoan.tsx"));
 const EducationLoan = lazy(() => import("./pages/loans/EducationLoan.tsx"));
 const MedicalLoan = lazy(() => import("./pages/loans/MedicalLoan.tsx"));
 
+// Location-Based Loan Landing Pages
+const LoanInDelhi = lazy(() => import("./pages/locations/LoanInDelhi.tsx"));
+const LoanInDelhiNCR = lazy(() => import("./pages/locations/LoanInDelhiNCR.tsx"));
+const LoanInGurugram = lazy(() => import("./pages/locations/LoanInGurugram.tsx"));
+const LoanInNoida = lazy(() => import("./pages/locations/LoanInNoida.tsx"));
+const LoanInGhaziabad = lazy(() => import("./pages/locations/LoanInGhaziabad.tsx"));
+
+
 const withSuspense = (
   Component: React.ComponentType,
   fallback: React.ReactNode
@@ -166,6 +174,33 @@ const App = () => (
 
           <Route path="/loans/medical-loan" element={withSuspense(MedicalLoan, <ContentPageFallback />)} />
           <Route path="/medical-loan" element={<Navigate to="/loans/medical-loan" replace />} />
+
+          {/* Location-Based Loan Landing Pages */}
+          <Route path="/loans/delhi" element={withSuspense(LoanInDelhi, <ContentPageFallback />)} />
+          <Route path="/loan-in-delhi" element={<Navigate to="/loans/delhi" replace />} />
+          <Route path="/personal-loan-in-delhi" element={<Navigate to="/loans/delhi" replace />} />
+          <Route path="/personal-loans-in-delhi" element={<Navigate to="/loans/delhi" replace />} />
+
+          <Route path="/loans/delhi-ncr" element={withSuspense(LoanInDelhiNCR, <ContentPageFallback />)} />
+          <Route path="/loan-in-delhi-ncr" element={<Navigate to="/loans/delhi-ncr" replace />} />
+          <Route path="/personal-loan-in-delhi-ncr" element={<Navigate to="/loans/delhi-ncr" replace />} />
+
+          <Route path="/loans/gurugram" element={withSuspense(LoanInGurugram, <ContentPageFallback />)} />
+          <Route path="/loan-in-gurugram" element={<Navigate to="/loans/gurugram" replace />} />
+          <Route path="/personal-loan-in-gurugram" element={<Navigate to="/loans/gurugram" replace />} />
+          <Route path="/personal-loan-in-gurgaon" element={<Navigate to="/loans/gurugram" replace />} />
+          <Route path="/loans/gurgaon" element={<Navigate to="/loans/gurugram" replace />} />
+
+          <Route path="/loans/noida-greater-noida" element={withSuspense(LoanInNoida, <ContentPageFallback />)} />
+          <Route path="/loans/noida" element={<Navigate to="/loans/noida-greater-noida" replace />} />
+          <Route path="/loan-in-noida" element={<Navigate to="/loans/noida-greater-noida" replace />} />
+          <Route path="/personal-loan-in-noida" element={<Navigate to="/loans/noida-greater-noida" replace />} />
+          <Route path="/personal-loan-in-greater-noida" element={<Navigate to="/loans/noida-greater-noida" replace />} />
+
+          <Route path="/loans/ghaziabad" element={withSuspense(LoanInGhaziabad, <ContentPageFallback />)} />
+          <Route path="/loan-in-ghaziabad" element={<Navigate to="/loans/ghaziabad" replace />} />
+          <Route path="/personal-loan-in-ghaziabad" element={<Navigate to="/loans/ghaziabad" replace />} />
+
 
           <Route path="/login" element={withSuspense(Login, <AuthPageFallback />)} />
           <Route path="/user/dashboard" element={withSuspense(LoanDashboard, <DashboardPageFallback />)} />
