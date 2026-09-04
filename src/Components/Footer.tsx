@@ -68,9 +68,9 @@ const Footer = () => {
       <div className="h-1 bg-gradient-to-r from-purple-600 via-violet-500 to-orange-400" />
 
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Brand */}
-          <div className="flex flex-col items-center sm:col-span-2 sm:items-start lg:col-span-1">
+          <div className="flex flex-col items-center sm:col-span-2 sm:items-start lg:col-span-3">
             <Link to="/" aria-label="Waqt Money Home Page" className="mb-4 inline-flex w-fit items-center justify-center">
               <BrandLogo className="h-14 w-auto object-contain md:-mt-3" />
             </Link>
@@ -94,7 +94,7 @@ const Footer = () => {
           </div>
 
           {/* Loan Products */}
-          <div>
+          <div className="lg:col-span-2">
             <h4 className="mb-3 text-base font-semibold text-slate-950">
               Loan Products
             </h4>
@@ -120,7 +120,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="lg:col-span-2">
             <h4 className="mb-3 text-base font-semibold text-slate-950">
               Quick Links
             </h4>
@@ -146,7 +146,7 @@ const Footer = () => {
           </div>
 
           {/* Policies */}
-          <div>
+          <div className="lg:col-span-2">
             <h4 className="mb-3 text-base font-semibold text-slate-950">
               Policies
             </h4>
@@ -172,13 +172,13 @@ const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div className="sm:col-span-2 lg:col-span-1">
+          <div className="sm:col-span-2 lg:col-span-3">
             <h4 className="mb-3 text-base font-semibold text-slate-950">
               Contact Info
             </h4>
             <span className="mx-auto mb-4 block h-0.5 w-10 bg-purple-600 sm:mx-0" />
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
               {contactItems.map((item) => {
                 const Icon = item.icon;
 
@@ -188,9 +188,9 @@ const Footer = () => {
                     href={item.href}
                     target={item.target}
                     rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
-                    className="group flex min-w-0 items-center gap-3 rounded-xl border border-purple-100/90 bg-white px-3.5 py-3 text-left shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-50/50 hover:shadow-md cursor-pointer"
+                    className="group flex min-w-0 items-center gap-2.5 rounded-xl border border-purple-100/90 bg-white px-3 py-2.5 text-left shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-50/50 hover:shadow-md cursor-pointer"
                   >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-50 text-purple-600 transition-colors group-hover:bg-purple-600 group-hover:text-white">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-50 text-purple-600 transition-colors group-hover:bg-purple-600 group-hover:text-white">
                       <Icon className="h-4 w-4" />
                     </span>
 
@@ -198,7 +198,7 @@ const Footer = () => {
                       <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
                         {item.label}
                       </p>
-                      <p className="mt-0.5 break-words whitespace-normal text-xs sm:text-sm font-semibold leading-5 text-slate-900 transition-colors group-hover:text-purple-700">
+                      <p className="mt-0.5 whitespace-nowrap text-xs xl:text-sm font-semibold leading-5 text-slate-900 transition-colors group-hover:text-purple-700">
                         {item.value}
                       </p>
                     </div>
