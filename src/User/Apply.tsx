@@ -38,7 +38,7 @@ type ApplicationResponseShape = {
   };
 };
 
-const MIN_SALARY = 25000;
+const MIN_SALARY = 1;
 const MIN_LOAN_AMOUNT = 5000;
 
 const Apply = () => {
@@ -123,8 +123,8 @@ const Apply = () => {
 
     if (field === "salary") {
       if (!salary) return "Please enter your monthly salary.";
-      if (salaryAmount < MIN_SALARY) {
-        return `Monthly salary less than ${formatCurrency(MIN_SALARY)} is not accepted.`;
+      if (salaryAmount <= 0) {
+        return "Please enter a valid monthly salary.";
       }
     }
 
@@ -188,20 +188,13 @@ const Apply = () => {
     const salaryAmount = Number(parseAmount(salary));
     const requestedLoanAmount = Number(parseAmount(loanAmount));
 
-    if (employment !== "salaried") {
-      return {
-        message: "We currently provide payday loans exclusively to salaried individuals. Self-employed applicants are not eligible at this time.",
-        field: "submit",
-      };
-    }
-
     if (!salary) {
       return { message: "Please enter your monthly salary.", field: "salary" };
     }
 
-    if (salaryAmount < MIN_SALARY) {
+    if (salaryAmount <= 0) {
       return {
-        message: `Monthly salary less than ${formatCurrency(MIN_SALARY)} is not accepted.`,
+        message: "Please enter a valid monthly salary.",
         field: "salary",
       };
     }
@@ -980,22 +973,17 @@ const Apply = () => {
                       aria-pressed={employment === "self"}
                       onClick={() => {
                         setEmployment("self");
-                        showError("We currently provide payday loans exclusively to salaried individuals. Self-employed applicants are not eligible at this time.");
+                        clearFieldError("submit");
                       }}
                       className={`h-[47px] rounded-lg border text-sm font-bold transition ${
                         employment === "self"
-                          ? "border-red-500 bg-red-500 text-white shadow-[0_9px_18px_rgba(239,68,68,0.22)]"
+                          ? "border-[#8048e2] bg-[#8048e2] text-white shadow-[0_9px_18px_rgba(128,72,226,0.22)]"
                           : "border-[#d8c5ff] bg-white text-[#62718a]"
                       }`}
                     >
                       Self Employed
                     </button>
                   </div>
-                  {employment === "self" && (
-                    <p className="mt-2.5 rounded-lg border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600">
-                      We currently provide payday loans exclusively to salaried individuals. Self-employed applicants are not eligible at this time.
-                    </p>
-                  )}
                 </div>
 
                 <div>
