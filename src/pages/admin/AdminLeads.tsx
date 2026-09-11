@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import AdminLayout from "@/Components/admin/AdminLayout";
 import SEO from "@/Components/SEO";
-import { Search, Eye, Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Eye, Filter, ChevronLeft, ChevronRight, Download, Calendar, RotateCcw } from "lucide-react";
 import { API_BASE_URL } from "@/config/api";
 import { getStepMeta } from "@/utils/stepHelper";
 
@@ -22,11 +22,14 @@ interface Lead {
 export default function AdminLeads() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
   const [error, setError] = useState("");
 
   // Filters
   const [search, setSearch] = useState("");
   const [loanType, setLoanType] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const limit = 20;
@@ -41,6 +44,8 @@ export default function AdminLeads() {
       url.searchParams.append("limit", String(limit));
       if (search) url.searchParams.append("search", search);
       if (loanType) url.searchParams.append("loanType", loanType);
+      if (startDate) url.searchParams.append("startDate", startDate);
+      if (endDate) url.searchParams.append("endDate", endDate);
 
       const response = await fetch(url.toString(), {
         headers: {
@@ -60,7 +65,7 @@ export default function AdminLeads() {
     } finally {
       setLoading(false);
     }
-  }, [page, limit, search, loanType]);
+  }, [page, limit, search, loanType, startDate, endDate]);
 
   useEffect(() => {
     fetchLeads();
@@ -72,28 +77,106 @@ export default function AdminLeads() {
     fetchLeads();
   };
 
-  const totalPages = Math.ceil(totalCount / limit);
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const token = localStorage.getItem("admin_token");
+      const url = new URL(`${API_BASE_URL}/admin/leads/export`);
+      if (search) url.searchParams.append("search", search);
+      if (loanType) url.searchParams.append("loanType", loanType);
+      if (startDate) url.searchParams.append("startDate", startDate);
+      if (endDate) url.searchParams.append("endDate", endDate);
 
-  const getStepBadgeColor = (step: string) => {
-    const s = String(step || "").toLowerCase();
-    if (s.includes("status") || s.includes("video") || s.includes("completed")) {
-      return "bg-green-50 text-green-700 border-green-100";
+      const response = await fetch(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Export failed");
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      const fileName = `WaqtMoney_Leads_${new Date().toISOString().slice(0, 10)}.csv`;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (err) {
+      console.error("Export error:", err);
+      alert("Failed to export leads. Please try again.");
+    } finally {
+      setExporting(false);
     }
-    if (s.includes("bank") || s.includes("references") || s.includes("slip")) {
-      return "bg-blue-50 text-blue-700 border-blue-100";
-    }
-    return "bg-purple-50 text-purple-700 border-purple-100";
   };
+
+  const applyPreset = (preset: string) => {
+    const today = new Date();
+    const formatDate = (d: Date) => d.toISOString().split("T")[0];
+
+    if (preset === "today") {
+      setStartDate(formatDate(today));
+      setEndDate(formatDate(today));
+    } else if (preset === "yesterday") {
+      const y = new Date(today);
+      y.setDate(y.getDate() - 1);
+      setStartDate(formatDate(y));
+      setEndDate(formatDate(y));
+    } else if (preset === "7days") {
+      const start = new Date(today);
+      start.setDate(start.getDate() - 7);
+      setStartDate(formatDate(start));
+      setEndDate(formatDate(today));
+    } else if (preset === "30days") {
+      const start = new Date(today);
+      start.setDate(start.getDate() - 30);
+      setStartDate(formatDate(start));
+      setEndDate(formatDate(today));
+    } else if (preset === "thisMonth") {
+      const start = new Date(today.getFullYear(), today.getMonth(), 1);
+      setStartDate(formatDate(start));
+      setEndDate(formatDate(today));
+    } else if (preset === "clear") {
+      setStartDate("");
+      setEndDate("");
+    }
+    setPage(1);
+  };
+
+  const resetAllFilters = () => {
+    setSearch("");
+    setLoanType("");
+    setStartDate("");
+    setEndDate("");
+    setPage(1);
+  };
+
+  const totalPages = Math.ceil(totalCount / limit);
 
   return (
     <AdminLayout>
       <SEO title="Admin Console - Loan Leads" robots="noindex, nofollow" />
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Loan Applications Leads</h1>
-        <p className="mt-2 text-sm text-slate-500">
-          View, search, and manage applicant logs submitted across Waqt Money portals.
-        </p>
+      <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Loan Applications Leads</h1>
+          <p className="mt-2 text-sm text-slate-500">
+            View, search, filter, and export applicant logs submitted across Waqt Money portals.
+          </p>
+        </div>
+        <button
+          onClick={handleExport}
+          disabled={exporting || loading}
+          className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-semibold text-sm shadow-md transition disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
+        >
+          <Download size={18} />
+          {exporting ? "Exporting CSV..." : "Export Leads CSV"}
+        </button>
       </div>
 
       {error && (
@@ -102,48 +185,142 @@ export default function AdminLeads() {
         </div>
       )}
 
-      {/* Filter and Search Bar */}
-      <div className="mb-8 bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
-        <form onSubmit={handleSearchSubmit} className="w-full md:max-w-md relative flex gap-2">
-          <div className="relative flex-grow">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-              <Search size={16} />
-            </span>
-            <input
-              type="text"
-              placeholder="Search by Mobile, PAN, Name, Email..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-purple-600 outline-none text-slate-800"
-            />
-          </div>
-          <button
-            type="submit"
-            className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition"
-          >
-            Search
-          </button>
-        </form>
+      {/* Filter and Search Section */}
+      <div className="mb-8 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+        {/* Top Controls: Search + Loan Type + Reset */}
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <form onSubmit={handleSearchSubmit} className="w-full md:max-w-md relative flex gap-2">
+            <div className="relative flex-grow">
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                <Search size={16} />
+              </span>
+              <input
+                type="text"
+                placeholder="Search by Mobile, PAN, Name, Email..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-purple-600 outline-none text-slate-800"
+              />
+            </div>
+            <button
+              type="submit"
+              className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition"
+            >
+              Search
+            </button>
+          </form>
 
-        <div className="w-full md:w-auto flex items-center gap-2">
-          <Filter size={16} className="text-slate-400" />
-          <select
-            value={loanType}
-            onChange={(e) => {
-              setLoanType(e.target.value);
-              setPage(1);
-            }}
-            className="py-2.5 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none text-slate-800 focus:bg-white"
-          >
-            <option value="">All Loan Types</option>
-            <option value="Personal">Personal Loan</option>
-            <option value="Business">Business Loan</option>
-            <option value="Payday">Payday Loan</option>
-            <option value="Property">Loan Against Property</option>
-            <option value="Vehicle">Vehicle Loan</option>
-            <option value="Education">Education Loan</option>
-            <option value="Medical">Medical Loan</option>
-          </select>
+          <div className="w-full md:w-auto flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1">
+              <Filter size={16} className="text-slate-400" />
+              <select
+                value={loanType}
+                onChange={(e) => {
+                  setLoanType(e.target.value);
+                  setPage(1);
+                }}
+                className="py-1.5 bg-transparent text-sm outline-none text-slate-800"
+              >
+                <option value="">All Loan Types</option>
+                <option value="Personal">Personal Loan</option>
+                <option value="Business">Business Loan</option>
+                <option value="Payday">Payday Loan</option>
+                <option value="Property">Loan Against Property</option>
+                <option value="Vehicle">Vehicle Loan</option>
+                <option value="Education">Education Loan</option>
+                <option value="Medical">Medical Loan</option>
+              </select>
+            </div>
+
+            {(search || loanType || startDate || endDate) && (
+              <button
+                onClick={resetAllFilters}
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl border border-rose-100 transition"
+              >
+                <RotateCcw size={14} /> Reset Filters
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Date Filter Controls */}
+        <div className="pt-4 border-t border-slate-100 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <Calendar size={15} className="text-purple-600" />
+              <span>Filter By Date:</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <label htmlFor="startDate" className="text-xs font-semibold text-slate-600">From:</label>
+              <input
+                id="startDate"
+                type="date"
+                value={startDate}
+                onChange={(e) => {
+                  setStartDate(e.target.value);
+                  setPage(1);
+                }}
+                className="py-1.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none text-slate-800 focus:bg-white focus:ring-2 focus:ring-purple-600"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <label htmlFor="endDate" className="text-xs font-semibold text-slate-600">To:</label>
+              <input
+                id="endDate"
+                type="date"
+                value={endDate}
+                onChange={(e) => {
+                  setEndDate(e.target.value);
+                  setPage(1);
+                }}
+                className="py-1.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none text-slate-800 focus:bg-white focus:ring-2 focus:ring-purple-600"
+              />
+            </div>
+          </div>
+
+          {/* Quick Presets */}
+          <div className="flex flex-wrap gap-1.5 text-xs">
+            <button
+              onClick={() => applyPreset("today")}
+              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-purple-100 hover:text-purple-700 text-slate-600 font-semibold transition"
+            >
+              Today
+            </button>
+            <button
+              onClick={() => applyPreset("yesterday")}
+              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-purple-100 hover:text-purple-700 text-slate-600 font-semibold transition"
+            >
+              Yesterday
+            </button>
+            <button
+              onClick={() => applyPreset("7days")}
+              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-purple-100 hover:text-purple-700 text-slate-600 font-semibold transition"
+            >
+              Last 7 Days
+            </button>
+            <button
+              onClick={() => applyPreset("30days")}
+              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-purple-100 hover:text-purple-700 text-slate-600 font-semibold transition"
+            >
+              Last 30 Days
+            </button>
+            <button
+              onClick={() => applyPreset("thisMonth")}
+              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-purple-100 hover:text-purple-700 text-slate-600 font-semibold transition"
+            >
+              This Month
+            </button>
+            {(startDate || endDate) && (
+              <button
+                onClick={() => applyPreset("clear")}
+                className="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-600 font-semibold hover:bg-rose-100 transition"
+              >
+                Clear Dates
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
