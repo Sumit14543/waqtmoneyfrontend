@@ -6,6 +6,7 @@ import Footer from "@/Components/Footer";
 import UserProgress from "./UserProgress";
 
 import { API_BASE_URL, getApiHeaders } from "@/config/api";
+import { persistApplicationId, recoverOrGetApplicationId } from "@/utils/sessionHelper";
 
 type ReferenceForm = {
   reference1Name: string;
@@ -35,43 +36,51 @@ const References = () => {
   const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
-    const applicationId =
-      sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+    let isMounted = true;
 
-    if (!applicationId) return;
+    (async () => {
+      const applicationId = await recoverOrGetApplicationId();
 
-    sessionStorage.setItem("applicationId", applicationId);
-    setFetching(true);
+      if (!applicationId || !isMounted) return;
 
-    fetch(`${API_BASE_URL}/application/${applicationId}`, {
-      credentials: "include",
-      headers: getApiHeaders(),
-    })
-      .then(async (response) => {
-        const result = await response.json().catch(() => ({}));
+      persistApplicationId(applicationId);
+      setFetching(true);
 
-        if (!response.ok) {
-          throw new Error(result.message || "Failed to load reference details");
-        }
-
-        return result.data || {};
+      fetch(`${API_BASE_URL}/application/${applicationId}`, {
+        credentials: "include",
+        headers: getApiHeaders(),
       })
-      .then((data) => {
-        setForm({
-          reference1Name: data.reference1_name || "",
-          reference1Phone: data.reference1_mobile || "",
-          reference1Relation: data.reference1_relation || "",
-          reference2Name: data.reference2_name || "",
-          reference2Phone: data.reference2_mobile || "",
-          reference2Relation: data.reference2_relation || "",
+        .then(async (response) => {
+          const result = await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+            throw new Error(result.message || "Failed to load reference details");
+          }
+
+          return result.data || {};
+        })
+        .then((data) => {
+          if (!isMounted) return;
+          setForm({
+            reference1Name: data.reference1_name || "",
+            reference1Phone: data.reference1_mobile || "",
+            reference1Relation: data.reference1_relation || "",
+            reference2Name: data.reference2_name || "",
+            reference2Phone: data.reference2_mobile || "",
+            reference2Relation: data.reference2_relation || "",
+          });
+        })
+        .catch((error) => {
+          console.error("Reference details load error:", error);
+        })
+        .finally(() => {
+          if (isMounted) setFetching(false);
         });
-      })
-      .catch((error) => {
-        console.error("Reference details load error:", error);
-      })
-      .finally(() => {
-        setFetching(false);
-      });
+    })();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -127,15 +136,14 @@ const References = () => {
     if (loading) return;
     if (!validate()) return;
 
-    const applicationId =
-      sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+    const applicationId = await recoverOrGetApplicationId();
 
     if (!applicationId) {
       setErrors({ submit: "Application session not found. Please start again." });
       return;
     }
 
-    sessionStorage.setItem("applicationId", applicationId);
+    persistApplicationId(applicationId);
     setLoading(true);
     setErrors({});
 

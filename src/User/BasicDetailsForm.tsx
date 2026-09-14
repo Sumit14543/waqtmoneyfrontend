@@ -6,6 +6,7 @@ import Footer from "@/Components/Footer";
 import UserProgress from "./UserProgress";
 
 import { API_BASE_URL, getApiHeaders } from "@/config/api";
+import { persistApplicationId, recoverOrGetApplicationId } from "@/utils/sessionHelper";
 
 type BasicErrors = {
   pincode?: string;
@@ -109,15 +110,14 @@ const BasicDetailsForm = () => {
     if (loading) return;
     if (!validate()) return;
 
-    const applicationId =
-      sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+    const applicationId = await recoverOrGetApplicationId();
 
     if (!applicationId) {
       setErrors({ submit: "Application session not found. Please start again." });
       return;
     }
 
-    sessionStorage.setItem("applicationId", applicationId);
+    persistApplicationId(applicationId);
 
     setLoading(true);
     setErrors({});

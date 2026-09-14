@@ -8,6 +8,7 @@ import UserProgress from "./UserProgress";
 import { useNavigate } from "react-router-dom";
 
 import { API_BASE_URL, getApiHeaders } from "@/config/api";
+import { persistApplicationId, recoverOrGetApplicationId } from "@/utils/sessionHelper";
 
 const KycAadhaar = () => {
   const navigate = useNavigate();
@@ -357,16 +358,14 @@ const KycAadhaar = () => {
       return;
     }
 
-    const applicationId =
-      sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+    const applicationId = await recoverOrGetApplicationId();
 
     if (!applicationId) {
       showError("Application session not found. Please start again.");
       return;
     }
 
-    sessionStorage.setItem("applicationId", applicationId);
-    localStorage.setItem("applicationId", applicationId);
+    persistApplicationId(applicationId);
     localStorage.setItem("aadhaarPendingApplicationId", applicationId);
 
     setLoading(true);
@@ -420,16 +419,14 @@ const KycAadhaar = () => {
   const handleSkip = async () => {
     if (loading || skipLoading) return;
 
-    const applicationId =
-      sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+    const applicationId = await recoverOrGetApplicationId();
 
     if (!applicationId) {
       showError("Application session not found. Please start again.");
       return;
     }
 
-    sessionStorage.setItem("applicationId", applicationId);
-    localStorage.setItem("applicationId", applicationId);
+    persistApplicationId(applicationId);
     sessionStorage.setItem("aadhaarVerificationSkipped", "true");
     localStorage.removeItem("aadhaarPendingApplicationId");
 

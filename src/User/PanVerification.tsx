@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import UserProgress from "./UserProgress";
 
 import { API_BASE_URL, getApiHeaders } from "@/config/api";
+import { getStoredApplicationId, persistApplicationId } from "@/utils/sessionHelper";
 
-const getApplicationId = () =>
-  sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+const getApplicationId = () => getStoredApplicationId();
 
 type PanErrors = {
   pan?: string;

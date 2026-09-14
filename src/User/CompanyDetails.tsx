@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import UserProgress from "./UserProgress";
 
 import { API_BASE_URL, getApiHeaders } from "@/config/api";
+import { getStoredApplicationId, persistApplicationId, recoverOrGetApplicationId } from "@/utils/sessionHelper";
 
 const salaryDates = Array.from({ length: 31 }, (_, index) => index + 1);
 type CompanyForm = {
@@ -43,73 +44,82 @@ const CompanyDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const applicationId =
-      sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+    let isMounted = true;
 
-    if (!applicationId) return;
+    (async () => {
+      const applicationId = await recoverOrGetApplicationId();
 
-    sessionStorage.setItem("applicationId", applicationId);
-    setFetching(true);
-    setUanLoading(true);
-    setUanNumber("");
+      if (!applicationId || !isMounted) return;
 
-    fetch(`${API_BASE_URL}/application/${applicationId}`, {
-      credentials: "include",
-      headers: getApiHeaders(),
-    })
-      .then(async (response) => {
-        const result = await response.json().catch(() => ({}));
+      persistApplicationId(applicationId);
+      setFetching(true);
+      setUanLoading(true);
+      setUanNumber("");
 
-        if (!response.ok) {
-          throw new Error(result.message || "Failed to load work details");
-        }
-
-        return result.data || {};
+      fetch(`${API_BASE_URL}/application/${applicationId}`, {
+        credentials: "include",
+        headers: getApiHeaders(),
       })
-      .then((data) => {
-        setForm({
-          company: data.company_name || "",
-          designation: data.designation || "",
-          email: data.office_email || "",
-          salaryDay: data.salary_day ? String(data.salary_day) : "",
-          address: data.office_address || "",
-          pincode: data.office_pincode || "",
-          education: data.education || "",
-          experience:
-            data.experience_years === null || data.experience_years === undefined
-              ? ""
-              : String(data.experience_years),
+        .then(async (response) => {
+          const result = await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+            throw new Error(result.message || "Failed to load work details");
+          }
+
+          return result.data || {};
+        })
+        .then((data) => {
+          if (!isMounted) return;
+          setForm({
+            company: data.company_name || "",
+            designation: data.designation || "",
+            email: data.office_email || "",
+            salaryDay: data.salary_day ? String(data.salary_day) : "",
+            address: data.office_address || "",
+            pincode: data.office_pincode || "",
+            education: data.education || "",
+            experience:
+              data.experience_years === null || data.experience_years === undefined
+                ? ""
+                : String(data.experience_years),
+          });
+        })
+        .catch((error) => {
+          console.error("Work details load error:", error);
+        })
+        .finally(() => {
+          if (isMounted) setFetching(false);
         });
-      })
-      .catch((error) => {
-        console.error("Work details load error:", error);
-      })
-      .finally(() => {
-        setFetching(false);
-      });
 
-    fetch(`${API_BASE_URL}/application/uan/${applicationId}`, {
-      credentials: "include",
-      headers: getApiHeaders(),
-    })
-      .then(async (response) => {
-        const result = await response.json().catch(() => ({}));
+      fetch(`${API_BASE_URL}/application/uan/${applicationId}`, {
+        credentials: "include",
+        headers: getApiHeaders(),
+      })
+        .then(async (response) => {
+          const result = await response.json().catch(() => ({}));
 
-        if (!response.ok) {
-          throw new Error(result.message || "Failed to load UAN number");
-        }
+          if (!response.ok) {
+            throw new Error(result.message || "Failed to load UAN number");
+          }
 
-        return result;
-      })
-      .then((result) => {
-        setUanNumber(result.uan_number || result.uanNumber || "");
-      })
-      .catch((error) => {
-        console.error("UAN load error:", error);
-      })
-      .finally(() => {
-        setUanLoading(false);
-      });
+          return result;
+        })
+        .then((result) => {
+          if (!isMounted) return;
+          setUanNumber(result.uan_number || result.uanNumber || "");
+        })
+        .catch((error) => {
+          console.error("UAN load error:", error);
+        })
+        .finally(() => {
+          if (isMounted) setUanLoading(false);
+        });
+    })();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -223,15 +233,14 @@ const CompanyDetails = () => {
       if (!isEmailValid) return;
     }
 
-    const applicationId =
-      sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+    const applicationId = await recoverOrGetApplicationId();
 
     if (!applicationId) {
       setErrors({ submit: "Application session not found. Please start again." });
       return;
     }
 
-    sessionStorage.setItem("applicationId", applicationId);
+    persistApplicationId(applicationId);
     setLoading(true);
     setErrors({});
 

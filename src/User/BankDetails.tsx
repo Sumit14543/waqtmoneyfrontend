@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import UserProgress from "./UserProgress";
 
 import { API_BASE_URL, getApiHeaders } from "@/config/api";
+import { persistApplicationId, recoverOrGetApplicationId } from "@/utils/sessionHelper";
 const IFSC_REGEX = /^[A-Z]{4}0[A-Z0-9]{6}$/;
 type BankForm = {
   ifsc: string;
@@ -41,12 +42,14 @@ const BankDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const applicationId =
-      sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+    let isMounted = true;
 
-    if (!applicationId) return;
+    (async () => {
+      const applicationId = await recoverOrGetApplicationId();
 
-    sessionStorage.setItem("applicationId", applicationId);
+      if (!applicationId || !isMounted) return;
+
+      persistApplicationId(applicationId);
 
     fetch(`${API_BASE_URL}/application/${applicationId}`, {
       credentials: "include",
@@ -74,6 +77,11 @@ const BankDetails = () => {
       .catch((error) => {
         console.error("Bank details load error:", error);
       });
+    })();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -191,15 +199,14 @@ const BankDetails = () => {
 
     if (!validate()) return;
 
-    const applicationId =
-      sessionStorage.getItem("applicationId") || localStorage.getItem("applicationId");
+    const applicationId = await recoverOrGetApplicationId();
 
     if (!applicationId) {
       setErrors({ submit: "Application session not found. Please start again." });
       return;
     }
 
-    sessionStorage.setItem("applicationId", applicationId);
+    persistApplicationId(applicationId);
     setLoading(true);
     setErrors({});
 
