@@ -55,23 +55,11 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      let response = await fetch(`${API_BASE_URL}/admin/send-otp`, {
+      const response = await fetch(`${API_BASE_URL}/admin/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: cleanEmail, password: cleanPass }),
       });
-
-      if (response.status === 404) {
-        const altUrl = API_BASE_URL.endsWith("/api")
-          ? `${API_BASE_URL.replace(/\/api$/, "")}/admin/send-otp`
-          : `${API_BASE_URL}/admin/send-otp`;
-
-        response = await fetch(altUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: cleanEmail, password: cleanPass }),
-        });
-      }
 
       const data = await response.json().catch(() => null);
 
@@ -105,23 +93,11 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      let response = await fetch(`${API_BASE_URL}/admin/verify-otp`, {
+      const response = await fetch(`${API_BASE_URL}/admin/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: cleanEmail, otp: cleanOtp }),
       });
-
-      if (response.status === 404) {
-        const altUrl = API_BASE_URL.endsWith("/api")
-          ? `${API_BASE_URL.replace(/\/api$/, "")}/admin/verify-otp`
-          : `${API_BASE_URL}/admin/verify-otp`;
-
-        response = await fetch(altUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: cleanEmail, otp: cleanOtp }),
-        });
-      }
 
       const data = await response.json().catch(() => null);
 

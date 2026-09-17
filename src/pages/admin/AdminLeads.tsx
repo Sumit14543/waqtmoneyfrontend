@@ -27,6 +27,7 @@ export default function AdminLeads() {
 
   // Filters
   const [search, setSearch] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
   const [loanType, setLoanType] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -42,7 +43,7 @@ export default function AdminLeads() {
       const url = new URL(`${API_BASE_URL}/admin/leads`);
       url.searchParams.append("page", String(page));
       url.searchParams.append("limit", String(limit));
-      if (search) url.searchParams.append("search", search);
+      if (appliedSearch) url.searchParams.append("search", appliedSearch);
       if (loanType) url.searchParams.append("loanType", loanType);
       if (startDate) url.searchParams.append("startDate", startDate);
       if (endDate) url.searchParams.append("endDate", endDate);
@@ -65,7 +66,7 @@ export default function AdminLeads() {
     } finally {
       setLoading(false);
     }
-  }, [page, limit, search, loanType, startDate, endDate]);
+  }, [page, limit, appliedSearch, loanType, startDate, endDate]);
 
   useEffect(() => {
     fetchLeads();
@@ -74,7 +75,7 @@ export default function AdminLeads() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
-    fetchLeads();
+    setAppliedSearch(search.trim());
   };
 
   const handleExport = async () => {
@@ -82,7 +83,7 @@ export default function AdminLeads() {
     try {
       const token = localStorage.getItem("admin_token");
       const url = new URL(`${API_BASE_URL}/admin/leads/export`);
-      if (search) url.searchParams.append("search", search);
+      if (appliedSearch || search) url.searchParams.append("search", appliedSearch || search);
       if (loanType) url.searchParams.append("loanType", loanType);
       if (startDate) url.searchParams.append("startDate", startDate);
       if (endDate) url.searchParams.append("endDate", endDate);
@@ -150,6 +151,7 @@ export default function AdminLeads() {
 
   const resetAllFilters = () => {
     setSearch("");
+    setAppliedSearch("");
     setLoanType("");
     setStartDate("");
     setEndDate("");

@@ -28,9 +28,18 @@ export const LocationCaptureModal: React.FC<LocationCaptureModalProps> = ({
   const [locationData, setLocationData] = useState<LocationData | null>(null);
   const [lowAccuracyWarning, setLowAccuracyWarning] = useState(false);
   const [isSubmittingLocation, setIsSubmittingLocation] = useState(false);
+  const locationSavedRef = React.useRef(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      locationSavedRef.current = false;
+    }
+  }, [isOpen]);
 
   const saveLocationToBackend = useCallback(
     async (coords: GeolocationCoordinates, isLowAcc: boolean) => {
+      if (locationSavedRef.current) return;
+      locationSavedRef.current = true;
       setIsSubmittingLocation(true);
       try {
         const capturedAt = new Date().toISOString();
