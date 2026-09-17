@@ -8,6 +8,23 @@ Options -Indexes
 
 DirectoryIndex index.html
 
+# 0. Anti-DDoS & Bot Mitigation Rules
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Block Grafana k6 & Automated Load-Testing Bot User Agents
+  RewriteCond %{HTTP_USER_AGENT} (k6|grafana|go-http-client|jmeter|ab|locust) [NC]
+  RewriteRule ^ - [F,L]
+</IfModule>
+
+# Block Specific Attacker / Unapproved Load Test IPs
+<IfModule mod_authz_core.c>
+  <RequireAll>
+    Require all granted
+    Require not ip 122.160.166.184
+  </RequireAll>
+</IfModule>
+
 # 1. GZIP Compression
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json application/xml image/svg+xml image/x-icon font/ttf font/otf font/woff font/woff2
