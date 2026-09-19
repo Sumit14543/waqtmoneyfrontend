@@ -16,6 +16,10 @@ DirectoryIndex index.html
   RewriteCond %{HTTP_USER_AGENT} (k6|grafana|go-http-client|jmeter|ab|locust|sqlmap|nikto|nmap|masscan) [NC]
   RewriteRule ^ - [F,L]
 
+  # Block WordPress / CMS Vulnerability Scanners (Since site is custom React + Node.js)
+  RewriteCond %{REQUEST_URI} ^/(wp-|wp/|wordpress/|wp-admin|wp-config|wp-content|wp-json|wp-login|webmin|wrangler\.toml|vercel\.json|web\.config) [NC]
+  RewriteRule ^ - [F,L]
+
   # Block Direct Probing of Sensitive Files (.env, .git, config files, settings.json, logs)
   RewriteCond %{REQUEST_URI} \.(env|git|htaccess|htpasswd|yml|yaml|json|log|bak|config|ts|sql|ini)$ [NC,OR]
   RewriteCond %{REQUEST_URI} (%2e|\.)(env|git|config) [NC]
@@ -28,6 +32,9 @@ DirectoryIndex index.html
     Require all granted
     Require not ip 122.160.166.184
     Require not ip 185.177.72.0/24
+    Require not ip 178.16.54.184
+    Require not ip 128.90.135.8
+    Require not ip 165.22.128.137
   </RequireAll>
 </IfModule>
 
