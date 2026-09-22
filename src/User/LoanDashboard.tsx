@@ -698,7 +698,9 @@ const LoanDashboard = () => {
                   {
                     icon: IndianRupee,
                     label: "Disbursed Amount",
-                    value: formatINR(Number(loan.disbursedAmount || crmStatus.disbursement?.disbursedAmount || crmStatus.sanction?.disbursedAmount || 0)),
+                    value: loan.disbursedAmount || crmStatus.disbursement?.disbursedAmount
+                      ? formatINR(Number(loan.disbursedAmount || crmStatus.disbursement?.disbursedAmount))
+                      : "-",
                   },
                   {
                     icon: ShieldCheck,

@@ -194,7 +194,7 @@ const mockApplicationFromCrmStatus = (data?: CrmStatus | null): Application => {
 
   const stage = String(data.statusCode || data.currentStage || data.crmStatus || "").toLowerCase().trim();
   const disbursementStatus = String(data.disbursement?.status || "").toLowerCase().trim();
-  const disbursedAmount = Number(data.disbursement?.disbursedAmount || data.sanction?.disbursedAmount || 0);
+  const disbursedAmount = Number(data.disbursement?.disbursedAmount || 0);
 
   const isDisbursed =
     disbursementStatus === "completed" ||
@@ -218,8 +218,8 @@ const mockApplicationFromCrmStatus = (data?: CrmStatus | null): Application => {
     loan_id: repayment.loanId || data.sanction?.loanId || data.sanction?.agreementNumber || "-",
     loan_amount: data.sanction?.principalAmount ?? data.loanAmount,
     principal_amount: data.sanction?.principalAmount ?? data.loanAmount,
-    disbursed_amount: data.disbursement?.disbursedAmount ?? data.sanction?.disbursedAmount,
-    disbursal_date: data.disbursement?.disbursedAt || data.disbursement?.disbursalDate || data.disbursement?.disbursementDate || data.sanction?.disbursedAt || "",
+    disbursed_amount: data.disbursement?.disbursedAmount ?? data.disbursedAmount,
+    disbursal_date: data.disbursement?.disbursedAt || data.disbursement?.disbursalDate || data.disbursement?.disbursementDate || "",
     full_name: data.customerName || "Customer",
     mobile: data.phone,
     pan_number: data.pan || data.panNumber || "",
