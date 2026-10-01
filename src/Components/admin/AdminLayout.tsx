@@ -13,7 +13,8 @@ import {
   X,
   User,
   Clock,
-  ChevronLeft
+  ChevronLeft,
+  Search
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -65,6 +66,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Landing Leads", path: "/admin/leads", icon: Users },
     { name: "CIBIL Reports", path: "/admin/cibil", icon: Award },
     { name: "Blog CMS", path: "/admin/blogs", icon: BookOpen },
+    { name: "SEO & Webpages Meta", path: "/admin/webpages-meta", icon: Search },
     { name: "View Website", path: "/", icon: Globe, external: true }
   ];
 

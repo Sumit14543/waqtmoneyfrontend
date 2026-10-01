@@ -15,6 +15,9 @@ export interface LocalBlog {
   metaDescription?: string;
   focusKeyword?: string;
   ctaHeading?: string;
+  faq_schema?: string;
+  faqs?: Array<{ question: string; answer: string }>;
+  displayFaqs?: boolean;
 }
 
 const LOCAL_BLOGS_KEY = "waqt_local_custom_blogs";
@@ -63,6 +66,9 @@ export const saveLocalBlog = (blogData: Partial<LocalBlog> & { title: string; sl
     metaDescription: blogData.metaDescription || blogData.excerpt,
     focusKeyword: blogData.focusKeyword || "",
     ctaHeading: blogData.ctaHeading || "Need Quick Funds Today?",
+    faq_schema: blogData.faq_schema || (blogData.faqs ? JSON.stringify(blogData.faqs) : undefined),
+    faqs: blogData.faqs || (blogData.faq_schema ? JSON.parse(blogData.faq_schema) : []),
+    displayFaqs: blogData.displayFaqs !== undefined ? blogData.displayFaqs : true,
   };
 
   const existingIdx = current.findIndex(

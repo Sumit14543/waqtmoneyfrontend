@@ -399,6 +399,54 @@ export default function BlogDetail() {
   const activeBlog = blog || (fallbackBlogs[0] as unknown as Blog);
   const tableOfContents = extractTableOfContents(activeBlog.content).slice(0, 5);
 
+  const extractBlogFaqs = (b: Blog): Array<{ question: string; answer: string }> => {
+    const raw = (b as any).faq_schema || (b as any).faqSchema || (b as any).faqs;
+    if (!raw) return [];
+    try {
+      const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+      if (Array.isArray(parsed)) {
+        return parsed.filter((f: any) => f.question?.trim() && f.answer?.trim());
+      }
+    } catch {}
+    return [];
+  };
+  const blogFaqs = extractBlogFaqs(activeBlog);
+
+  const schemas: Record<string, unknown>[] = [
+    {
+      "@type": "BlogPosting",
+      headline: activeBlog.title,
+      description: activeBlog.excerpt,
+      author: {
+        "@type": "Organization",
+        name: activeBlog.author || "Waqt Finance Pvt Ltd"
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "Waqt Money",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://waqtmoney.com/waqt-money-logo-img.png"
+        }
+      },
+      datePublished: activeBlog.created_at || "2026-07-31"
+    }
+  ];
+
+  if (blogFaqs.length > 0) {
+    schemas.push({
+      "@type": "FAQPage",
+      mainEntity: blogFaqs.map((f) => ({
+        "@type": "Question",
+        name: f.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: f.answer
+        }
+      }))
+    });
+  }
+
   return (
     <div className="min-h-screen bg-[#faf9ff] font-sans text-slate-900">
       <Navbar />
@@ -411,27 +459,9 @@ export default function BlogDetail() {
               description={activeBlog.excerpt}
               canonicalUrl={`https://waqtmoney.com/blog/${activeBlog.slug}`}
               ogType="article"
-                ogImage={getImageUrl(activeBlog.image)}
-                schema={{
-                  "@context": "https://schema.org",
-                  "@type": "BlogPosting",
-                  headline: activeBlog.title,
-                  description: activeBlog.excerpt,
-                  author: {
-                    "@type": "Organization",
-                    name: activeBlog.author || "Waqt Finance Pvt Ltd"
-                  },
-                  publisher: {
-                    "@type": "Organization",
-                    name: "Waqt Money",
-                    logo: {
-                      "@type": "ImageObject",
-                      url: "https://waqtmoney.com/waqt-money-logo-img.png"
-                    }
-                  },
-                  datePublished: activeBlog.created_at || "2026-07-31"
-                }}
-              />
+              ogImage={getImageUrl(activeBlog.image)}
+              schema={schemas}
+            />
 
               {/* Breadcrumb Navigation */}
               <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs font-semibold text-slate-500">
@@ -519,6 +549,31 @@ export default function BlogDetail() {
                       renderContentBlocks(activeBlog.content)
                     )}
                   </div>
+
+                  {/* FAQ Accordion Section */}
+                  {blogFaqs.length > 0 && (activeBlog as any).displayFaqs !== false && (
+                    <div className="mt-10 pt-8 border-t border-purple-100 space-y-4">
+                      <div className="flex items-center gap-2.5">
+                        <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 shadow-xs"></span>
+                        <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                          Frequently Asked Questions
+                        </h2>
+                      </div>
+                      <div className="space-y-3 pt-2">
+                        {blogFaqs.map((faq, idx) => (
+                          <div key={idx} className="p-4 rounded-2xl bg-purple-50/40 border border-purple-100/80 space-y-1.5 hover:border-purple-200 transition">
+                            <h3 className="text-sm sm:text-base font-bold text-slate-900 flex items-start gap-2">
+                              <span className="text-purple-600 font-extrabold text-sm mt-0.5">Q.</span>
+                              <span>{faq.question}</span>
+                            </h3>
+                            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pl-5 font-normal">
+                              {faq.answer}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </article>
 
                 {/* Right Column: Unified Sticky Sidebar */}

@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { useDynamicPageMeta } from "@/hooks/useDynamicPageMeta";
 
 type SchemaType = Record<string, unknown> | Record<string, unknown>[];
 
@@ -18,16 +19,18 @@ const DEFAULT_KEYWORDS =
 const DEFAULT_IMAGE = "https://waqtmoney.com/waqt-money-logo-img.png";
 const SITE_NAME = "Waqt Money";
 
-export default function SEO({
-  title,
-  description,
-  canonicalUrl,
-  keywords,
-  robots = "index, follow",
-  ogType = "website",
-  ogImage = DEFAULT_IMAGE,
-  schema,
-}: SEOProps) {
+export default function SEO(props: SEOProps) {
+  const dynamicMeta = useDynamicPageMeta(props);
+
+  const title = dynamicMeta.title;
+  const description = dynamicMeta.description;
+  const canonicalUrl = dynamicMeta.canonicalUrl;
+  const keywords = dynamicMeta.keywords;
+  const robots = dynamicMeta.robots || props.robots || "index, follow";
+  const ogType = props.ogType || "website";
+  const ogImage = dynamicMeta.ogImage || props.ogImage || DEFAULT_IMAGE;
+  const schema = dynamicMeta.schema || props.schema;
+
   const fallbackUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}${window.location.pathname.toLowerCase().replace(/\/$/, "")}`

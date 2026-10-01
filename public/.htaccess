@@ -128,6 +128,10 @@ DirectoryIndex index.html
   RewriteRule ^blogs/?$ https://waqtmoney.com/blog [R=301,L]
   RewriteRule ^blogs/(.*)$ https://waqtmoney.com/blog/$1 [R=301,L]
 
+  # 5. Serve Pre-rendered Static HTML Pages directly (e.g. /about -> about/index.html)
+  RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+  RewriteRule ^([a-zA-Z0-9\-_/]+)/?$ $1/index.html [L]
+
   # Serve existing physical static files directly
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
@@ -137,7 +141,7 @@ DirectoryIndex index.html
   RewriteCond %{REQUEST_FILENAME}/index.html !-f
   RewriteRule ^ index.html [L]
 
-  # React Router fallback to index.html
+  # React Router fallback to index.html for dynamic client-side routes (e.g. /user/*, /admin/*)
   RewriteRule ^ index.html [L]
 </IfModule>
 

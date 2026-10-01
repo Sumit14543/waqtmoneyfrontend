@@ -27,7 +27,14 @@ import {
   Heading3,
   AlignLeft,
   AlignCenter,
-  AlignRight
+  AlignRight,
+  HelpCircle,
+  Plus,
+  Trash2,
+  ChevronUp,
+  ChevronDown,
+  Copy,
+  Eye
 } from "lucide-react";
 import { API_BASE_URL, getBlogImageUrl } from "@/config/api";
 import { fallbackBlogs } from "@/data/mockBlogs";
@@ -58,8 +65,19 @@ export default function AdminBlogForm() {
   const [metaDescription, setMetaDescription] = useState("");
   const [ctaHeading, setCtaHeading] = useState("Need Quick Funds Today?");
 
+  // FAQ Schema States
+  interface BlogFaqItem {
+    question: string;
+    answer: string;
+  }
+  const [faqs, setFaqs] = useState<BlogFaqItem[]>([
+    { question: "", answer: "" }
+  ]);
+  const [displayFaqsOnPage, setDisplayFaqsOnPage] = useState(true);
+  const [showFaqJsonPreview, setShowFaqJsonPreview] = useState(false);
+
   // Sidebar Settings Tab & Editor Mode
-  const [activeTab, setActiveTab] = useState<"SETTINGS" | "EEAT" | "SEO">("SETTINGS");
+  const [activeTab, setActiveTab] = useState<"SETTINGS" | "EEAT" | "SEO" | "FAQS">("SETTINGS");
   const [editorMode, setEditorMode] = useState<"VISUAL" | "CODE">("VISUAL");
 
   // Selection Range Ref to preserve selection across button clicks
@@ -232,6 +250,25 @@ export default function AdminBlogForm() {
           setAuthorRole(String((blog as LocalBlog).authorRole || "Financial Analyst & Credit Expert"));
           setFocusKeyword(String((blog as LocalBlog).focusKeyword || ""));
           setCtaHeading(String((blog as LocalBlog).ctaHeading || "Need Quick Funds Today?"));
+
+          // Load existing FAQ schema
+          const rawFaqData =
+            (blog as any).faq_schema ||
+            (blog as any).faqSchema ||
+            (blog as any).faqs;
+          if (rawFaqData) {
+            try {
+              const parsed = typeof rawFaqData === "string" ? JSON.parse(rawFaqData) : rawFaqData;
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                setFaqs(parsed);
+              }
+            } catch (err) {
+              console.warn("Could not parse blog FAQs:", err);
+            }
+          }
+          if ((blog as any).displayFaqs !== undefined) {
+            setDisplayFaqsOnPage(Boolean((blog as any).displayFaqs));
+          }
 
           if (editorDivRef.current) {
             editorDivRef.current.innerHTML = fetchedContent;
@@ -411,6 +448,9 @@ export default function AdminBlogForm() {
       else finalImageUrl = "/blog-assets/blog-1-personal-loan-guide.webp";
     }
 
+    const validFaqs = faqs.filter((f) => f.question.trim() && f.answer.trim());
+    const faqSchemaString = validFaqs.length > 0 ? JSON.stringify(validFaqs) : "";
+
     const blogPayload = {
       id: isEdit && id ? id : Date.now(),
       title: title.trim(),
@@ -427,7 +467,10 @@ export default function AdminBlogForm() {
       metaTitle,
       metaDescription,
       focusKeyword,
-      ctaHeading
+      ctaHeading,
+      faq_schema: faqSchemaString,
+      faqs: validFaqs,
+      displayFaqs: displayFaqsOnPage
     };
 
     let backendSuccess = false;
@@ -443,6 +486,8 @@ export default function AdminBlogForm() {
       formData.append("author", author);
       formData.append("excerpt", excerpt || title);
       formData.append("content", finalContent);
+      formData.append("faq_schema", faqSchemaString);
+      formData.append("displayFaqs", String(displayFaqsOnPage));
 
       if (imageFile) {
         formData.append("image", imageFile);
@@ -893,14 +938,32 @@ export default function AdminBlogForm() {
                   <button
                     type="button"
                     onClick={() => setActiveTab("SEO")}
-                    className={`flex-1 py-2 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1 text-[11px] font-bold ${
                       activeTab === "SEO"
                         ? "bg-white text-purple-700 shadow-2xs border border-purple-100"
                         : "text-slate-600 hover:text-slate-900"
                     }`}
                   >
                     <Search size={13} />
-                    SEO ENGINE
+                    SEO
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("FAQS")}
+                    className={`flex-1 py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1 text-[11px] font-bold ${
+                      activeTab === "FAQS"
+                        ? "bg-white text-purple-700 shadow-2xs border border-purple-100"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    <HelpCircle size={13} />
+                    FAQS
+                    {faqs.filter((f) => f.question.trim() && f.answer.trim()).length > 0 && (
+                      <span className="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold bg-purple-100 text-purple-700">
+                        {faqs.filter((f) => f.question.trim() && f.answer.trim()).length}
+                      </span>
+                    )}
                   </button>
                 </div>
 
@@ -1161,6 +1224,199 @@ export default function AdminBlogForm() {
                         />
                       </div>
                     </>
+                  )}
+
+                  {activeTab === "FAQS" && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                        <div>
+                          <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <HelpCircle size={14} className="text-purple-600" />
+                            Google FAQ Schema Builder
+                          </h3>
+                          <p className="text-[10px] text-slate-500 font-medium mt-0.5">
+                            Auto-generates Schema.org FAQPage for rich search snippets
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Display toggle */}
+                      <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer p-2 rounded-xl bg-purple-50/60 border border-purple-100">
+                        <input
+                          type="checkbox"
+                          checked={displayFaqsOnPage}
+                          onChange={(e) => setDisplayFaqsOnPage(e.target.checked)}
+                          className="h-4 w-4 text-purple-600 rounded border-slate-300 focus:ring-purple-500"
+                        />
+                        <span>Display FAQ accordion on blog page</span>
+                      </label>
+
+                      {/* FAQ items list */}
+                      <div className="space-y-3">
+                        {faqs.map((faq, index) => (
+                          <div
+                            key={index}
+                            className="p-3 bg-white border border-slate-200 rounded-2xl shadow-2xs space-y-2.5 relative"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">
+                                FAQ #{index + 1}
+                              </span>
+                              <div className="flex items-center gap-1">
+                                {index > 0 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const next = [...faqs];
+                                      const temp = next[index - 1];
+                                      next[index - 1] = next[index];
+                                      next[index] = temp;
+                                      setFaqs(next);
+                                    }}
+                                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                                    title="Move Up"
+                                  >
+                                    <ChevronUp size={13} />
+                                  </button>
+                                )}
+                                {index < faqs.length - 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const next = [...faqs];
+                                      const temp = next[index + 1];
+                                      next[index + 1] = next[index];
+                                      next[index] = temp;
+                                      setFaqs(next);
+                                    }}
+                                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                                    title="Move Down"
+                                  >
+                                    <ChevronDown size={13} />
+                                  </button>
+                                )}
+                                {faqs.length > 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setFaqs(faqs.filter((_, i) => i !== index))}
+                                    className="p-1 rounded-md text-rose-500 hover:bg-rose-50"
+                                    title="Delete FAQ"
+                                  >
+                                    <Trash2 size={13} />
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+
+                            <div>
+                              <label className="block text-[10px] font-bold text-slate-600 mb-1">
+                                Question:
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="e.g. What is the minimum CIBIL score required?"
+                                value={faq.question}
+                                onChange={(e) => {
+                                  const next = [...faqs];
+                                  next[index].question = e.target.value;
+                                  setFaqs(next);
+                                }}
+                                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-purple-600"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[10px] font-bold text-slate-600 mb-1">
+                                Answer:
+                              </label>
+                              <textarea
+                                rows={2}
+                                placeholder="e.g. A CIBIL score of 650 or higher is preferred for instant approval."
+                                value={faq.answer}
+                                onChange={(e) => {
+                                  const next = [...faqs];
+                                  next[index].answer = e.target.value;
+                                  setFaqs(next);
+                                }}
+                                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-normal text-slate-800 outline-none focus:bg-white focus:ring-2 focus:ring-purple-600"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Add FAQ button */}
+                      <button
+                        type="button"
+                        onClick={() => setFaqs([...faqs, { question: "", answer: "" }])}
+                        className="w-full py-2.5 px-3 bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold rounded-xl border border-purple-200 transition flex items-center justify-center gap-1.5"
+                      >
+                        <Plus size={14} />
+                        Add Question & Answer
+                      </button>
+
+                      {/* Preview Schema JSON-LD toggle */}
+                      {faqs.some((f) => f.question.trim() && f.answer.trim()) && (
+                        <div className="pt-2 border-t border-slate-200">
+                          <button
+                            type="button"
+                            onClick={() => setShowFaqJsonPreview(!showFaqJsonPreview)}
+                            className="text-[11px] font-bold text-purple-600 hover:text-purple-800 flex items-center gap-1"
+                          >
+                            <Eye size={12} />
+                            {showFaqJsonPreview ? "Hide" : "Preview"} Google FAQPage JSON-LD Schema
+                          </button>
+
+                          {showFaqJsonPreview && (
+                            <div className="mt-2 p-3 bg-slate-900 rounded-xl text-[10px] font-mono text-emerald-400 overflow-x-auto relative">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const schemaObj = {
+                                    "@context": "https://schema.org",
+                                    "@type": "FAQPage",
+                                    mainEntity: faqs
+                                      .filter((f) => f.question.trim() && f.answer.trim())
+                                      .map((f) => ({
+                                        "@type": "Question",
+                                        name: f.question.trim(),
+                                        acceptedAnswer: {
+                                          "@type": "Answer",
+                                          text: f.answer.trim()
+                                        }
+                                      }))
+                                  };
+                                  navigator.clipboard.writeText(JSON.stringify(schemaObj, null, 2));
+                                }}
+                                className="absolute top-2 right-2 px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[9px] font-bold flex items-center gap-1"
+                              >
+                                <Copy size={10} /> Copy
+                              </button>
+                              <pre>
+                                {JSON.stringify(
+                                  {
+                                    "@context": "https://schema.org",
+                                    "@type": "FAQPage",
+                                    mainEntity: faqs
+                                      .filter((f) => f.question.trim() && f.answer.trim())
+                                      .map((f) => ({
+                                        "@type": "Question",
+                                        name: f.question.trim(),
+                                        acceptedAnswer: {
+                                          "@type": "Answer",
+                                          text: f.answer.trim()
+                                        }
+                                      }))
+                                  },
+                                  null,
+                                  2
+                                )}
+                              </pre>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
 
