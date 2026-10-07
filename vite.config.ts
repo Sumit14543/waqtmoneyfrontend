@@ -38,9 +38,6 @@ export default defineConfig({
             if (id.includes("framer-motion")) {
               return "vendor-motion";
             }
-            if (id.includes("recharts")) {
-              return "vendor-charts";
-            }
             if (id.includes("sweetalert2") || id.includes("canvas-confetti")) {
               return "vendor-utils";
             }

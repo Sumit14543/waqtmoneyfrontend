@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { Slider } from "@/Components/ui/slider";
 import { Button } from "@/Components/ui/button";
 import { CheckCircle2, ArrowRight } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Link } from "react-router-dom";
 
 const LoanCalculator = () => {
@@ -11,19 +10,19 @@ const LoanCalculator = () => {
 
   const dailyRate = 1;
 
-  const { totalPayable, totalInterest, apr, chartData } = useMemo(() => {
+  const { totalPayable, totalInterest, apr, pPct, iPct } = useMemo(() => {
     const interest = amount * (dailyRate / 100) * tenure;
     const total = amount + interest;
     const aprVal = (dailyRate * 365).toFixed(1);
+    const principalRatio = total > 0 ? amount / total : 1;
+    const interestRatio = total > 0 ? interest / total : 0;
 
     return {
       totalPayable: Math.round(total),
       totalInterest: Math.round(interest),
       apr: aprVal,
-      chartData: [
-        { name: "Principal", value: amount },
-        { name: "Interest", value: Math.round(interest) },
-      ],
+      pPct: principalRatio,
+      iPct: interestRatio,
     };
   }, [amount, tenure]);
 
@@ -115,34 +114,69 @@ const LoanCalculator = () => {
             </div>
 
             {/* PIE CHART BELOW RATE */}
-            <div className="h-60">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart accessibilityLayer aria-label="Loan Principal vs Interest Breakdown">
+            <div className="flex flex-col items-center justify-center pt-2">
+              <div className="relative flex h-52 w-52 items-center justify-center">
+                <svg
+                  viewBox="0 0 200 200"
+                  className="h-full w-full -rotate-90 transform transition-all duration-300"
+                  role="img"
+                  aria-label={`Principal ₹${amount.toLocaleString()} (${Math.round(pPct * 100)}%), Interest ₹${totalInterest.toLocaleString()} (${Math.round(iPct * 100)}%)`}
+                >
                   <title>Loan Principal and Interest Breakdown</title>
-                  <Pie
-                    data={chartData}
-                    innerRadius={60}
-                    outerRadius={90}
-                    paddingAngle={4}
-                    dataKey="value"
-                  >
-                    {chartData.map((entry, index) => (
-                      <Cell key={index} fill={COLORS[index]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+                  {/* Background Track */}
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="70"
+                    fill="transparent"
+                    stroke="#f1f5f9"
+                    strokeWidth="26"
+                  />
+                  {/* Principal Slice */}
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="70"
+                    fill="transparent"
+                    stroke="#7c3aed"
+                    strokeWidth="26"
+                    strokeDasharray={`${(pPct * 439.82).toFixed(2)} 439.82`}
+                    strokeDashoffset="0"
+                    strokeLinecap="round"
+                    className="transition-all duration-500 ease-out"
+                  />
+                  {/* Interest Slice */}
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="70"
+                    fill="transparent"
+                    stroke="#c4b5fd"
+                    strokeWidth="26"
+                    strokeDasharray={`${(iPct * 439.82).toFixed(2)} 439.82`}
+                    strokeDashoffset={`-${(pPct * 439.82).toFixed(2)}`}
+                    strokeLinecap="round"
+                    className="transition-all duration-500 ease-out"
+                  />
+                </svg>
+
+                {/* Center Value */}
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total</span>
+                  <span className="text-lg font-extrabold text-slate-900">₹{totalPayable.toLocaleString()}</span>
+                  <span className="text-[11px] font-medium text-purple-600">{tenure} Days</span>
+                </div>
+              </div>
 
               {/* Legend */}
-              <div className="flex justify-center gap-6 mt-3 text-xs font-medium">
-                <span className="flex items-center gap-1">
-                  <span className="w-3 h-3 bg-purple-600 rounded-full"></span>
-                  Principal
+              <div className="flex justify-center gap-6 mt-4 text-xs font-semibold">
+                <span className="flex items-center gap-1.5 text-slate-700">
+                  <span className="w-3 h-3 bg-[#7c3aed] rounded-full"></span>
+                  Principal ({Math.round(pPct * 100)}%)
                 </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-3 h-3 bg-purple-300 rounded-full"></span>
-                  Interest
+                <span className="flex items-center gap-1.5 text-slate-700">
+                  <span className="w-3 h-3 bg-[#c4b5fd] rounded-full"></span>
+                  Interest ({Math.round(iPct * 100)}%)
                 </span>
               </div>
             </div>

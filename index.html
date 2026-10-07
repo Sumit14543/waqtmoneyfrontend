@@ -32,14 +32,13 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Preload ACTUAL Hero Image (WebP) -->
-    <link rel="preload" as="image" href="/hero_banner_custom.webp" type="image/webp" fetchpriority="high" />
+    <!-- Responsive Preload for LCP Hero Image -->
+    <link rel="preload" as="image" href="/hero_banner_custom-sm.webp" type="image/webp" media="(max-width: 640px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/hero_banner_custom.webp" type="image/webp" media="(min-width: 641px)" fetchpriority="high" />
 
-    <!-- Resource Preconnects -->
-    <link rel="preconnect" href="https://api.waqtmoney.com" crossorigin />
+    <!-- Google Fonts Non-Blocking Loading (System Fallbacks Prevent Layout Shifts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
     <noscript>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -94,35 +93,55 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Deferred Non-Blocking Tracking Scripts (GTM & GA4) -->
+    <!-- User-Interaction & Idle Deferred Tracking Scripts (GTM & GA4) -->
     <script>
-      window.addEventListener('load', function() {
-        var loadTracking = function() {
-          // GTM
+      (function() {
+        var trackingLoaded = false;
+        function loadTracking() {
+          if (trackingLoaded) return;
+          trackingLoaded = true;
+
+          window.removeEventListener('scroll', loadTracking, { passive: true });
+          window.removeEventListener('touchstart', loadTracking, { passive: true });
+          window.removeEventListener('mousemove', loadTracking, { passive: true });
+          window.removeEventListener('keydown', loadTracking, { passive: true });
+
+          // Google Tag Manager
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','GTM-WLW8NHFK');
 
-          // GA4
+          // Google Analytics 4
           var gaScript = document.createElement('script');
           gaScript.async = true;
           gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-0HK38FZXCF';
-          document.body.appendChild(gaScript);
+          document.head.appendChild(gaScript);
           
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'G-0HK38FZXCF');
-        };
-
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(function() { setTimeout(loadTracking, 2000); });
-        } else {
-          setTimeout(loadTracking, 2500);
         }
-      });
+
+        // Trigger immediately upon user interaction
+        window.addEventListener('scroll', loadTracking, { passive: true, once: true });
+        window.addEventListener('touchstart', loadTracking, { passive: true, once: true });
+        window.addEventListener('mousemove', loadTracking, { passive: true, once: true });
+        window.addEventListener('keydown', loadTracking, { passive: true, once: true });
+
+        // Fallback: If no interaction, initialize after 4.5 seconds during idle time
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            if ('requestIdleCallback' in window) {
+              requestIdleCallback(loadTracking, { timeout: 1500 });
+            } else {
+              loadTracking();
+            }
+          }, 4500);
+        });
+      })();
     </script>
   </body>
 </html>

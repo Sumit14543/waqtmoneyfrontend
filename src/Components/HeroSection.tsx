@@ -149,17 +149,26 @@ const HeroSection = () => {
             <div className="mx-auto w-full max-w-full sm:max-w-lg md:max-w-xl lg:max-w-[700px] xl:max-w-3xl lg:-translate-x-14 xl:-translate-x-20">
               <div className="relative w-full text-center">
                 <div className="absolute -inset-4 rounded-full bg-primary/10 blur-3xl sm:-inset-12" />
-                <img
-                  src="/hero_banner_custom.webp"
-                  alt="Waqt Money Instant Personal Loan and Salary Advance App in India"
-                  width={604}
-                  height={511}
-                  style={{ aspectRatio: "604 / 511" }}
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  className="relative mx-auto w-[138%] sm:w-full max-w-none -ml-[40%] sm:ml-0 pr-1 sm:pr-0 object-contain mix-blend-multiply scale-105 sm:scale-110 lg:scale-125 xl:scale-130 pointer-events-none"
-                />
+                <picture>
+                  <source
+                    media="(max-width: 640px)"
+                    srcSet="/hero_banner_custom-sm.webp"
+                    type="image/webp"
+                  />
+                  <img
+                    src="/hero_banner_custom.webp"
+                    srcSet="/hero_banner_custom-sm.webp 600w, /hero_banner_custom.webp 1024w"
+                    sizes="(max-width: 640px) 100vw, 604px"
+                    alt="Waqt Money Instant Personal Loan and Salary Advance App in India"
+                    width={600}
+                    height={400}
+                    style={{ aspectRatio: "600 / 400" }}
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                    className="relative mx-auto w-[138%] sm:w-full max-w-none -ml-[40%] sm:ml-0 pr-1 sm:pr-0 object-contain mix-blend-multiply scale-105 sm:scale-110 lg:scale-125 xl:scale-130 pointer-events-none"
+                  />
+                </picture>
               </div>
             </div>
           </div>
