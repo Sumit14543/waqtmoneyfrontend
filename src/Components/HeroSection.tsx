@@ -83,7 +83,7 @@ const HeroSection = () => {
               Instant Personal Loan & Salary Advance in India —{" "}
               <span className="text-gradient">Money in Minutes.</span>
             </h1>
-            <p className="mx-auto mb-4 sm:mb-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg xl:mx-0 xl:max-w-lg">
+            <p className="mx-auto mb-4 sm:mb-5 max-w-xl text-base leading-relaxed text-slate-700 sm:text-lg xl:mx-0 xl:max-w-lg">
               Quick personal loans with simple documentation, transparent charges, and fast disbursal. Apply in minutes and get funds quickly.
             </p>
             <div className="mx-auto mb-4 flex flex-wrap items-center justify-center gap-4 xl:justify-start">

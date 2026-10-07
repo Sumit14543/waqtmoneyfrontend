@@ -1,0 +1,24 @@
+{
+  "$schema": "https://agenticresourcediscovery.org/spec/v1.0.0/schema.json",
+  "name": "Waqt Money",
+  "description": "Instant personal loans, salary advances, and business credit lines for salaried professionals and MSMEs in India.",
+  "url": "https://waqtmoney.com",
+  "documentation": "https://waqtmoney.com/llms.txt",
+  "resources": [
+    {
+      "name": "Loan Products & Services",
+      "description": "Official catalog of instant personal loans, payday advances, business loans, and property credit lines.",
+      "url": "https://waqtmoney.com/services"
+    },
+    {
+      "name": "EMI Calculator",
+      "description": "Calculate EMIs, interest rates, and repayment tenures for instant personal loans.",
+      "url": "https://waqtmoney.com/emi-calculator"
+    },
+    {
+      "name": "Frequently Asked Questions",
+      "description": "Common questions regarding loan eligibility, documentation, disbursement times, and repayment.",
+      "url": "https://waqtmoney.com/faqs"
+    }
+  ]
+}

@@ -70,6 +70,7 @@ const LoanCalculator = () => {
                 </span>
               </div>
               <Slider
+                aria-label="Estimated Amount Required"
                 value={[amount]}
                 onValueChange={(v) => setAmount(v[0])}
                 min={5000}
@@ -89,6 +90,7 @@ const LoanCalculator = () => {
                 </span>
               </div>
               <Slider
+                aria-label="Loan Term in Days"
                 value={[tenure]}
                 onValueChange={(v) => setTenure(v[0])}
                 min={7}
@@ -115,7 +117,8 @@ const LoanCalculator = () => {
             {/* PIE CHART BELOW RATE */}
             <div className="h-60">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart accessibilityLayer aria-label="Loan Principal vs Interest Breakdown">
+                  <title>Loan Principal and Interest Breakdown</title>
                   <Pie
                     data={chartData}
                     innerRadius={60}

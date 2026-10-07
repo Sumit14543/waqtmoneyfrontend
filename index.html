@@ -97,7 +97,7 @@
     <!-- Deferred Non-Blocking Tracking Scripts (GTM & GA4) -->
     <script>
       window.addEventListener('load', function() {
-        setTimeout(function() {
+        var loadTracking = function() {
           // GTM
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -115,7 +115,13 @@
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'G-0HK38FZXCF');
-        }, 1500);
+        };
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(function() { setTimeout(loadTracking, 2000); });
+        } else {
+          setTimeout(loadTracking, 2500);
+        }
       });
     </script>
   </body>
