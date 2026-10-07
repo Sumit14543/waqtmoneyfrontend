@@ -1,106 +1,94 @@
 import { Helmet } from "react-helmet-async";
-import { useDynamicPageMeta } from "@/hooks/useDynamicPageMeta";
+
+const CANONICAL_ORIGIN = "https://waqtmoney.com";
+const DEFAULT_OG_IMAGE = "https://waqtmoney.com/og-banner-1200x630.webp";
+const DEFAULT_KEYWORDS =
+  "personal loan, business loan, payday loan, quick loans, online loan approval, instant loan India, Waqt Money, Waqt Finance";
+const DEFAULT_DESCRIPTION =
+  "Apply for quick, paperless personal loans, payday advances, business loans, and secured property credits. Instant approvals from licensed NBFC partner Waqt Finance Pvt Ltd.";
+const SITE_NAME = "Waqt Money";
 
 type SchemaType = Record<string, unknown> | Record<string, unknown>[];
 
-type SEOProps = {
+export interface SEOProps {
   title: string;
-  description: string;
+  description?: string;
   canonicalUrl?: string;
+  canonical?: string;
   keywords?: string;
-  robots?: string; // e.g. "index, follow" or "noindex, nofollow"
+  robots?: string;
+  noindex?: boolean;
   ogType?: string;
   ogImage?: string;
   schema?: SchemaType;
-};
+}
 
-const DEFAULT_KEYWORDS =
-  "personal loan, business loan, payday loan, quick loans, online loan approval, instant loan India, Waqt Money, Waqt Finance";
-const DEFAULT_IMAGE = "https://waqtmoney.com/waqt-money-logo-img.png";
-const SITE_NAME = "Waqt Money";
-
-export default function SEO(props: SEOProps) {
-  const dynamicMeta = useDynamicPageMeta(props);
-
-  const title = dynamicMeta.title;
-  const description = dynamicMeta.description;
-  const canonicalUrl = dynamicMeta.canonicalUrl;
-  const keywords = dynamicMeta.keywords;
-  const robots = dynamicMeta.robots || props.robots || "index, follow";
-  const ogType = props.ogType || "website";
-  const ogImage = dynamicMeta.ogImage || props.ogImage || DEFAULT_IMAGE;
-  const schema = dynamicMeta.schema || props.schema;
-
-  const fallbackUrl =
+export function SEO({
+  title,
+  description = DEFAULT_DESCRIPTION,
+  canonicalUrl,
+  canonical,
+  keywords,
+  robots,
+  noindex = false,
+  ogType = "website",
+  ogImage = DEFAULT_OG_IMAGE,
+  schema,
+}: SEOProps) {
+  // Always use the canonical non-www origin (never window.location.origin)
+  const rawPath =
     typeof window !== "undefined"
-      ? `${window.location.origin}${window.location.pathname.toLowerCase().replace(/\/$/, "")}`
-      : "https://waqtmoney.com";
-  const currentUrl = (canonicalUrl || fallbackUrl).toLowerCase();
-  const fullTitle = title.includes("Waqt Money") ? title : `${title} | ${SITE_NAME}`;
+      ? window.location.pathname.toLowerCase().replace(/\/+$/, "")
+      : "";
+  const fallbackUrl = rawPath ? `${CANONICAL_ORIGIN}${rawPath}` : `${CANONICAL_ORIGIN}/`;
+  const finalCanonical = (canonical || canonicalUrl || fallbackUrl).toLowerCase();
 
-  // Format schema cleanly into valid JSON-LD graph structure without duplicates
-  const formatSchema = (input: SchemaType) => {
-    if (!input) return null;
-    const list: Record<string, unknown>[] = Array.isArray(input) ? input : [input];
+  const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
 
-    // Remove duplicates based on @type and @id or name
-    const seenTypes = new Set<string>();
-    const deduplicatedList: Record<string, unknown>[] = [];
+  const finalRobots = noindex
+    ? "noindex, nofollow"
+    : robots || "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
 
-    list.forEach((item) => {
-      if (!item || typeof item !== "object") return;
-      const typeStr = String(item["@type"] || "");
-      const key = item["@id"] ? String(item["@id"]) : typeStr;
-      
-      // Skip top-level FinancialService from page-level schemas since index.html already has the master FinancialService schema
-      if (typeStr === "FinancialService") {
-        return;
-      }
-
-      if (typeStr === "Organization") {
-        if (seenTypes.has(typeStr)) return;
-        seenTypes.add(typeStr);
-      } else if (key) {
-        if (seenTypes.has(key)) return;
-        seenTypes.add(key);
-      }
-
-      // Clean redundant inner @context
-      const cleanItem = { ...item };
-      delete cleanItem["@context"];
-      deduplicatedList.push(cleanItem);
-    });
-
-    if (deduplicatedList.length === 0) return null;
-    if (deduplicatedList.length === 1 && !Array.isArray(input)) {
-      return { "@context": "https://schema.org", ...deduplicatedList[0] };
-    }
-
-    return {
-      "@context": "https://schema.org",
-      "@graph": deduplicatedList
-    };
-  };
-
-  const formattedSchema = schema ? formatSchema(schema) : null;
+  // Preserve page-level FinancialService schemas (needed for City Loan pages & /services)
+  const structuredData = schema
+    ? (() => {
+        const items = (Array.isArray(schema) ? schema : [schema]) as Record<string, unknown>[];
+        const cleaned = items
+          .filter((item) => item && typeof item === "object")
+          .map((item) => {
+            const copy = { ...item };
+            delete copy["@context"];
+            return copy;
+          });
+        if (cleaned.length === 0) return null;
+        if (cleaned.length === 1 && !Array.isArray(schema)) {
+          return { "@context": "https://schema.org", ...cleaned[0] };
+        }
+        return { "@context": "https://schema.org", "@graph": cleaned };
+      })()
+    : null;
 
   return (
     <Helmet>
       {/* Basic Metadata */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
-      {keywords && <meta name="keywords" content={`${DEFAULT_KEYWORDS}, ${keywords}`} />}
-      {!keywords && <meta name="keywords" content={DEFAULT_KEYWORDS} />}
-      <meta name="robots" content={robots} />
+      {keywords ? (
+        <meta name="keywords" content={`${DEFAULT_KEYWORDS}, ${keywords}`} />
+      ) : (
+        <meta name="keywords" content={DEFAULT_KEYWORDS} />
+      )}
+      <meta name="robots" content={finalRobots} />
       <meta name="author" content="Waqt Finance Pvt Ltd" />
-      <link rel="canonical" href={currentUrl} />
+      <link rel="canonical" href={finalCanonical} />
 
       {/* Open Graph / Facebook */}
+      <meta property="og:locale" content="en_IN" />
       <meta property="og:type" content={ogType} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
-      <meta property="og:url" content={currentUrl} />
+      <meta property="og:url" content={finalCanonical} />
       <meta property="og:site_name" content={SITE_NAME} />
 
       {/* Twitter Cards */}
@@ -110,11 +98,13 @@ export default function SEO(props: SEOProps) {
       <meta name="twitter:image" content={ogImage} />
 
       {/* JSON-LD Schema Markup */}
-      {formattedSchema && (
+      {structuredData && (
         <script type="application/ld+json">
-          {JSON.stringify(formattedSchema)}
+          {JSON.stringify(structuredData)}
         </script>
       )}
     </Helmet>
   );
 }
+
+export default SEO;

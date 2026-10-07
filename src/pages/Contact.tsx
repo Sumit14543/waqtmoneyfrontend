@@ -189,7 +189,7 @@ const Contact = () => {
                     <Phone className="text-green-700 dark:text-green-300 group-hover:text-white transition-colors" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">Call Us</h3>
+                    <h2 className="text-base font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">Call Us</h2>
                     <p className="text-gray-600 dark:text-slate-400 text-sm">
                       +91 9217086608
                     </p>
@@ -205,7 +205,7 @@ const Contact = () => {
                     <Mail className="text-purple-700 dark:text-purple-300 group-hover:text-white transition-colors" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Email Support</h3>
+                    <h2 className="text-base font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Email Support</h2>
                     <p className="text-gray-600 dark:text-slate-400 text-sm break-words">
                       support@waqtmoney.in
                     </p>
@@ -218,9 +218,9 @@ const Contact = () => {
                     <Clock className="text-orange-700 dark:text-orange-300" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">Working Hours</h3>
+                    <h2 className="text-base font-semibold text-gray-900 dark:text-white">Working Hours</h2>
                     <p className="text-gray-600 dark:text-slate-400 text-sm">
-                      Mon - Sat: 9AM - 7PM <br />
+                      Mon - Sat: 9:30 AM - 6:30 PM <br />
                       Sunday: Closed
                     </p>
                   </div>
@@ -231,9 +231,9 @@ const Contact = () => {
 
             {/* Form */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 md:p-10">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 Contact Us
-              </h3>
+              </h2>
 
               <form className="space-y-5" onSubmit={handleSubmit}>
 

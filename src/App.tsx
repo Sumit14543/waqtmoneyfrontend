@@ -18,11 +18,10 @@ import { Toaster } from "./Components/ui/toaster";
 import { TooltipProvider } from "@/Components/ui/tooltip";
 import EnterKeyFocusHandler from "./Components/EnterKeyFocusHandler.tsx";
 import ScrollToTop from "./Components/ScrollToTop.tsx";
-import SpeculationRules from "./Components/SpeculationRules.tsx";
 
 const queryClient = new QueryClient();
 
-const Index = lazy(() => import("./pages/Index.tsx"));
+import Index from "./pages/Index.tsx";
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const Services = lazy(() => import("./pages/Services.tsx"));
 const About = lazy(() => import("./pages/About-us.tsx"));
@@ -53,7 +52,6 @@ const AdminLeadDetail = lazy(() => import("./pages/admin/AdminLeadDetail.tsx"));
 const AdminContacts = lazy(() => import("./pages/admin/AdminContacts.tsx"));
 const AdminBlogs = lazy(() => import("./pages/admin/AdminBlogs.tsx"));
 const AdminBlogForm = lazy(() => import("./pages/admin/AdminBlogForm.tsx"));
-const AdminWebpagesMeta = lazy(() => import("./pages/admin/AdminWebpagesMeta.tsx"));
 
 // PUBLIC BLOG ROUTES
 const Blog = lazy(() => import("./pages/Blog.tsx"));
@@ -111,9 +109,8 @@ const App = () => (
       <BrowserRouter>
         <EnterKeyFocusHandler />
         <ScrollToTop />
-        <SpeculationRules />
         <Routes>
-          <Route path="/" element={withSuspense(Index, <HomeFallback />)} />
+          <Route path="/" element={<Index />} />
           <Route path="/services" element={withSuspense(Services, <ContentPageFallback />)} />
           <Route path="/about" element={withSuspense(About, <ContentPageFallback />)} />
           <Route path="/faqs" element={withSuspense(Faqs, <ContentPageFallback />)} />
@@ -243,7 +240,6 @@ const App = () => (
           <Route path="/admin/blogs" element={withSuspense(AdminBlogs, <AdminTablePageFallback />)} />
           <Route path="/admin/blogs/new" element={withSuspense(AdminBlogForm, <AdminBlogFormFallback />)} />
           <Route path="/admin/blogs/edit/:id" element={withSuspense(AdminBlogForm, <AdminBlogFormFallback />)} />
-          <Route path="/admin/webpages-meta" element={withSuspense(AdminWebpagesMeta, <AdminTablePageFallback />)} />
 
           <Route path="*" element={withSuspense(NotFound, <ContentPageFallback />)} />
         </Routes>

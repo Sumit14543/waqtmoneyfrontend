@@ -80,7 +80,7 @@ const HeroSection = () => {
               RBI Registered NBFC
             </div>
             <h1 className="mx-auto mb-4 max-w-2xl font-heading text-4xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl xl:mx-0">
-              Fast Approvals{" "}
+              Instant Personal Loan & Salary Advance in India —{" "}
               <span className="text-gradient">Money in Minutes.</span>
             </h1>
             <p className="mx-auto mb-4 sm:mb-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg xl:mx-0 xl:max-w-lg">
@@ -150,8 +150,8 @@ const HeroSection = () => {
               <div className="relative w-full text-center">
                 <div className="absolute -inset-4 rounded-full bg-primary/10 blur-3xl sm:-inset-12" />
                 <img
-                  src="/hero_banner_custom.png"
-                  alt="Waqt Money instant loan features with up to 50000, flexible repayment, instant approval and low interest rates"
+                  src="/hero_banner_custom.webp"
+                  alt="Waqt Money Instant Personal Loan and Salary Advance App in India"
                   width={604}
                   height={511}
                   style={{ aspectRatio: "604 / 511" }}

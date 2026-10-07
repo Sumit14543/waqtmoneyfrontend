@@ -139,7 +139,7 @@ const Faqs = () => {
                 }`}
               >
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-sm font-medium text-neutral-800">{faq.question}</span>
+                  <h2 className="text-sm font-medium text-neutral-800 m-0 p-0">{faq.question}</h2>
                   <div
                     className={`rounded p-1 text-slate-400 transition-colors ${
                       openIndex === index ? "bg-slate-200 text-slate-500" : "hover:bg-slate-300 hover:text-slate-500"

@@ -49,7 +49,7 @@ export default function GrievanceRedressal() {
             </p>
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Support Email:</strong> support@waqtmoney.in</li>
-              <li><strong>Operational Hours:</strong> 9:00 AM to 6:00 PM (Monday to Saturday, excluding public holidays)</li>
+              <li><strong>Operational Hours:</strong> Monday to Saturday: 9:30 AM to 6:30 PM IST (excluding public holidays)</li>
               <li><strong>Expected Resolution Time:</strong> 24 to 48 business hours</li>
             </ul>
 
@@ -61,8 +61,9 @@ export default function GrievanceRedressal() {
               If your complaint is not resolved within 7 business days at Level 1, or if you are not satisfied with the resolution, you may escalate the issue to our dedicated Grievance Officer:
             </p>
             <ul className="list-disc pl-5 space-y-2">
-              <li><strong>Officer Name:</strong> Grievance Officer – Waqt Money</li>
+              <li><strong>Officer:</strong> Nodal Grievance Redressal Officer – Waqt Finance Pvt Ltd</li>
               <li><strong>Contact Email:</strong> support@waqtmoney.in</li>
+              <li><strong>Contact Phone:</strong> +91-9217086608</li>
               <li><strong>Address:</strong> Waqt Finance Pvt Ltd, H-15 BSI Business Park, H Block, Sector 63, Noida, Uttar Pradesh, India</li>
               <li><strong>Expected Resolution Time:</strong> Within 7 working days</li>
             </ul>

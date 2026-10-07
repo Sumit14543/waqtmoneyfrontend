@@ -200,7 +200,7 @@ export default function BusinessLoan() {
           "@type": "ListItem",
           "position": 2,
           "name": "Loans",
-          "item": "https://waqtmoney.com/loans"
+          "item": "https://waqtmoney.com/services"
         },
         {
           "@type": "ListItem",

@@ -1,16 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-IN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Permissions-Policy" content="geolocation=*, camera=*, microphone=*" />
-    
-    <!-- Fallback/Default SEO Meta Tags -->
-    <title>Waqt Money - Quick Online Personal Loans with Instant Approval</title>
-    <meta name="description" content="Get instant personal loans, payday loans, and business loans online with Waqt Money. Quick approvals, paperless documentation, and direct disbursal within minutes." />
+
+    <!-- Default SEO Meta Tags (with data-rh="true" so react-helmet-async replaces instead of duplicating) -->
+    <title data-rh="true">Waqt Money - Instant Personal & Business Loans Online</title>
+    <meta data-rh="true" name="description" content="Apply for quick, paperless personal loans, payday advances, business loans, and secured property credits. Instant approvals from licensed NBFC partner Waqt Finance Pvt Ltd." />
+    <meta data-rh="true" name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link data-rh="true" rel="canonical" href="https://waqtmoney.com/" />
     <meta name="theme-color" content="#6d28d9" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    
+
+    <!-- Static OpenGraph & Twitter Cards for Non-JS Crawlers (WhatsApp, LinkedIn, FB, X) -->
+    <meta data-rh="true" property="og:locale" content="en_IN" />
+    <meta data-rh="true" property="og:type" content="website" />
+    <meta data-rh="true" property="og:site_name" content="Waqt Money" />
+    <meta data-rh="true" property="og:title" content="Waqt Money - Instant Personal & Business Loans Online" />
+    <meta data-rh="true" property="og:description" content="Apply for quick, paperless personal loans, payday advances, business loans, and secured property credits. Instant approvals from licensed NBFC partner Waqt Finance Pvt Ltd." />
+    <meta data-rh="true" property="og:url" content="https://waqtmoney.com/" />
+    <meta data-rh="true" property="og:image" content="https://waqtmoney.com/og-banner-1200x630.webp" />
+    <meta data-rh="true" name="twitter:card" content="summary_large_image" />
+    <meta data-rh="true" name="twitter:title" content="Waqt Money - Instant Personal & Business Loans Online" />
+    <meta data-rh="true" name="twitter:description" content="Apply for quick, paperless personal loans, payday advances, business loans, and secured property credits." />
+    <meta data-rh="true" name="twitter:image" content="https://waqtmoney.com/og-banner-1200x630.webp" />
+
     <!-- Favicon and Icons -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -18,10 +32,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- LCP Hero Image Preload Hint -->
-    <link rel="preload" as="image" href="/landing_banner_img.webp" type="image/webp" fetchpriority="high" />
+    <!-- Preload ACTUAL Hero Image (WebP) -->
+    <link rel="preload" as="image" href="/hero_banner_custom.webp" type="image/webp" fetchpriority="high" />
 
-    <!-- Resource Preconnects & Non-Render Blocking Google Fonts -->
+    <!-- Resource Preconnects -->
+    <link rel="preconnect" href="https://api.waqtmoney.com" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
@@ -38,15 +53,16 @@
     {
       "@context": "https://schema.org",
       "@type": "FinancialService",
+      "@id": "https://waqtmoney.com/#financialservice",
       "name": "Waqt Money",
       "legalName": "Waqt Finance Pvt Ltd",
       "url": "https://waqtmoney.com",
       "logo": "https://waqtmoney.com/waqt-money-logo-img.png",
-      "image": "https://waqtmoney.com/landing_banner_img.webp",
+      "image": "https://waqtmoney.com/og-banner-1200x630.webp",
       "description": "Instant Personal Loans, Payday Loans, and Business Credit Lines for Salaried Professionals and MSMEs in India.",
       "telephone": "+91-9217086608",
       "email": "support@waqtmoney.in",
-      "priceRange": "₹5,000 - ₹5,00,000",
+      "priceRange": "₹5,000 - ₹25,00,000",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "H-15 BSI Business Park, H Block, Sector 63",
@@ -62,68 +78,13 @@
       },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday"
-        ],
-        "opens": "09:00",
-        "closes": "19:00"
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "09:30",
+        "closes": "18:30"
       }
-    <!-- W3C Speculation Rules API for Instant Next-Gen Browser Pre-rendering -->
-    <script type="speculationrules">
-    {
-      "prerender": [
-        {
-          "source": "list",
-          "urls": [
-            "/",
-            "/about",
-            "/services",
-            "/emi-calculator",
-            "/faqs",
-            "/contact",
-            "/policies",
-            "/loans/personal-loan",
-            "/loans/business-loan",
-            "/loans/payday-loan",
-            "/loans/loan-against-property",
-            "/loans/vehicle-loan",
-            "/loans/short-term-loan",
-            "/loans/education-loan",
-            "/loans/medical-loan",
-            "/loans/delhi",
-            "/loans/delhi-ncr",
-            "/loans/gurugram",
-            "/loans/noida-greater-noida",
-            "/loans/ghaziabad",
-            "/blog"
-          ],
-          "eagerness": "moderate"
-        }
-      ],
-      "prefetch": [
-        {
-          "source": "list",
-          "urls": [
-            "/privacy-policy",
-            "/terms-conditions",
-            "/refund-policy",
-            "/disclaimer",
-            "/grievance-redressal",
-            "/responsible-lending",
-            "/repayment"
-          ],
-          "eagerness": "moderate"
-        }
-      ]
     }
     </script>
   </head>
-
   <body>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WLW8NHFK"

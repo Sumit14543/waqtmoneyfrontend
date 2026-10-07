@@ -1,5 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import SEO from "@/Components/SEO";
@@ -15,10 +16,14 @@ export default function NotFound() {
   return (
     <>
       <SEO
-        title="404 - Page Not Found"
-        description="The requested page could not be found. Return to Waqt Money homepage to access instant loans."
-        robots="noindex, nofollow"
+        title="404 - Page Not Found | Waqt Money"
+        description="The page you are looking for does not exist or has been moved. Explore Waqt Money instant personal and salary advance loans."
+        canonical="https://waqtmoney.com/404"
+        noindex={true}
       />
+      <Helmet>
+        <meta name="prerender-status-code" content="404" />
+      </Helmet>
       <Navbar />
 
       <main className="min-h-screen flex flex-col justify-between bg-gradient-to-b from-white via-[#fbf9ff] to-white pt-24">

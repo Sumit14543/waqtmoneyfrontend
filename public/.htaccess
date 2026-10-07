@@ -1,7 +1,6 @@
-# ====================================================================
-# WAQT MONEY PRODUCTION .HTACCESS FOR CPANEL / APACHE
-# High-Performance Compression, Caching, Security & SPA Routing
-# ====================================================================
+# ============================================================================
+# Waqt Money Production Apache .htaccess (SEO, Security & CWV Optimized)
+# ============================================================================
 
 # Disable Directory Indexing
 Options -Indexes
@@ -68,7 +67,7 @@ DirectoryIndex index.html
 
 # 4. Security & Headers
 <IfModule mod_headers.c>
-  # Static Cache
+  # Static Cache (Hashed assets immutable)
   <FilesMatch "\.(css|js|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
@@ -81,69 +80,69 @@ DirectoryIndex index.html
   </FilesMatch>
 
   # Security Headers
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  
-  # Remove restrictive server geolocation=() policy and allow geolocation
-  Header always unset Permissions-Policy
-  Header unset Permissions-Policy
-  Header always set Permissions-Policy "geolocation=*, camera=*, microphone=*"
-  Header set Permissions-Policy "geolocation=*, camera=*, microphone=*"
+  # Allow camera, microphone, and geolocation for Video KYC
+  Header always set Permissions-Policy "camera=(self), microphone=(self), geolocation=(self), payment=(self)"
 </IfModule>
 
-# 5. React SPA Routing, Non-WWW Redirect & Force HTTPS
+# 5. MIME Types
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType image/webp .webp
+</IfModule>
+
+# 6. Rewrite Engine & SEO Canonicalization
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # 1. Force Non-WWW (Redirect www.waqtmoney.com to waqtmoney.com)
-  RewriteCond %{HTTP_HOST} ^www\.(.+) [NC]
-  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+  # Force HTTPS + non-www in a SINGLE 301 hop
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\.waqtmoney\.com$ [NC]
+  RewriteRule ^(.*)$ https://waqtmoney.com/$1 [L,R=301]
 
-  # 2. Force HTTPS
-  RewriteCond %{HTTPS} !=on
-  RewriteRule ^ https://waqtmoney.com%{REQUEST_URI} [R=301,L]
+  # Strip trailing slashes on inner routes (except directories)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} (.+)/$
+  RewriteRule ^ %1 [L,R=301]
 
-  # 3. Canonical 301 Redirects for Duplicate Loan URLs
-  RewriteRule ^personal-loan/?$ https://waqtmoney.com/loans/personal-loan [R=301,L]
-  RewriteRule ^business-loan/?$ https://waqtmoney.com/loans/business-loan [R=301,L]
-  RewriteRule ^payday-loan/?$ https://waqtmoney.com/loans/payday-loan [R=301,L]
-  RewriteRule ^pay-day-loan/?$ https://waqtmoney.com/loans/payday-loan [R=301,L]
-  RewriteRule ^loan-against-property/?$ https://waqtmoney.com/loans/loan-against-property [R=301,L]
-  RewriteRule ^vehicle-loan/?$ https://waqtmoney.com/loans/vehicle-loan [R=301,L]
-  RewriteRule ^short-term-loan/?$ https://waqtmoney.com/loans/short-term-loan [R=301,L]
-  RewriteRule ^short-term-loans/?$ https://waqtmoney.com/loans/short-term-loan [R=301,L]
-  RewriteRule ^medical-loan/?$ https://waqtmoney.com/loans/medical-loan [R=301,L]
-  RewriteRule ^education-loan/?$ https://waqtmoney.com/loans/education-loan [R=301,L]
+  # Server-side 301 Redirects for Legacy Root Loan URLs -> Canonical /loans/*
+  RewriteRule ^personal-loan/?$ https://waqtmoney.com/loans/personal-loan [L,R=301]
+  RewriteRule ^business-loan/?$ https://waqtmoney.com/loans/business-loan [L,R=301]
+  RewriteRule ^(payday-loan|pay-day-loan)/?$ https://waqtmoney.com/loans/payday-loan [L,R=301]
+  RewriteRule ^(short-term-loan|short-term-loans)/?$ https://waqtmoney.com/loans/short-term-loan [L,R=301]
+  RewriteRule ^vehicle-loan/?$ https://waqtmoney.com/loans/vehicle-loan [L,R=301]
+  RewriteRule ^loan-against-property/?$ https://waqtmoney.com/loans/loan-against-property [L,R=301]
+  RewriteRule ^medical-loan/?$ https://waqtmoney.com/loans/medical-loan [L,R=301]
+  RewriteRule ^education-loan/?$ https://waqtmoney.com/loans/education-loan [L,R=301]
+  RewriteRule ^loans/?$ https://waqtmoney.com/services [L,R=301]
 
-  # 4. Canonical 301 Redirects for Case Variations & Legal Pages
-  RewriteRule ^Faqs/?$ https://waqtmoney.com/faqs [R=301,L]
-  RewriteRule ^Emi-Calculator/?$ https://waqtmoney.com/emi-calculator [R=301,L]
-  RewriteRule ^Repayment/?$ https://waqtmoney.com/repayment [R=301,L]
-  RewriteRule ^Policies/?$ https://waqtmoney.com/policies [R=301,L]
-  RewriteRule ^Contact/?$ https://waqtmoney.com/contact [R=301,L]
-  RewriteRule ^Privacy-Policies/?$ https://waqtmoney.com/privacy-policy [R=301,L]
-  RewriteRule ^privacy-policies/?$ https://waqtmoney.com/privacy-policy [R=301,L]
-  RewriteRule ^blogs/?$ https://waqtmoney.com/blog [R=301,L]
-  RewriteRule ^blogs/(.*)$ https://waqtmoney.com/blog/$1 [R=301,L]
-
-  # 5. Serve Pre-rendered Static HTML Pages directly (e.g. /about -> about/index.html)
-  RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
-  RewriteRule ^([a-zA-Z0-9\-_/]+)/?$ $1/index.html [L]
+  # Canonical 301 Redirects for Case Variations & Legacy routes
+  RewriteRule ^Faqs/?$ https://waqtmoney.com/faqs [L,R=301]
+  RewriteRule ^Emi-Calculator/?$ https://waqtmoney.com/emi-calculator [L,R=301]
+  RewriteRule ^Repayment/?$ https://waqtmoney.com/repayment [L,R=301]
+  RewriteRule ^Policies/?$ https://waqtmoney.com/policies [L,R=301]
+  RewriteRule ^Contact/?$ https://waqtmoney.com/contact [L,R=301]
+  RewriteRule ^(Privacy-Policies|privacy-policies)/?$ https://waqtmoney.com/privacy-policy [L,R=301]
+  RewriteRule ^blogs/?$ https://waqtmoney.com/blog [L,R=301]
+  RewriteRule ^blogs/(.*)$ https://waqtmoney.com/blog/$1 [L,R=301]
 
   # Serve existing physical static files directly
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # Fallback directories without an index.html to main index.html
+  # Serve pre-rendered HTML snapshot if directory/index.html exists
   RewriteCond %{REQUEST_FILENAME} -d
-  RewriteCond %{REQUEST_FILENAME}/index.html !-f
-  RewriteRule ^ index.html [L]
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^ - [L]
 
-  # React Router fallback to index.html for dynamic client-side routes (e.g. /user/*, /admin/*)
+  # React SPA Routing Fallback (for valid client routes)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ index.html [L]
 </IfModule>
 
 ErrorDocument 404 /index.html
-

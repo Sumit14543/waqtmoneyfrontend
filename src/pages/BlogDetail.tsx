@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import SEO from "@/Components/SEO";
+import NotFound from "./NotFound";
 import {
   Calendar,
   Clock,
@@ -32,14 +33,12 @@ interface Blog {
   viewsCount?: string;
 }
 
-// Synchronous helper to resolve blog instantly from local storage or fallback list
-const findInitialBlog = (cleanSlug: string): Blog => {
-  if (!cleanSlug) return fallbackBlogs[0] as unknown as Blog;
+// Synchronous helper to resolve blog strictly from local custom or fallback list
+const findExactStaticBlog = (cleanSlug: string): Blog | null => {
+  if (!cleanSlug) return null;
 
   try {
     const localCustom = getLocalBlogs() || [];
-
-    // 1. Exact match in local storage custom blogs
     const foundLocal = localCustom.find(
       (b) =>
         (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
@@ -50,7 +49,6 @@ const findInitialBlog = (cleanSlug: string): Blog => {
     console.warn("Error reading local custom blogs:", e);
   }
 
-  // 2. Exact match in fallback mock blogs
   const foundFallback = fallbackBlogs.find(
     (b) =>
       (b.slug || "").trim().toLowerCase().replace(/[\s_]+/g, "-") === cleanSlug ||
@@ -58,31 +56,24 @@ const findInitialBlog = (cleanSlug: string): Blog => {
   );
   if (foundFallback) return foundFallback as unknown as Blog;
 
-  // 3. Partial keyword / slug match in fallback mock blogs
-  const partialMatch = fallbackBlogs.find(
-    (b) =>
-      cleanSlug.includes((b.slug || "").trim().toLowerCase()) ||
-      (b.slug || "").trim().toLowerCase().includes(cleanSlug) ||
-      cleanSlug
-        .split("-")
-        .filter((w) => w.length > 3)
-        .some((word) => (b.title || "").toLowerCase().includes(word) || (b.slug || "").toLowerCase().includes(word))
-  );
-  if (partialMatch) return partialMatch as unknown as Blog;
-
-  // 4. Default fallback to first blog so page NEVER hangs on loading or Article Not Found
-  return fallbackBlogs[0] as unknown as Blog;
+  return null;
 };
 
 export default function BlogDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const [blog, setBlog] = useState<Blog>(() => {
+  const [blog, setBlog] = useState<Blog | null>(() => {
     const rawSlug = String(slug || "").trim();
     const decodedSlug = decodeURIComponent(rawSlug);
     const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
-    return findInitialBlog(cleanSlug);
+    return findExactStaticBlog(cleanSlug);
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(() => {
+    const rawSlug = String(slug || "").trim();
+    const decodedSlug = decodeURIComponent(rawSlug);
+    const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
+    return !findExactStaticBlog(cleanSlug);
+  });
+  const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState("");
   const [sidebarSearch, setSidebarSearch] = useState("");
 
@@ -93,30 +84,32 @@ export default function BlogDetail() {
     const decodedSlug = decodeURIComponent(rawSlug);
     const cleanSlug = decodedSlug.toLowerCase().replace(/[\s_]+/g, "-");
 
-    // 1. INSTANT SYNCHRONOUS RESOLUTION (0ms delay)
-    const initialFound = findInitialBlog(cleanSlug);
-    if (isMounted) {
-      setBlog(initialFound);
+    const exactLocal = findExactStaticBlog(cleanSlug);
+    if (exactLocal) {
+      setBlog(exactLocal);
       setLoading(false);
+      setNotFound(false);
+    } else {
+      setLoading(true);
     }
 
-    // 2. Background API Sync with 2.5s Abort Timeout
     const fetchBlog = async () => {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2500);
-
       try {
-        const response = await fetch(`${API_BASE_URL}/blogs/${cleanSlug}`, {
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
+        const response = await fetch(`${API_BASE_URL}/blogs/${cleanSlug}`);
         const data = await response.json().catch(() => null);
 
-        if (isMounted && response.ok && data?.success && data?.blog) {
+        if (!isMounted) return;
+
+        if (response.ok && data?.success && data?.blog) {
           setBlog(data.blog);
+          setNotFound(false);
+        } else if (!exactLocal) {
+          setNotFound(true);
         }
       } catch {
-        clearTimeout(timeoutId);
+        if (isMounted && !exactLocal) {
+          setNotFound(true);
+        }
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -396,56 +389,28 @@ export default function BlogDetail() {
     return headings;
   };
 
-  const activeBlog = blog || (fallbackBlogs[0] as unknown as Blog);
-  const tableOfContents = extractTableOfContents(activeBlog.content).slice(0, 5);
-
-  const extractBlogFaqs = (b: Blog): Array<{ question: string; answer: string }> => {
-    const raw = (b as any).faq_schema || (b as any).faqSchema || (b as any).faqs;
-    if (!raw) return [];
-    try {
-      const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
-      if (Array.isArray(parsed)) {
-        return parsed.filter((f: any) => f.question?.trim() && f.answer?.trim());
-      }
-    } catch {}
-    return [];
-  };
-  const blogFaqs = extractBlogFaqs(activeBlog);
-
-  const schemas: Record<string, unknown>[] = [
-    {
-      "@type": "BlogPosting",
-      headline: activeBlog.title,
-      description: activeBlog.excerpt,
-      author: {
-        "@type": "Organization",
-        name: activeBlog.author || "Waqt Finance Pvt Ltd"
-      },
-      publisher: {
-        "@type": "Organization",
-        name: "Waqt Money",
-        logo: {
-          "@type": "ImageObject",
-          url: "https://waqtmoney.com/waqt-money-logo-img.png"
-        }
-      },
-      datePublished: activeBlog.created_at || "2026-07-31"
-    }
-  ];
-
-  if (blogFaqs.length > 0) {
-    schemas.push({
-      "@type": "FAQPage",
-      mainEntity: blogFaqs.map((f) => ({
-        "@type": "Question",
-        name: f.question,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: f.answer
-        }
-      }))
-    });
+  if (notFound) {
+    return <NotFound />;
   }
+
+  if (loading && !blog) {
+    return (
+      <div className="min-h-screen bg-[#faf9ff]">
+        <Navbar />
+        <div className="pt-32 pb-20 flex justify-center items-center">
+          <div className="w-10 h-10 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!blog) {
+    return <NotFound />;
+  }
+
+  const activeBlog = blog;
+  const tableOfContents = extractTableOfContents(activeBlog.content).slice(0, 5);
 
   return (
     <div className="min-h-screen bg-[#faf9ff] font-sans text-slate-900">
@@ -459,9 +424,27 @@ export default function BlogDetail() {
               description={activeBlog.excerpt}
               canonicalUrl={`https://waqtmoney.com/blog/${activeBlog.slug}`}
               ogType="article"
-              ogImage={getImageUrl(activeBlog.image)}
-              schema={schemas}
-            />
+                ogImage={getImageUrl(activeBlog.image)}
+                schema={{
+                  "@context": "https://schema.org",
+                  "@type": "BlogPosting",
+                  headline: activeBlog.title,
+                  description: activeBlog.excerpt,
+                  author: {
+                    "@type": "Organization",
+                    name: activeBlog.author || "Waqt Finance Pvt Ltd"
+                  },
+                  publisher: {
+                    "@type": "Organization",
+                    name: "Waqt Money",
+                    logo: {
+                      "@type": "ImageObject",
+                      url: "https://waqtmoney.com/waqt-money-logo-img.png"
+                    }
+                  },
+                  datePublished: activeBlog.created_at || "2026-07-31"
+                }}
+              />
 
               {/* Breadcrumb Navigation */}
               <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs font-semibold text-slate-500">
@@ -503,11 +486,15 @@ export default function BlogDetail() {
                     <Clock size={13} className="text-purple-500" />
                     {activeBlog.readTime || "5 Min Read"}
                   </span>
-                  <span className="text-slate-300">•</span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <Eye size={13} className="text-purple-500" />
-                    {activeBlog.viewsCount || "142 Views"}
-                  </span>
+                  {activeBlog.viewsCount && (
+                    <>
+                      <span className="text-slate-300">•</span>
+                      <span className="flex items-center gap-1 font-medium">
+                        <Eye size={13} className="text-purple-500" />
+                        {activeBlog.viewsCount}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -549,31 +536,6 @@ export default function BlogDetail() {
                       renderContentBlocks(activeBlog.content)
                     )}
                   </div>
-
-                  {/* FAQ Accordion Section */}
-                  {blogFaqs.length > 0 && (activeBlog as any).displayFaqs !== false && (
-                    <div className="mt-10 pt-8 border-t border-purple-100 space-y-4">
-                      <div className="flex items-center gap-2.5">
-                        <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 shadow-xs"></span>
-                        <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-                          Frequently Asked Questions
-                        </h2>
-                      </div>
-                      <div className="space-y-3 pt-2">
-                        {blogFaqs.map((faq, idx) => (
-                          <div key={idx} className="p-4 rounded-2xl bg-purple-50/40 border border-purple-100/80 space-y-1.5 hover:border-purple-200 transition">
-                            <h3 className="text-sm sm:text-base font-bold text-slate-900 flex items-start gap-2">
-                              <span className="text-purple-600 font-extrabold text-sm mt-0.5">Q.</span>
-                              <span>{faq.question}</span>
-                            </h3>
-                            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pl-5 font-normal">
-                              {faq.answer}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </article>
 
                 {/* Right Column: Unified Sticky Sidebar */}
@@ -624,7 +586,7 @@ export default function BlogDetail() {
                     {/* Promotional Loan CTA Box */}
                     <div className="bg-gradient-to-br from-purple-950 via-slate-900 to-purple-950 text-white rounded-3xl p-6 shadow-xl border border-purple-900/40 text-center space-y-4">
                       <span className="inline-block bg-purple-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
-                        INSTANT DISPURSAL
+                        INSTANT DISBURSAL
                       </span>
                       <h3 className="font-heading text-xl font-extrabold leading-snug">
                         Need Quick Funds Today?

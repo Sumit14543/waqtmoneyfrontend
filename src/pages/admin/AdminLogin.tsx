@@ -195,13 +195,11 @@ export default function AdminLogin() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-purple-600 outline-none text-slate-800"
-                    placeholder="shivani@waqtfinance.com or support@waqtmoney.in"
+                    placeholder="Enter admin email"
+                    autoComplete="off"
                     required
                   />
                 </div>
-                <p className="mt-1 text-[11px] text-slate-400">
-                  Allowed domains: <span className="font-semibold text-purple-600">@waqtfinance.com</span> or <span className="font-semibold text-purple-600">@waqtmoney.in</span>
-                </p>
               </div>
 
               <div>
