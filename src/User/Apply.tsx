@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRightCircle, CalendarDays, ChevronDown, FileText, Lock, Zap } from "lucide-react";
 import Navbar from "@/Components/Navbar";
@@ -53,6 +53,11 @@ const Apply = () => {
   const agreeRef = useRef<HTMLInputElement>(null);
 
   const [showIntro, setShowIntro] = useState(true);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const [employment, setEmployment] = useState("salaried");
   const [salary, setSalary] = useState("");
   const [loanAmount, setLoanAmount] = useState("");
@@ -625,6 +630,18 @@ const Apply = () => {
       setLoading(false);
     }
   };
+
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Navbar />
+        <div className="py-24 text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (showIntro) {
     const introCards = [

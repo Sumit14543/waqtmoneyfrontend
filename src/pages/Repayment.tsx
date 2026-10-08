@@ -53,6 +53,12 @@ const isRealLoanId = (value?: string | null) => {
 
 const Repayment = () => {
   const navigate = useNavigate();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const [pan, setPan] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [otpRequested, setOtpRequested] = useState(false);
@@ -406,6 +412,24 @@ const Repayment = () => {
       ]
     }
   ];
+
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-[#f7f5ff]">
+        <SEO
+          title="Repay Your Loan Online - Secure Repayment Options"
+          description="Repay your Waqt Money loan securely online. View step-by-step instructions for UPI transfer, NEFT/IMPS bank transfer, and card payment clearance."
+          keywords="repay loan online, loan payment UPI, NEFT loan repayment, credit payback portal"
+          canonicalUrl="https://waqtmoney.com/repayment"
+        />
+        <Navbar />
+        <div className="py-24 text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f7f5ff] text-slate-950">

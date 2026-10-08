@@ -16,7 +16,6 @@ const STATIC_ROUTES = [
   '/about',
   '/services',
   '/emi-calculator',
-  '/repayment',
   '/faqs',
   '/contact',
   '/blog',
@@ -91,6 +90,11 @@ async function runPrerender() {
     process.exit(1);
   }
 
+  // Preserve the clean Vite SPA shell (<div id="root"></div>) for dynamic routes like /user/apply and /repayment
+  const spaHtmlPath = path.join(DIST_DIR, 'spa.html');
+  fs.copyFileSync(path.join(DIST_DIR, 'index.html'), spaHtmlPath);
+  console.log('Preserved clean SPA shell to dist/spa.html for dynamic client routes');
+
   const app = express();
   app.use(express.static(DIST_DIR));
   app.use((req, res) => {
@@ -136,6 +140,19 @@ async function runPrerender() {
   } finally {
     if (browser) await browser.close();
     server.close();
+
+    // Ensure repayment and apply form folders never exist statically in dist/
+    const repaymentDir = path.join(DIST_DIR, 'repayment');
+    if (fs.existsSync(repaymentDir)) {
+      fs.rmSync(repaymentDir, { recursive: true, force: true });
+      console.log('Removed dist/repayment to prevent static pre-rendering of repayment form');
+    }
+    const userDir = path.join(DIST_DIR, 'user');
+    if (fs.existsSync(userDir)) {
+      fs.rmSync(userDir, { recursive: true, force: true });
+      console.log('Removed dist/user to prevent static pre-rendering of user apply form');
+    }
+
     console.log('Pre-rendering complete! All static HTML snapshots written to dist/');
   }
 }
