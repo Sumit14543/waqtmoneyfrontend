@@ -588,6 +588,7 @@ const LoanDashboard = () => {
             </div>
           </div>
 
+          {latestLoan ? (
           <div className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="flex flex-col gap-6 rounded-[22px] border border-purple-100 bg-[#fbfaff] px-5 py-6 shadow-[0_14px_34px_rgba(91,33,182,0.08)] sm:flex-row sm:items-center sm:px-8 sm:py-8">
               <div className="relative h-[105px] w-[150px] shrink-0">
@@ -641,6 +642,7 @@ const LoanDashboard = () => {
               </div>
             </div>
           </div>
+          ) : null}
         </div>
 
         {loading && (
