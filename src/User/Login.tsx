@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ClipboardEvent, FormEvent, KeyboardEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import {
@@ -363,7 +363,20 @@ const Login = () => {
               {(error || message) && (
                 <div className="mt-5">
                   {error && (
-                    <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-bold text-red-600">{error}</p>
+                    <div className="rounded-2xl border border-red-200/90 bg-red-50/95 p-4 text-left shadow-sm">
+                      <p className="text-sm font-bold text-red-600">{error}</p>
+                      {error.toLowerCase().includes("apply") && (
+                        <div className="mt-3 flex items-center justify-between border-t border-red-200/60 pt-3">
+                          <span className="text-xs font-semibold text-slate-600">New customer?</span>
+                          <Link
+                            to="/user/apply"
+                            className="inline-flex items-center gap-1 text-xs font-black text-purple-700 underline transition hover:text-purple-900"
+                          >
+                            Apply for Loan &rarr;
+                          </Link>
+                        </div>
+                      )}
+                    </div>
                   )}
                   {message && (
                     <p className="rounded-xl bg-green-50 px-4 py-3 text-sm font-bold text-green-700">{message}</p>
